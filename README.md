@@ -1,29 +1,23 @@
-# trans_toilet
+# InclusiveToiletProject
 
-This template should help get you started developing with Vue 3 in Vite.
+包容性卫生间数据采集项目
 
-## Recommended IDE Setup
+在线体验地址: 
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 功能
 
-## Customize configuration
+- [x] 数据采集工具
+- [x] i18n (英语、中文、日语)
+- [x] 数据导出
+- [x] 记录GPS坐标
+- [x] 记录照片
+- [ ] 持久化存储
+- [ ] 数据编辑
+- [ ] 数据导入
+- [ ] 评价/评论功能
+- [ ] 去中心化仓库
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## 开源许可证
 
-## Project Setup
+GPL v3
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
