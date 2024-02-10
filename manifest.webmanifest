@@ -1,1 +1,1 @@
-{"name":"trans_toilet","short_name":"trans_toilet","start_url":"./","display":"standalone","background_color":"#ffffff","lang":"en","scope":"./"}
+{"name":"InclusiveToiletProject","short_name":"ToiletMarker","start_url":"./","display":"standalone","background_color":"#ffffff","lang":"en","scope":"./","description":"InclusiveToiletProject tool","theme_color":"#ffa8b8","icons":[{"src":"./assets/logo.svg","sizes":"192x192","type":"image/svg"}]}
