@@ -8,7 +8,21 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [
     vue(),
-    VitePWA({ registerType: 'autoUpdate' })
+    VitePWA({
+      includeAssets: ['./assets/logo.svg'],
+      manifest: {
+        name: 'InclusiveToiletProject',
+        short_name: 'ToiletMarker',
+        description: 'InclusiveToiletProject tool',
+        theme_color: '#ffa8b8',
+        icons: [
+          {
+            src: './assets/logo.svg',
+            sizes: '192x192',
+            type: 'image/svg'
+          }
+        ]
+      })
   ],
   resolve: {
     alias: {
