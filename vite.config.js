@@ -22,7 +22,8 @@ export default defineConfig({
             type: 'image/svg'
           }
         ]
-      })
+      }
+    })
   ],
   resolve: {
     alias: {
