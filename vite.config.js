@@ -17,9 +17,9 @@ export default defineConfig({
                 theme_color: '#ffa8b8',
                 icons: [
                     {
-                        src: './logo-144.svg',
+                        src: './144x144.png',
                         sizes: '144x144',
-                        type: 'image/svg',
+                        type: 'image/png',
                     },
                     {
                         src: './logo-192.svg',
