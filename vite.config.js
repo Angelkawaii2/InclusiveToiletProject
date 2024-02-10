@@ -9,7 +9,7 @@ export default defineConfig({
     plugins: [
         vue(),
         VitePWA({
-            includeAssets: ['./assets/logo.svg'],
+            includeAssets: ['./logo-192.svg'],
             manifest: {
                 name: 'InclusiveToiletProject',
                 short_name: 'ToiletMarker',
@@ -17,11 +17,15 @@ export default defineConfig({
                 theme_color: '#ffa8b8',
                 icons: [
                     {
-                        src: './public/logo.svg',
+                        src: './logo-192.svg',
                         sizes: '192x192',
                         type: 'image/svg',
-                        purpose: "any"
-                    }
+                    },
+                    {
+                        src: './logo-512.svg',
+                        sizes: '192x192',
+                        type: 'image/svg',
+                    },
                 ]
             }
         })
