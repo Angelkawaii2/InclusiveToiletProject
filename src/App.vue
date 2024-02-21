@@ -10,7 +10,7 @@ const {t} = useI18n()
 let DEBUG = ref(localStorage.getItem("isDebug") === "true" || false); // 这里使用了===来判断是否是字符串"true"，并且使用了.value来访问ref的值
 
 const handleDebugSwitch = (val) => { // 这里使用了一个普通的函数，而不是ref
-  //console.log(val)
+                                     //console.log(val)
   localStorage.setItem("isDebug", val); // 这里没有问题
 };
 
@@ -242,15 +242,15 @@ const handleChange = (val) => {
 
     <div v-if="false">
       <img alt="Trans logo" class="logo" src="./assets/logo.svg" width="10%" height="10%"/>
-      <span style="color:#a8a8a8"> v0.1.0-alpha</span>
     </div>
 
     <switch-lang></switch-lang>
 
-    <div>
+    <div style="margin-bottom: 10px">
       <h2>{{ $t("ui.title") }}</h2>
-      <span style="color:#a8a8a8"> v0.1.0-alpha</span>
+      <el-link style="margin: auto" href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub Project | Version: v0.1.0-alpha </el-link>
     </div>
+
     <el-backtop :right="40" :bottom="100"/>
 
     <el-button type="danger" @click="handleReset">{{ $t("ui.general.resetAll") }}</el-button>
