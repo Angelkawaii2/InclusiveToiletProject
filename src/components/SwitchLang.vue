@@ -26,13 +26,17 @@ watch(locale, (newLocale) => {
 </script>
 
 <template>
-  <el-radio-group v-model="locale" size="small">
+  <el-select v-model="locale" size="small">
+    <el-option v-for="(v,k) in availableLang" :key=k :label=v.name :value="k" :disabled=!v.avail />
+  </el-select>
+
+<!--  <el-radio-group v-model="locale" size="small">
     <el-radio-button v-for="(v,k) in availableLang"
                      :key=k :label=k :disabled=!v.avail
                      >
       {{ v.name }}
     </el-radio-button>
-  </el-radio-group>
+  </el-radio-group>-->
 </template>
 
 <style scoped>

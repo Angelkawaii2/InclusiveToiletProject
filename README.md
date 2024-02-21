@@ -7,6 +7,15 @@
 [在线体验: InclusiveToiletProject](https://angelkawaii2.github.io/InclusiveToiletProject/)
 
 
+## 当前版本
+
+#### v0.1.0-alpha   
+#### [更新日志](CHANGELOG.md)
+
+## 数据版本 
+1. [v0.0.1-20240210](./data_structure/v1-20240210.md)  
+2. [v0.1.0-20240221](./data_structure/v2-20240221.md)  
+
 ## 功能
 
 - [x] 数据采集工具
@@ -17,8 +26,8 @@
 - [ ] 持久化存储
 - [ ] 数据编辑
 - [ ] 数据导入
-- [ ] 评价/评论功能
-- [ ] 去中心化仓库
+- [ ] 云端评价/评论功能
+
 
 ## 开源许可证
 
