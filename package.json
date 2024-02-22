@@ -1,6 +1,6 @@
 {
-  "name": "trans_toilet",
-  "version": "0.0.0",
+  "name": "inclusive_toilet_project",
+  "version": "0.1.1-dev",
   "private": true,
   "type": "module",
   "scripts": {

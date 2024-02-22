@@ -40,5 +40,8 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
-    base: './'
+    base: './',
+    define:{
+        '__APP_VERSION__':JSON.stringify(process.env.npm_package_version)
+    }
 })
