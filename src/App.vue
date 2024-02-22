@@ -9,6 +9,9 @@ const {t} = useI18n()
 
 let DEBUG = ref(localStorage.getItem("isDebug") === "true" || false); // 这里使用了===来判断是否是字符串"true"，并且使用了.value来访问ref的值
 
+
+const APP_VERSION = __APP_VERSION__
+
 const handleDebugSwitch = (val) => { // 这里使用了一个普通的函数，而不是ref
                                      //console.log(val)
   localStorage.setItem("isDebug", val); // 这里没有问题
@@ -248,7 +251,8 @@ const handleChange = (val) => {
 
     <div style="margin-bottom: 10px">
       <h2>{{ $t("ui.title") }}</h2>
-      <el-link style="margin: auto" href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub Project | Version: v0.1.0-alpha </el-link>
+      <el-link style="margin: auto" href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub Project | Deploy Version:
+        {{ APP_VERSION}}</el-link>
     </div>
 
     <el-backtop :right="40" :bottom="100"/>
