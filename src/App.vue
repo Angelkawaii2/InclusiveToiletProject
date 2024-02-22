@@ -26,7 +26,7 @@ const toiletTypeMap = {
 }
 
 const data = ref({
-  version: 20240210,
+  version: 20240221,
   timestamp: 0,
   gpsCoord: {
     "lat": null,
@@ -65,7 +65,7 @@ const data = ref({
 const handleReset = ref(() => {
   deltaSec = null
   data.value = {
-    version: 20240210,
+    version: 20240221,
     timestamp: 0,
     gpsCoord: {
       "lat": null,
