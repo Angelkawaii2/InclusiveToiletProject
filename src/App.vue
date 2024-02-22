@@ -4,6 +4,7 @@ import {computed, ref, watch, watchEffect} from "vue";
 import SwitchLang from "@/components/SwitchLang.vue";
 import {useI18n} from "vue-i18n";
 import {Plus} from '@element-plus/icons-vue'
+import UpgradeNotification from "@/components/UpgradeNotification.vue";
 
 const {t} = useI18n()
 
@@ -242,6 +243,8 @@ const handleChange = (val) => {
 <template>
   <div class="blur-background"></div>
   <div class="content">
+
+    <upgrade-notification></upgrade-notification>
 
     <div v-if="false">
       <img alt="Trans logo" class="logo" src="./assets/logo.svg" width="10%" height="10%"/>
