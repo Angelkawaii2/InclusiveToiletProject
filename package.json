@@ -1,6 +1,6 @@
 {
   "name": "inclusive_toilet_project",
-  "version": "0.1.1-dev",
+  "version": "0.1.1-dev-beta1",
   "private": true,
   "type": "module",
   "scripts": {
