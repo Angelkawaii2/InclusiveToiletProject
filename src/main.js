@@ -11,7 +11,9 @@ import en from '@/i18n/en-us.js'
 import jp from '@/i18n/ja-jp.js'
 
 import SwitchLang from "@/components/SwitchLang.vue";
+import {registerSW} from "virtual:pwa-register";
 
+registerSW({ immediate: true })
 
 const i18n = createI18n({
     legacy: false,
