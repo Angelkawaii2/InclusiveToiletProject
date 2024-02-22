@@ -10,6 +10,7 @@ export default defineConfig({
         vue(),
         VitePWA({
             includeAssets: ['./logo-192.svg'],
+            registerType: 'autoUpdate',
             manifest: {
                 name: 'InclusiveToiletProject',
                 short_name: 'ToiletMarker',
@@ -41,7 +42,7 @@ export default defineConfig({
         }
     },
     base: './',
-    define:{
-        '__APP_VERSION__':JSON.stringify(process.env.npm_package_version)
+    define: {
+        '__APP_VERSION__': JSON.stringify(process.env.npm_package_version)
     }
 })

@@ -5,12 +5,20 @@ import {ref} from 'vue'
 
 const dialogVisible = ref(false)
 const updateSW = registerSW({
+  onRegisteredSW() {
+    console.log("onRegisteredSW")
+  },
   onNeedRefresh() {
     // 当检测到有新的版本时，显示提示框
     dialogVisible.value = true
+    const confirmed = window.confirm(
+        "A new version is available! Reload to update?"
+    );
+    if (confirmed) {
+      updateSW(true);
+    }
   },
   onOfflineReady() {
-    //alert("offline ready")
     // 当应用准备好离线访问时，可以在这里显示一个通知
     console.log('应用已准备好离线访问')
   },
