@@ -43,6 +43,8 @@ export default defineConfig({
     },
     base: './',
     define: {
-        '__APP_VERSION__': JSON.stringify(process.env.npm_package_version)
+        '__APP_VERSION__': JSON.stringify(process.env.npm_package_version),
+        __BUILD_TIME__: JSON.stringify(new Date().toLocaleString()),
+        __DATA_VERSION__: JSON.stringify("20240301"),
     }
 })

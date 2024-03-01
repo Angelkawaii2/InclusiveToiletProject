@@ -24,7 +24,8 @@ jobs:
         run: npm run build
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          branch: gh-pages # GitHub Pages分支
+          folder: dist # 构建产物目录
+          target-folder: ${{ github.ref_name }} # 将构建结果部署到以分支名命名的目录

@@ -5,6 +5,7 @@ import SwitchLang from "@/components/SwitchLang.vue";
 import {useI18n} from "vue-i18n";
 import {Plus} from '@element-plus/icons-vue'
 import UpgradeNotification from "@/components/UpgradeNotification.vue";
+import GpsLocation from "@/components/GpsLocationComponent.vue";
 
 const {t} = useI18n()
 
@@ -12,6 +13,7 @@ let DEBUG = ref(localStorage.getItem("isDebug") === "true" || false); // 这里�
 
 
 const APP_VERSION = __APP_VERSION__
+const buildTime = __BUILD_TIME__;
 
 const handleDebugSwitch = (val) => { // 这里使用了一个普通的函数，而不是ref
                                      //console.log(val)
@@ -25,54 +27,20 @@ const toiletTypeMap = {
   'ui.toilet_type.undefined': -1
 }
 
-const data = ref({
-  version: 20240221,
-  timestamp: 0,
-  gpsCoord: {
-    "lat": null,
-    "lon": null,
-    "alt": null,
-    "accuracy": null,
-    "type": "wgs84"
-  },
-  toiletType: [1],
-  toiletMetadata: {
-    isPrivate: false,//是否位于私人资产中（酒店、公司等）
-    accessible: {//无障碍卫生间相关
-      isInBinary: false,//是否位于二元性别的卫生间内（有些奇葩厕所是这样）
-      isLocked: false,// 第三卫生间是否被锁上，取值true/false/null?
+function initData() {
+  return {
+    DEBUG: {
+      build_date: buildTime,
+      app_version: APP_VERSION
     },
-    extra: {
-      hasHook: undefined,//是否存在衣服挂钩
-      isFree: true,//是否免费
-      hasDryer: undefined,//是否存在烘干机
-      hasMirror: undefined,//是否有镜子
-    },
-    score: {
-      recommendation: 0
-    }
-  },
-  time: {
-    unknown: false,
-    allDay: false,
-    startTime: "08:00",
-    endTime: "22:00",
-  },
-  img: [],
-  comments: null
-})
-
-const handleReset = ref(() => {
-  deltaSec = null
-  data.value = {
-    version: 20240221,
+    version: __DATA_VERSION__,
     timestamp: 0,
     gpsCoord: {
-      "lat": null,
-      "lon": null,
-      "alt": null,
-      "accuracy": null,
-      "type": "wgs84"
+      lat: null,
+      lon: null,
+      alt: null,
+      accuracy: null,
+      type: "wgs84"
     },
     toiletType: [1],
     toiletMetadata: {
@@ -100,70 +68,18 @@ const handleReset = ref(() => {
     img: [],
     comments: null
   }
+}
+
+const data = ref(initData())
+
+const handleReset = ref(() => {
+  data.value = initData()
 })
 
 const renderedJsonData = computed(() => {
       return JSON.stringify(data.value, null, 2)
     }
 )
-
-/*const calcIsPrivate = computed(()=>{
-  if (data.value.toiletMetadata.isPrivate === null) {
-    return 1
-  }else if (data.value.toiletMetadata.isPrivate){
-    return 0
-  }
-  return 2
-})*/
-
-const databaseStatus = ref({
-  "access": false
-})
-
-let deltaSec = ref(null);
-
-
-const getGpsLocation = ref(() => {
-      if (!navigator.geolocation) {
-        alert(t('ui.unsupported_browser'));
-        return
-      }
-      navigator.geolocation.getCurrentPosition((position) => {
-        Object.assign(data.value.gpsCoord, {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-          alt: position.coords.altitude,
-          accuracy: position.coords.accuracy,
-        })
-        data.value.timestamp = position.timestamp
-        console.log(position.coords)
-      }, () => {
-        alert(t('ui.gps.check_permission'))
-      });
-    }
-)
-
-let timeDifference = ref('');
-
-watchEffect(() => {
-  setInterval(() => {
-    const diff = Date.now() - data.value.timestamp;
-    if (data.value.timestamp === 0) {
-      timeDifference.value = t('ui.time.waiting'); // "Waiting..."
-      return
-    }
-    deltaSec = Math.floor(diff / 1000)
-
-    if (diff < 60000) {
-      timeDifference.value = `${Math.floor(diff / 1000)} ${t('ui.time.seconds_ago')}`; // "秒前"
-    } else if (diff < 3600000) {
-      let min = `${Math.floor(diff / 60000)}`;
-      timeDifference.value = `${min}${t('ui.time.minutes_ago')} (${Math.floor(diff / 1000)})${t('ui.time.seconds')}`; // "分钟前" "秒"
-    } else {
-      timeDifference.value = `${Math.floor(diff / 3600000)}${t('ui.time.hours_ago')}`; // "小时前"
-    }
-  }, 500);
-});
 
 
 const dialogImageUrl = ref('')
@@ -238,6 +154,12 @@ const handleChange = (val) => {
   console.log("selected value:", val);
 };
 
+const handleGpsUpdate = (val) => {
+  data.value.gpsCoord = val.GpsCoord
+  data.value.timestamp = val.timestamp
+  //alert("handlGpsUpda")
+}
+
 </script>
 
 <template>
@@ -254,8 +176,10 @@ const handleChange = (val) => {
 
     <div style="margin-bottom: 10px">
       <h2>{{ $t("ui.title") }}</h2>
-      <el-link style="margin: auto" href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub Project | Deploy Version:
-        {{ APP_VERSION}}</el-link>
+      <el-link style="margin: auto" href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub
+        Project | Version:
+        {{ APP_VERSION }} | Build: {{ buildTime }}
+      </el-link>
     </div>
 
     <el-backtop :right="40" :bottom="100"/>
@@ -263,45 +187,7 @@ const handleChange = (val) => {
     <el-button type="danger" @click="handleReset">{{ $t("ui.general.resetAll") }}</el-button>
 
     <!--    位置定位-->
-    <el-card>
-      <template #header>
-        <div class="card-header">
-          <h3> {{ $t("ui.gps.title") }}</h3>
-          <el-button @click="getGpsLocation">{{ $t('ui.gps.location.access_gps_location_btn') }}</el-button>
-        </div>
-        <div>
-          <!--  超时mark  -->
-          <el-text v-if="deltaSec==null">
-            {{ $t("ui.gps.status.failed") }}
-          </el-text>
-          <el-text v-else-if="deltaSec<60 && data.gpsCoord.accuracy>50">
-            {{ $t("ui.gps.status.low_accuracy") }}
-          </el-text>
-          <el-text v-else-if="deltaSec<60">
-            {{ $t("ui.gps.status.success") }}
-          </el-text>
-          <el-text v-else>{{ $t("ui.gps.status.outdated") }}</el-text>
-        </div>
-      </template>
-
-      <div>
-        <el-input v-model="data.gpsCoord.lon" placeholder="waiting" disabled>
-          <template #prepend>{{ $t('ui.gps.location.longitude') }}</template>
-        </el-input>
-        <el-input v-model="data.gpsCoord.lat" placeholder="waiting" disabled>
-          <template #prepend>{{ $t('ui.gps.location.latitude') }}</template>
-        </el-input>
-
-        <el-input v-model="data.gpsCoord.accuracy" placeholder="waiting" disabled>
-          <template #prepend>{{ $t('ui.gps.location.accuracy') }}</template>
-          <template #append>{{ $t('ui.gps.location.meter') }}</template>
-        </el-input>
-        <el-input v-model="timeDifference" placeholder="delta" disabled>
-          <template #prepend>{{ $t('ui.gps.location.delta') }}</template>
-        </el-input>
-
-      </div>
-    </el-card>
+    <gps-location @update:gps-coord="handleGpsUpdate" :gps-data=data.gpsCoord :timestamp=undefined></gps-location>
 
     <!--类型选择-->
     <el-card>
@@ -383,7 +269,7 @@ const handleChange = (val) => {
       </div>
       <div class="selector">
         <h4>{{ $t("ui.metadata.recommendation_title") }}</h4>
-        <el-rate v-model="data.toiletMetadata.score" clearable/>
+        <el-rate v-model="data.toiletMetadata.score.recommendation" clearable/>
       </div>
     </el-card>
 
@@ -481,6 +367,9 @@ const handleChange = (val) => {
 
     <div style="margin-top: 50px" v-if="DEBUG">
       <h1>DEBUG PAGE</h1>
+      <el-text> 版本: {{ APP_VERSION }}</el-text>
+      <hr>
+      <el-text> 编译时间: {{ buildTime }}</el-text>
       <h3>Output</h3>
       <el-button v-if="false" @click="navigator.clipboard.writeText(renderedJsonData)">COPY</el-button>
 
@@ -494,7 +383,7 @@ const handleChange = (val) => {
           show-word-limit
           readonly
       />
-      <span>预计文件大小: </span>
+      <span v-if="false">预计文件大小: </span>
 
       <div v-if="false">
         <h3>当前数据条数: </h3>
