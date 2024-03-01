@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - '*'
+      - 'dev'
   workflow_dispatch:
 jobs:
   deploy:
@@ -28,4 +28,4 @@ jobs:
         with:
           branch: gh-pages # GitHub Pages分支
           folder: dist # 构建产物目录
-          target-folder: ${{ github.ref_name }} # 将构建结果部署到以分支名命名的目录
+          target-folder: ${{ github.ref_name }}
