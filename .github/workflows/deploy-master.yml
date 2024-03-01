@@ -1,4 +1,4 @@
-name: Deploy
+name: Branch Main Build Status
 
 on:
   push:
