@@ -1,11 +1,14 @@
 # InclusiveToiletProject
 
-![npm run build Workflow](https://github.com/angelkawaii2/InclusiveToiletProject/actions/workflows/deploy.yml/badge.svg)
+![Master Build Status](https://github.com/angelkawaii2/InclusiveToiletProject/actions/workflows/deploy-master.yml/badge.svg)
+![Dev Build Status](https://github.com/angelkawaii2/InclusiveToiletProject/actions/workflows/deploy-dev.yml/badge.svg)
 ![Pages Deployment Workflow](https://github.com/Angelkawaii2/InclusiveToiletProject/actions/workflows/pages/pages-build-deployment/badge.svg)
 
 包容性卫生间数据采集项目
 
-[在线体验: InclusiveToiletProject](https://angelkawaii2.github.io/InclusiveToiletProject/)
+[➡️在线体验: InclusiveToiletProject](https://angelkawaii2.github.io/InclusiveToiletProject/)
+
+[⚠️Dev 测试分支 (不稳定，慎用)](https://angelkawaii2.github.io/InclusiveToiletProject/dev/)
 
 ## 当前分支版本 | App Version
 
