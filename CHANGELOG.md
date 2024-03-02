@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v0.2.0-dev3 (20240303)
+
+<details>
+
+<summary>
+点击展开更新日志
+</summary>
+变更
+
+</details>
+
 ## v0.2.0-dev2
 
 <details>

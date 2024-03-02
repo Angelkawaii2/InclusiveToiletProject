@@ -32,38 +32,61 @@ const data = useCurrentData()
 
 <template>
 
-  <div id="app">
+  <div>
 
-    <switch-lang/>
+    <!--part 1 title-->
+    <el-row :gutter="10">
 
-    <div >
-      <h2>{{ $t("ui.title") }}</h2>
-      <el-link  href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub
-        Project | Version:
-        {{ v }} | Build: {{ buildTime }}
-      </el-link>
-    </div>
+      <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+        <switch-lang/>
+      </el-col>
 
-    <!--    todo 什么玩意？-->
+      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+        <div>
+          <h2>{{ $t("ui.title") }}</h2>
+          <el-link href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub
+            Project | Version:
+            {{ v }} | Build: {{ buildTime }}
+          </el-link>
+        </div>
+      </el-col>
+    </el-row>
+
+
     <el-backtop :right="40" :bottom="100"/>
 
-    <!--    位置定位-->
-    <gps-location/>
 
-    <!--类型选择-->
-    <toilet-type-selector-component/>
+    <!--part 2 gps-->
+    <el-row :gutter="10">
 
-    <accessible-meta-component v-show="data.toiletType.includes(2)"/>
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="9">
+        <!--    位置定位-->
+        <gps-location/>
+        <!--类型选择-->
+        <toilet-type-selector-component/>
+        <accessible-meta-component v-show="data.toiletType.includes(2)"/>
+      </el-col>
 
-    <!--    todo 从这里开始横屏-->
 
-    <toilet-metadata/>
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="10">
+        <toilet-metadata/>
+        <time-selector-component/>
+      </el-col>
 
-    <time-selector-component/>
 
-    <image-upload-component/>
+      <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="10">
+        <el-row :gutter="10">
+          <el-col :xs="24" :sm="12" :md="24" :lg="24" :xl="24">
+            <image-upload-component/>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="24" :lg="24" :xl="24">
+            <comment-component/>
+          </el-col>
+        </el-row>
+      </el-col>
 
-    <comment-component/>
+    </el-row>
+
 
     <download-btn-component/>
 
@@ -85,27 +108,6 @@ const data = useCurrentData()
 div {
   margin-top: 10px;
 }
-
-#app::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-      30deg,
-      rgba(86, 205, 252, 0.1) 0%,
-      rgba(86, 205, 252, 0.1) 10%,
-      rgba(255, 255, 255, 0.1) 10%,
-      rgba(255, 255, 255, 0.1) 20%,
-      rgba(255, 105, 180, 0.1) 20%,
-      rgba(255, 105, 180, 0.1) 30%,
-      rgba(86, 205, 252, 0.1) 30%
-  );
-  z-index: -1;
-}
-
 
 .card-header {
   display: flex;

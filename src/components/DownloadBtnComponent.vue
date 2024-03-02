@@ -23,16 +23,16 @@ function downloadData() {
 <template>
   <div>
 
-    <el-button type="danger" disabled v-show="data.timestamp===0||data.gpsCoord.lon==null">
+    <el-button size="large" type="danger" disabled v-show="data.timestamp===0||data.gpsCoord.lon==null">
       {{ $t("ui.gps.acquire.gps_no_data") }}
     </el-button>
 
-    <el-button type="success" @click="downloadData"
+    <el-button size="large" type="success" @click="downloadData"
                v-show="data.gpsCoord.lon!=null && gpsStatus.deltaSec<60">
       {{ $t("ui.general.save") }}
     </el-button>
 
-    <el-button type="warning" @click="downloadData"
+    <el-button size="large" type="warning" @click="downloadData"
                v-show="data.gpsCoord.lon!=null && gpsStatus.deltaSec>60">
       {{ $t("ui.general.save") }} - {{ $t("ui.gps.acquire.gps_expired") }}
     </el-button>

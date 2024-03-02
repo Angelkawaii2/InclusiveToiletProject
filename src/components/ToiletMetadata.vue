@@ -1,9 +1,22 @@
 <script setup lang="ts">
 import {useCurrentData} from "@/stores/currentData"
 import {storeToRefs} from "pinia";
+import {ref} from "vue";
 
-const data = useCurrentData()
-const toiletMetadata = storeToRefs(data).toiletMetadata
+
+const {toiletMetadata} = storeToRefs(useCurrentData())
+
+/*
+const metadataProperties = ref([
+  {ui: 'ui.metadata.isPrivateProperty', modelRef: toiletMetadata.isPrivate},
+  {ui: 'ui.metadata.isFree', modelRef: toiletMetadata.isFree},
+  {ui: 'ui.metadata.hasHook', modelRef: toiletMetadata.hasHook},
+  {ui: 'ui.metadata.hasMirror', modelRef: toiletMetadata.hasMirror},
+  {ui: 'ui.metadata.hasDryer', modelRef: toiletMetadata.hasDryer},
+]);
+*/
+
+
 </script>
 
 <template>
@@ -14,45 +27,57 @@ const toiletMetadata = storeToRefs(data).toiletMetadata
       <h3>{{ $t("ui.metadata.title") }}</h3>
     </template>
 
+
+    <!--    <div class="selector" v-for="prop in metadataProperties" :key="prop.ui">
+          <h4>{{ $t(prop.ui) }}</h4>
+          <el-radio-group v-model="prop.modelRef">
+            <el-radio size="large" :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
+            <el-radio size="large" :value=false>{{ $t("ui.general.select.no") }}</el-radio>
+            <el-radio size="large" :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+          </el-radio-group>
+        </div>
+
+        <hr>-->
+
     <div class="selector">
       <h4>{{ $t("ui.metadata.isPrivateProperty") }}</h4>
       <el-radio-group v-model="toiletMetadata.isPrivate">
-        <el-radio :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
-        <el-radio :value=false>{{ $t("ui.general.select.no") }}</el-radio>
-        <el-radio :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+        <el-radio size="large" :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
+        <el-radio size="large" :value=false>{{ $t("ui.general.select.no") }}</el-radio>
+        <el-radio size="large" :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
       </el-radio-group>
     </div>
     <div class="selector">
       <h4>{{ $t("ui.metadata.isFree") }}</h4>
       <el-radio-group v-model="toiletMetadata.extra.isFree">
-        <el-radio :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
-        <el-radio :value=false>{{ $t("ui.general.select.no") }}</el-radio>
-        <el-radio :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+        <el-radio size="large" :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
+        <el-radio size="large" :value=false>{{ $t("ui.general.select.no") }}</el-radio>
+        <el-radio size="large" :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
       </el-radio-group>
     </div>
     <div class="selector">
       <h4>{{ $t("ui.metadata.hasHook") }}</h4>
       <el-radio-group v-model="toiletMetadata.extra.hasHook">
-        <el-radio :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
-        <el-radio :value=false>{{ $t("ui.general.select.no") }}</el-radio>
-        <el-radio :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+        <el-radio size="large" :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
+        <el-radio size="large" :value=false>{{ $t("ui.general.select.no") }}</el-radio>
+        <el-radio size="large" :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
       </el-radio-group>
     </div>
 
     <div class="selector">
       <h4>{{ $t("ui.metadata.hasMirror") }}</h4>
       <el-radio-group v-model="toiletMetadata.extra.hasMirror">
-        <el-radio :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
-        <el-radio :value=false>{{ $t("ui.general.select.no") }}</el-radio>
-        <el-radio :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+        <el-radio size="large" :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
+        <el-radio size="large" :value=false>{{ $t("ui.general.select.no") }}</el-radio>
+        <el-radio size="large" :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
       </el-radio-group>
     </div>
     <div class="selector">
       <h4>{{ $t("ui.metadata.hasDryer") }}</h4>
       <el-radio-group v-model="toiletMetadata.extra.hasDryer">
-        <el-radio :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
-        <el-radio :value=false>{{ $t("ui.general.select.no") }}</el-radio>
-        <el-radio :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+        <el-radio size="large" :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
+        <el-radio size="large" :value=false>{{ $t("ui.general.select.no") }}</el-radio>
+        <el-radio size="large" :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
       </el-radio-group>
     </div>
     <div class="selector">

@@ -12,7 +12,7 @@ const time = data.time
     <template #header>
       <div class="card-header">
         <h3>{{ $t('ui.time.title') }}</h3>
-        <el-button @click="time.unknown=!time.unknown">
+        <el-button size="large" @click="time.unknown=!time.unknown">
           {{ time.unknown ? $t("ui.time.create") : $t("ui.time.remove") }}
         </el-button>
       </div>
@@ -29,14 +29,15 @@ const time = data.time
       <!--        时间选择器-->
       <div v-show="!time.allDay">
         <el-time-select
+            size="large"
             v-model="time.startTime"
             start="00:00"
             step="00:30"
             end="24:00"
         />
-        <div>
-        </div>
+
         <el-time-select
+            size="large"
             v-model="time.endTime"
             start="00:00"
             step="00:30"
