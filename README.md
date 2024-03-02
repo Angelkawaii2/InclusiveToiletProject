@@ -6,9 +6,9 @@
 
 包容性卫生间数据采集项目
 
-【稳定版】[➡️在线体验(支持PWA)](https://angelkawaii2.github.io/InclusiveToiletProject/)
+【稳定版(经过测试)】[➡️在线体验(支持PWA)](https://angelkawaii2.github.io/InclusiveToiletProject/)
 
-【测试版】[⚠️Dev 测试分支 (不稳定，慎用)](https://angelkawaii2.github.io/InclusiveToiletProject/dev/)
+【测试版(最新预览)】[⚠️Dev 测试分支 (不稳定慎用)](https://angelkawaii2.github.io/InclusiveToiletProject/dev/)
 
 ## 当前分支版本 | App Version
 
