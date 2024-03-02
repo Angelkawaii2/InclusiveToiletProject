@@ -6,7 +6,8 @@ export default {
                 "no": "否",
                 "unknown": "不知道"
             },
-            "resetAll": "重置当前页面数据"
+            "resetAll": "重置当前页面数据",
+            "save": "保存",
         },
         "title": "包容性卫生间数据采集工具",
         "unsupported_browser": "您当前使用的浏览器不支持获取GPS位置信息，请更换浏览器后重试。",
@@ -63,10 +64,11 @@ export default {
         },
         "metadata": {
             "title": "额外信息",
-            "isFree":"是否免费？",
+            "isFree": "是否免费？",
             "isPrivateProperty": "是否位于私家区域（例如单位、公司内部）？",
             "hasHook": "有无挂衣钩？",
             "hasMirror": "有无镜子？",
+            "hasDryer":"有无吹风机？",
             "recommendation_title": "推荐程度"
         }
     }

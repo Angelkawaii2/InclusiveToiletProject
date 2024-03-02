@@ -19,7 +19,7 @@ export default {
                 "latitude": "Latitude",
                 "accuracy": "Accuracy",
                 "meter": "Meter",
-                "delta": "Distance from last acquisition"
+                "delta": "After last acquisition"
             },
             "acquire": {
                 "gps_no_data": "No GPS information acquired",

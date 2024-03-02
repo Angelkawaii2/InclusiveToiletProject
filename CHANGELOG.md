@@ -1,11 +1,41 @@
 # Changelog
 
+
+## v0.2.0-dev2
+
+<details>
+<summary>
+更新日期: 20240302
+</summary>
+变更
+
+1. 解耦剩余其他组件
+2. 引入pinia管理全局状态
+3. 组件修改为使用pinia
+4. 为``metadata``面板中添加了吹风机/干手机的选项
+
+已知问题
+
+</details>
+
+
 ## v0.2.0-dev1 
+
+<details>
+<summary>
 更新日期: 20240301
-### 变更
+</summary>
+变更
 
 1. 解耦 GPSLocation 组件
 2. 测试同时部署多个分支到 GitHub Pages 以避免变更影响到 release 版本
+3. 在数据中添加DEBUG节点，存储项目编译时间和app版本
+4. 修复 data.toiletMetadata.score.recommendation 节点更新错误的问题
+
+已知问题
+1. 第一次点击获取gps时，deltaSec 的UI更新会延迟1秒
+</details>
+
 
 ## v0.1.2
 
