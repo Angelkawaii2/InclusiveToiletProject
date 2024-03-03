@@ -44,7 +44,7 @@ const getGpsLocation = () => {
     gpsStatus.deltaSec = 0
     // 成功获取位置后开始计时
     timer = setInterval(() => {
-      gpsStatus.deltaSec += 1;
+      gpsStatus.deltaSec = Math.round((new Date().getTime() - gpsStatus.gpsTimestamp) / 1000);
     }, 1000); // 每秒递增
 
     gpsStatus.isAcquiring = false

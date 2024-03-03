@@ -76,7 +76,7 @@ function initData(): DataState {
     return {
         DEBUG: {
             build_date: buildTime,
-            app_version: "v0.2.0-dev3" //todo 先硬编码之后再修
+            app_version: "v0.2.0-dev4" //todo 先硬编码之后再修
         },
         version: DATA_VERSION,
         timestamp: 0,
