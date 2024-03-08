@@ -12,8 +12,9 @@ import jp from '@/i18n/ja-jp.js'
 
 import SwitchLang from "@/components/SwitchLang.vue";
 import {registerSW} from "virtual:pwa-register";
+import {createPinia} from "pinia";
 
-registerSW({ immediate: true })
+registerSW({immediate: true})
 
 const i18n = createI18n({
     legacy: false,
@@ -22,8 +23,11 @@ const i18n = createI18n({
     messages: {"zh-cn": zh, "en-us": en, "ja-jp": jp}
 })
 
+const pinia = createPinia()
+
 createApp(App)
     .component("switch-lang", SwitchLang)
     .use(i18n)
     .use(ElementPlus)
+    .use(pinia)
     .mount('#app')
