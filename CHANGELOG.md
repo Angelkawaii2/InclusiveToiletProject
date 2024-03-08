@@ -1,50 +1,57 @@
 # Changelog
 
 
-## v0.2.0-dev3 (20240303)
-
+## v0.2.0-dev (20240308)
 <details>
 
 <summary>
 点击展开更新日志
 </summary>
-变更
 
-</details>
+----
 
-## v0.2.0-dev2
+v0.2.0-dev4 变更 (20240308)
 
-<details>
-<summary>
-更新日期: 20240302
-</summary>
-变更
+1. 修复 GPS计时器 在部分浏览器对标签页休眠后不准确的问题
+2. 修复 vite变量 无法使用的问题（之后需要修ts的代码提示，现在先跑起来）
+3. 修复 data 中没有 version 字段的问题
+3. 更新 comments 组件，为按钮添加更多常用标签
 
-1. 解耦剩余其他组件
-2. 引入pinia管理全局状态
-3. 组件修改为使用pinia
-4. 为``metadata``面板中添加了吹风机/干手机的选项
+v0.2.0-dev3 变更 (20240303)
 
-已知问题
+1. 修正 背景样式无法铺满页面
+2. 修正 页面在宽屏下布局错乱
+3. 适配 宽屏界面（iPad等）采用自适应布局
+4. 修正 第三卫生间卡片样式
+5. 优化 部分按钮和单选框点击面积，增强移动端易用性
 
-</details>
+已知问题：
 
+1. 部分vita变量无法正常生效，需手动修改currentData.js中的版本号
 
-## v0.2.0-dev1 
+----
+v0.2.0-dev2 变更 (20240302)
 
-<details>
-<summary>
-更新日期: 20240301
-</summary>
-变更
+1. 解耦 剩余其他组件
+2. 增加 pinia 组件，管理全局状态
+3. 增加 ``metadata``面板中 吹风机/干手机的选项
+4. 修正 部分翻译问题
+
+----
+
+v0.2.0-dev1 变更 (20240301)
 
 1. 解耦 GPSLocation 组件
-2. 测试同时部署多个分支到 GitHub Pages 以避免变更影响到 release 版本
-3. 在数据中添加DEBUG节点，存储项目编译时间和app版本
+2. 测试 同时部署多个分支到 GitHub Pages 以避免变更影响到 release 版本
+3. 添加 DEBUG节点到data数据中，存储项目编译时间和app版本供未来可能的升级使用
 4. 修复 data.toiletMetadata.score.recommendation 节点更新错误的问题
 
 已知问题
+
 1. 第一次点击获取gps时，deltaSec 的UI更新会延迟1秒
+
+----
+
 </details>
 
 

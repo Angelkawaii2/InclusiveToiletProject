@@ -75,10 +75,10 @@ export const useCurrentData = defineStore('mydata', {
 function initData(): DataState {
     return {
         DEBUG: {
-            build_date: buildTime,
-            app_version: "v0.2.0-dev4" //todo 先硬编码之后再修
+            build_date: VITE_BUILD_TIME,
+            app_version: VITE_APP_VERSION //todo 先硬编码之后再修
         },
-        version: DATA_VERSION,
+        version: VITE_DATA_VERSION,
         timestamp: 0,
         gpsCoord: {
             lat: undefined,

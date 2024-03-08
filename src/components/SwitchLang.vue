@@ -26,10 +26,11 @@ watch(locale, (newLocale) => {
 </script>
 
 <template>
-  <el-select v-model="locale" size="small">
-    <el-option v-for="(v,k) in availableLang" :key=k :label=v.name :value="k" :disabled=!v.avail />
-  </el-select>
-
+  <div :class="$attrs.class">
+    <el-select v-model="locale" size="small">
+      <el-option v-for="(v,k) in availableLang" :key=k :label=v.name :value="k" :disabled=!v.avail></el-option>
+    </el-select>
+  </div>
 </template>
 
 <style scoped>

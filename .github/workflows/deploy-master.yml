@@ -1,4 +1,4 @@
-name: Branch Main Build Status
+name: Main Build Status
 
 on:
   push:
