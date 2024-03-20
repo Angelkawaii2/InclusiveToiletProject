@@ -69,8 +69,12 @@ onUnmounted(() => {
     <template #header>
       <div class="card-header">
         <h3> {{ $t("ui.gps.title") }}</h3>
-        <el-button size="large" @click="getGpsLocation" :disabled=gpsStatus.isAcquiring>{{
+        <el-button size="large" type="primary" @click="getGpsLocation" v-show=!gpsStatus.isAcquiring>{{
             $t('ui.gps.location.access_gps_location_btn')
+          }}
+        </el-button>
+        <el-button size="large" disabled v-show="gpsStatus.isAcquiring">{{
+            $t('ui.gps.location.acquiring_gps_location_btn')
           }}
         </el-button>
       </div>

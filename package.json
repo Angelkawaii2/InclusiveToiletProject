@@ -1,6 +1,6 @@
 {
   "name": "inclusive_toilet_project",
-  "version": "0.2.0-dev-4",
+  "version": "0.2.1-dev-1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,7 +13,8 @@
     "element-plus": "^2.5.5",
     "pinia": "^2.1.7",
     "vue": "^3.4",
-    "vue-i18n": "^9.9.1"
+    "vue-i18n": "^9.9.1",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",

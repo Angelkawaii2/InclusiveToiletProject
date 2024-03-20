@@ -31,3 +31,4 @@ jobs:
           branch: gh-pages # GitHub Pages分支
           folder: dist # 构建产物目录
           target-folder: ${{ github.ref_name }}
+          clean: false

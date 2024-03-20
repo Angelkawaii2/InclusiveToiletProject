@@ -16,6 +16,7 @@ export default {
             "check_permission": "获取GPS坐标失败，请检查是否授予位置信息权限。",
             "location": {
                 "access_gps_location_btn": "获取当前 GPS 坐标",
+                "acquiring_gps_location_btn": "获取中...",
                 "longitude": "经度",
                 "latitude": "纬度",
                 "accuracy": "精确度",

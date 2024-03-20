@@ -16,6 +16,14 @@ const availableLang = {
   "ja-jp": {
     name: "日本語",
     avail: true
+  },
+  "zh-nyaa": {
+    name: "中文-猫娘",
+    avail: true
+  },
+  "zh-tw": {
+    name: "正體中文-臺灣",
+    avail: true
   }
 }
 
