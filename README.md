@@ -4,15 +4,15 @@
 ![Dev Build Status](https://github.com/angelkawaii2/InclusiveToiletProject/actions/workflows/deploy-dev.yml/badge.svg)
 ![Pages Deployment Workflow](https://github.com/Angelkawaii2/InclusiveToiletProject/actions/workflows/pages/pages-build-deployment/badge.svg)
 
-包容性卫生间数据采集项目
+包容性卫生间地图数据采集项目
 
-【稳定版(经过测试)】[➡️在线体验(支持PWA)](https://angelkawaii2.github.io/InclusiveToiletProject/)
+【稳定版(经过测试)】[➡️ 在线体验(支持PWA)](https://angelkawaii2.github.io/InclusiveToiletProject/)
 
-【测试版(最新预览)】[⚠️Dev 测试分支 (慎用)](https://angelkawaii2.github.io/InclusiveToiletProject/dev/)
+【测试版(最新功能预览)】[🛠️ Dev 测试分支](https://angelkawaii2.github.io/InclusiveToiletProject/dev/)
 
 ## 当前分支版本 | App Version
 
-### v0.2.1-dev1 (20240320)
+### v0.3.0.20240321-dev.1 (20240321)
 
 <details>
 
@@ -22,11 +22,19 @@
 
 ----
 
+v0.3.0.20240321-dev.1 变更 (20240321)
+
+1. 更新 版本号，使其符合语义化版本规范
+2. 优化 添加界面的布局效果，现在多栏能够紧凑显示
+3. 添加 版本号水印标识于Dev分支构建的页面
+4. 修正 GPS组件 在 点击reset按钮后 显示的 距离上次获取时间 错误的问题
+5. 更新 语言文件，优化部分表达方式
+
 v0.2.1-dev1 变更 (20240320)
 
 1. 增加 ``zh-tw`` 和 ``zh-nyaa`` 翻译文件
 2. 引入 ``Vue-router`` ，拆分页面，为后续扩展做准备
-3. 优化了 GPS组件 的按钮交互效果
+3. 优化  GPS组件 的按钮交互效果
 
 已知问题
 

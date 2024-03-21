@@ -12,6 +12,10 @@ export const useCurrentGpsStatus = defineStore("gps:status", {
         isTimeout(): boolean {
             return this.deltaSec === -1;
         },
+        reset() {
+            this.deltaSec = -1;
+            this.gpsTimestamp = 0
+        },
         hasGpsData(): boolean {
             return this.gpsCoords === undefined
         }

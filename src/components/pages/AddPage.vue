@@ -18,6 +18,10 @@ let DEBUG = ref(localStorage.getItem("isDebug") === "true" || false); // 这里�
 const handleDebugSwitch = (val: string) => {
   localStorage.setItem("isDebug", val);
 };
+
+const isAccessbleSelected = (): boolean => {
+  return data.toiletType.includes(2)
+}
 </script>
 
 <template>
@@ -25,22 +29,30 @@ const handleDebugSwitch = (val: string) => {
   <!--part 2 gps-->
   <el-row :gutter="10">
 
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="9">
+    <el-col :xs="24" :sm="12" :md="isAccessbleSelected()?8:12" :lg="isAccessbleSelected()?8:12"
+            :xl="isAccessbleSelected()?8:9">
       <!--    位置定位-->
       <gps-location class="card"/>
       <!--类型选择-->
       <toilet-type-selector-component class="card"/>
-      <accessible-meta-component class="card" v-show="data.toiletType.includes(2) "/>
+      <accessible-meta-component class="card" v-show="isAccessbleSelected() "/>
+      <toilet-metadata v-show="!isAccessbleSelected() " class="card"/>
     </el-col>
 
 
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="10">
-      <toilet-metadata class="card"/>
+    <el-col :xs="24" :sm="12" :md="isAccessbleSelected()?8:12" :lg="isAccessbleSelected()?8:12"
+            :xl="isAccessbleSelected()?8:8">
+      <toilet-metadata v-show="isAccessbleSelected() " class="card"/>
       <time-selector-component class="card"/>
+      <div v-show="!isAccessbleSelected() ">
+        <image-upload-component class="card"/>
+        <comment-component class="card"/>
+      </div>
     </el-col>
 
 
-    <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="10">
+    <el-col :xs="24" :sm="24" :md="8" :lg="isAccessbleSelected()?8:0" :xl="isAccessbleSelected()?8:0"
+            v-show="isAccessbleSelected() ">
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :md="24" :lg="24" :xl="24">
           <image-upload-component class="card"/>
@@ -72,5 +84,7 @@ const handleDebugSwitch = (val: string) => {
 <style scoped>
 .card {
   margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

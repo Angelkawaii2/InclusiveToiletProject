@@ -1,5 +1,12 @@
 export default {
+    "metadata": {
+        "lastUpdate": "2024-03-21",
+        "translators": [
+            'Jiean Ru'
+        ]
+    },
     'ui': {
+        "slogan": "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
         "general": {
             "select": {
                 "yes": "✅是",
@@ -25,7 +32,7 @@ export default {
             },
             "acquire": {
                 "gps_no_data": "未获取GPS信息",
-                "gps_expired": "GPS信息可能过期"
+                "gps_expired": "⚠️GPS信息可能过期"
             },
             "status": {
                 "failed": "❌未获取",
@@ -49,7 +56,7 @@ export default {
             "seconds": "秒"
         },
         "photo": {
-            "title": "📷添加照片",
+            "title": "📷照片",
         },
         "toilet_type": {
             "title": "🈂️提供的卫生间服务",
@@ -64,7 +71,17 @@ export default {
             "isInBinary": "🚻是否位于男女卫生间内？"
         },
         "comments": {
-            "title": "✏️备注"
+            "title": "✏️备注",
+            "tags": {
+                "goodEnvironment": "🤗环境好",
+                "poorEnvironment": "🤮环境差",
+                "hardToFind": "👀不好找",
+                "subwayStation": "🚇地铁站内",
+                "roadside": "🚵在路边",
+                "temporaryParking": "🅿️可临时停车",
+                "shoppingMall": "🏬商场内",
+                "underMaintenance": "❌维护中"
+            }
         },
         "metadata": {
             "title": "ℹ️额外信息",

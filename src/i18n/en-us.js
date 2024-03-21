@@ -1,44 +1,51 @@
 export default {
+    "metadata": {
+        "lastUpdate": "2024-03-21",
+        "translators": [
+            'OpenAI-ChatGPT4'
+        ]
+    },
     'ui': {
+        "slogan":"Never surrender to anxiety and depression; there will always be a place for us in this world.",
         "general": {
             "select": {
-                "yes": "Yes",
-                "no": "No",
-                "unknown": "Unknown"
+                "yes": "✅Yes",
+                "no": "❌No",
+                "unknown": "❓Unknown"
             },
             "resetAll": "Reset current page data"
         },
-        "title": "Inclusive Restroom Data Collection Tool",
+        "title": "Inclusive Restroom Map Project",
         "unsupported_browser": "The browser you are currently using does not support GPS location information, please change the browser and try again.",
         "gps": {
-            "title": "Location information",
-            "check_permission": "Failed to get GPS coordinates, please check if location information permission is granted.",
+            "title": "️🛰️Your Location",
+            "check_permission": "Please enable location permission to get your GPS coordinates.",
             "location": {
-                "access_gps_location_btn": "Get current GPS coordinates",
+                "access_gps_location_btn": "Find My Location",
                 "longitude": "Longitude",
                 "latitude": "Latitude",
                 "accuracy": "Accuracy",
                 "meter": "Meter",
-                "delta": "After last acquisition"
+                "delta": "Time Since Last Location Check"
             },
             "acquire": {
-                "gps_no_data": "No GPS information acquired",
-                "gps_expired": "GPS information may be outdated"
+                "gps_no_data": "⚠️No location data.",
+                "gps_expired": "⚠️Your location info might be out of date."
             },
             "status": {
-                "failed": "❌Not acquired",
-                "success": "✅Acquired",
+                "failed": "❌Location Not Found",
+                "success": "✅Location Found",
                 "outdated": "⚠️May be outdated",
-                "low_accuracy": "⚠️Low accuracy"
+                "low_accuracy": "⚠️Location Might Be Inaccurate"
             }
         },
         "time": {
-            "title": "Opening hours",
+            "title": "🕘️Opening hours",
             "create": "Create",
             "remove": "Remove",
             "is24Hour": {
                 "true": "Open all day✅",
-                "false": "Open for part of the day🕖"
+                "false": "Open for part of the day❌"
             },
             "waiting": "Waiting...",
             "seconds_ago": "Seconds ago",
@@ -47,27 +54,31 @@ export default {
             "seconds": "Seconds"
         },
         "photo": {
-            "title": "Add photos",
+            "title": "📷Photos",
         },
         "toilet_type": {
             "title": "Restroom services provided",
-            "binary": "Gendered restroom",
-            "accessible": "Third/Accessible restroom",
+            "binary": "🚻Gendered restroom",
+            "accessible": "♿Third/Accessible restroom",
             "unisex": "Gender-neutral restroom",
             "undefined": "Other"
         },
         "accessible_extend": {
             "title": "Third restroom-Additional information",
-            "isLocked": "Is it locked?",
-            "isInBinary": "Is it located in a binary gender restroom?"
+            "isLocked": "🔒Is it locked?",
+            "isInBinary": "🚻Is it located in a binary gender restroom?"
+        },
+        "comments": {
+            "title": "✏️Comments"
         },
         "metadata": {
-            "title": "Additional information",
-            "isPrivateProperty": "Is it in a private area?",
-            "isFree":"Is it free to use？",
-            "hasHook": "Is there a clothes hook?",
-            "hasMirror": "Is there a mirror?",
-            "recommendation_title": "Recommendation Score"
+            "title": "ℹ️Additional information",
+            "isFree": "🆓Is it free to use？",
+            "isPrivateProperty": "🏨Is it in a private area?",
+            "hasHook": "👚Is there a clothes hook?",
+            "hasMirror": "🪞Is there a mirror?",
+            "hasDryer": "🌀Is there a dryer？",
+            "recommendation_title": "⭐Recommendation Score"
         }
     }
 };

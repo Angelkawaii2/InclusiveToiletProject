@@ -14,7 +14,7 @@ const timestamp = storeToRefs(data).timestamp
 
 const gpsStatus = useCurrentGpsStatus()
 
-let timer: number | null;
+let timer: number;
 
 const getGpsLocation = () => {
   console.log("acquiring gps...")
@@ -25,7 +25,6 @@ const getGpsLocation = () => {
   }
   if (timer) {
     clearInterval(timer)
-    timer = null
   }
 
   navigator.geolocation.getCurrentPosition((position) => {
@@ -44,6 +43,10 @@ const getGpsLocation = () => {
     gpsStatus.deltaSec = 0
     // 成功获取位置后开始计时
     timer = setInterval(() => {
+      if (gpsStatus.deltaSec == -1) {
+        clearInterval(timer)
+        return
+      }
       gpsStatus.deltaSec = Math.round((new Date().getTime() - gpsStatus.gpsTimestamp) / 1000);
     }, 1000); // 每秒递增
 
@@ -106,7 +109,8 @@ onUnmounted(() => {
         <template #append>{{ $t('ui.gps.location.meter') }}</template>
       </el-input>
       <br>
-      <el-text>
+      <el-text type="danger" v-show="gpsStatus.deltaSec==-1">{{ $t('ui.gps.acquire.gps_no_data') }}</el-text>
+      <el-text v-show="gpsStatus.deltaSec!==-1">
         {{ $t('ui.gps.location.delta') }}: {{ gpsStatus.deltaSec }} {{ $t('ui.time.seconds') }}
       </el-text>
 

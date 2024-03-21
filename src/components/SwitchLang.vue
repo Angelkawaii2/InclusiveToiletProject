@@ -18,7 +18,7 @@ const availableLang = {
     avail: true
   },
   "zh-nyaa": {
-    name: "中文-猫娘",
+    name: "简体中文-猫娘",
     avail: true
   },
   "zh-tw": {
