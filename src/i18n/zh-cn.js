@@ -41,6 +41,9 @@ export default {
                 "low_accuracy": "⚠️精度不足"
             }
         },
+        "map": {
+            "title": "🗺️地图"
+        },
         "time": {
             "title": "🕘️开放时间",
             "create": "创建",

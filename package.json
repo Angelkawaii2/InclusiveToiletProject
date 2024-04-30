@@ -1,6 +1,6 @@
 {
   "name": "inclusive_toilet_project",
-  "version": "v0.3.0.20240321-dev.1",
+  "version": "v0.3.0.20240430-dev.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,15 +10,18 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "element-plus": "^2.5.5",
+    "element-plus": "^2.7.2",
+    "ol": "^9.1.0",
     "pinia": "^2.1.7",
-    "vue": "^3.4",
-    "vue-i18n": "^9.9.1",
-    "vue-router": "^4.3.0"
+    "vue": "^3.4.26",
+    "vue-i18n": "^9.13.1",
+    "vue-router": "^4.3.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.3",
-    "vite": "^5.0.11",
-    "vite-plugin-pwa": "^0.18.0"
+    "@types/ol": "^7.0.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vite-plugin-pwa": "^0.20.0"
   }
 }

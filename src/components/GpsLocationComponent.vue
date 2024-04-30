@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onUnmounted} from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
 import {useI18n} from "vue-i18n";
 import {storeToRefs} from "pinia";
 import {useCurrentData} from "@/stores/currentData"
@@ -10,7 +10,8 @@ const {t} = useI18n();
 
 const data = useCurrentData()
 const gpsData = storeToRefs(data).gpsCoord
-const timestamp = storeToRefs(data).timestamp
+const gpsBtn = ref<HTMLElement | null>(null);
+
 
 const gpsStatus = useCurrentGpsStatus()
 
@@ -50,14 +51,20 @@ const getGpsLocation = () => {
       gpsStatus.deltaSec = Math.round((new Date().getTime() - gpsStatus.gpsTimestamp) / 1000);
     }, 1000); // 每秒递增
 
-    gpsStatus.isAcquiring = false
+    setTimeout(() => {
+      gpsStatus.isAcquiring = false;
+      //gpsBtn.value?.blur()
+    }, 1000); // 至少保留一秒 true 状态
   }, () => {
     alert(t('ui.gps.check_permission'))
     gpsStatus.isAcquiring = false
   });
 
 };
-
+// 可以添加一个 onMounted 钩子来测试 DOM 引用
+onMounted(() => {
+  console.log('gpsBtn is:', gpsBtn.value); // 查看是否正确获取 DOM
+});
 
 onUnmounted(() => {
   if (timer) {
@@ -72,13 +79,12 @@ onUnmounted(() => {
     <template #header>
       <div class="card-header">
         <h3> {{ $t("ui.gps.title") }}</h3>
-        <el-button size="large" type="primary" @click="getGpsLocation" v-show=!gpsStatus.isAcquiring>{{
-            $t('ui.gps.location.access_gps_location_btn')
-          }}
-        </el-button>
-        <el-button size="large" disabled v-show="gpsStatus.isAcquiring">{{
-            $t('ui.gps.location.acquiring_gps_location_btn')
-          }}
+        <el-button
+            size="large"
+            type="primary"
+            :disabled="gpsStatus.isAcquiring"
+            @click="getGpsLocation">
+          {{ gpsStatus.isAcquiring ? $t('ui.gps.location.acquiring_gps_location_btn') : $t('ui.gps.location.access_gps_location_btn') }}
         </el-button>
       </div>
       <div>

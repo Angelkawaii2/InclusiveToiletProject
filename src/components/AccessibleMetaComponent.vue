@@ -14,7 +14,7 @@ const toiletMeta = storeToRefs(data).toiletMetadata
     <template #header>
       <h3>{{ $t("ui.accessible_extend.title") }}</h3>
     </template>
-
+    <!--    todo 这里用undefined的话element plus会报错-->
     <div class="selector">
       <h4>{{ $t("ui.accessible_extend.isLocked") }}</h4>
       <el-radio-group v-model="toiletMeta.accessible.isLocked">

@@ -11,6 +11,7 @@ import CommentComponent from "@/components/CommentComponent.vue";
 import DebugJsonComponent from "@/components/debug/DebugJsonComponent.vue";
 import {useCurrentData} from "@/stores/currentData.js";
 import {ref} from "vue";
+import MapComponent from "@/components/MapComponent.vue";
 
 const data = useCurrentData()
 let DEBUG = ref(localStorage.getItem("isDebug") === "true" || false); // 这里使用了===来判断是否是字符串"true"，并且使用了.value来访问ref的值
@@ -25,6 +26,8 @@ const isAccessbleSelected = (): boolean => {
 </script>
 
 <template>
+
+  <MapComponent class="card"/>
 
   <!--part 2 gps-->
   <el-row :gutter="10">

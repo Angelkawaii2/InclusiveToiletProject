@@ -1,6 +1,8 @@
-import {defineStore} from "pinia";
+/// <reference path="./currentData.d.ts" />
 
-interface GpsCoord {
+import {defineStore} from "pinia";
+//import {DataState} from "./currentData"
+export interface GpsCoord {
     lat?: number;
     lon?: number;
     alt?: number;
@@ -8,37 +10,37 @@ interface GpsCoord {
     type: string;
 }
 
-interface Accessible {
+export interface Accessible {
     isInBinary?: boolean;
     isLocked?: boolean;
 }
 
-interface Extra {
+export interface Extra {
     hasHook?: boolean;
     isFree?: boolean;
     hasDryer?: boolean;
     hasMirror?: boolean;
 }
 
-interface Score {
+export interface Score {
     recommendation: number;
 }
 
-interface ToiletMetadata {
+export interface ToiletMetadata {
     isPrivate: boolean;
     accessible: Accessible;
     extra: Extra;
     score: Score;
 }
 
-interface Time {
+export interface Time {
     unknown: boolean;
     allDay: boolean;
     startTime: string;
     endTime: string;
 }
 
-interface DataState {
+export interface DataState {
     DEBUG: {
         build_date: string | undefined;
         app_version: string | undefined;
@@ -81,8 +83,8 @@ function initData(): DataState {
         version: VITE_DATA_VERSION,
         timestamp: 0,
         gpsCoord: {
-            lat: undefined,
-            lon: undefined,
+            lat: null,
+            lon: null,
             alt: undefined,
             accuracy: undefined,
             type: "wgs84"
@@ -91,8 +93,8 @@ function initData(): DataState {
         toiletMetadata: {
             isPrivate: false,
             accessible: {
-                isInBinary: undefined,
-                isLocked: undefined,
+                isInBinary: null,
+                isLocked: null,
             },
             extra: {
                 hasHook: undefined,

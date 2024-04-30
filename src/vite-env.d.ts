@@ -1,3 +1,4 @@
+// vite-env.d.ts
 /// <reference types="vite/client" />
 interface ImportMetaEnv {
     VITE_APP_VERSION: string;
