@@ -75,6 +75,7 @@ export default {
         },
         "comments": {
             "title": "✏️备注",
+            "name": "名称",
             "tags": {
                 "goodEnvironment": "🤗环境好",
                 "poorEnvironment": "🤮环境差",

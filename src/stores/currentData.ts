@@ -1,6 +1,7 @@
 /// <reference path="./currentData.d.ts" />
 
 import {defineStore} from "pinia";
+
 //import {DataState} from "./currentData"
 export interface GpsCoord {
     lat?: number;
@@ -45,6 +46,7 @@ export interface DataState {
         build_date: string | undefined;
         app_version: string | undefined;
     };
+    name: string | undefined;
     version: string | undefined;
     timestamp: number;
     gpsCoord: GpsCoord;
@@ -81,6 +83,7 @@ function initData(): DataState {
             app_version: VITE_APP_VERSION //todo 先硬编码之后再修
         },
         version: VITE_DATA_VERSION,
+        name: undefined,
         timestamp: 0,
         gpsCoord: {
             lat: null,

@@ -6,7 +6,7 @@ import {useI18n} from "vue-i18n";
 const {t} = useI18n();
 const data = useCurrentData()
 const comment = storeToRefs(data).comments
-
+const name = storeToRefs(data).name
 
 //todo 要做i18n，或者用tag的方式实现？ 20240308
 const cmtMap = [
@@ -44,6 +44,10 @@ const handleBtnClick = (v: string) => {
       </div>
     </template>
 
+    <div>
+      <el-text>{{$t('ui.comments.name')}}</el-text>
+      <el-input type="text" placeholder="name" v-model="name"></el-input>
+    </div>
     <div>
       <el-input type="textarea" rows="3" placeholder="t-comments" v-model="comment"/>
     </div>

@@ -6,7 +6,7 @@ export default {
         ]
     },
     'ui': {
-        "slogan":"Never surrender to anxiety and depression; there will always be a place for us in this world.",
+        "slogan": "Never surrender to anxiety and depression; there will always be a place for us in this world.",
         "general": {
             "select": {
                 "yes": "✅Yes",
@@ -69,7 +69,8 @@ export default {
             "isInBinary": "🚻Is it located in a binary gender restroom?"
         },
         "comments": {
-            "title": "✏️Comments"
+            "title": "✏️Comments",
+            "name": "Name",
         },
         "metadata": {
             "title": "ℹ️Additional information",
