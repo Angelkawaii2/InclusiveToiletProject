@@ -4,6 +4,7 @@ import {useI18n} from "vue-i18n";
 import {storeToRefs} from "pinia";
 import {useCurrentData} from "@/stores/currentData"
 import {useCurrentGpsStatus} from "@/stores/currentGpsStatus"
+import {notifyError} from "@/Utils/Notify";
 
 const {t} = useI18n();
 
@@ -15,7 +16,7 @@ const gpsBtn = ref<HTMLElement | null>(null);
 
 const gpsStatus = useCurrentGpsStatus()
 
-let timer: number;
+let timer;
 
 const getGpsLocation = () => {
   console.log("acquiring gps...")
@@ -53,11 +54,27 @@ const getGpsLocation = () => {
 
     setTimeout(() => {
       gpsStatus.isAcquiring = false;
-      //gpsBtn.value?.blur()
+
     }, 1000); // 至少保留一秒 true 状态
-  }, () => {
-    alert(t('ui.gps.check_permission'))
+  }, (error: GeolocationPositionError) => {
     gpsStatus.isAcquiring = false
+    switch (error.code) {
+      case GeolocationPositionError.PERMISSION_DENIED: {
+        notifyError(t('ui.gps.check_permission'))
+        break;
+      }
+      case GeolocationPositionError.POSITION_UNAVAILABLE: {
+        notifyError("t获取位置信息失败，请移动到开阔位置重试")
+        break
+      }
+      case GeolocationPositionError.TIMEOUT: {
+        notifyError("t获取GPS超时，请移动到开阔位置重试")
+        break
+      }
+    }
+  }, {
+    timeout: 1000//超时10s，避免卡住
+    //todo 改为配置项
   });
 
 };
@@ -84,7 +101,9 @@ onUnmounted(() => {
             type="primary"
             :disabled="gpsStatus.isAcquiring"
             @click="getGpsLocation">
-          {{ gpsStatus.isAcquiring ? $t('ui.gps.location.acquiring_gps_location_btn') : $t('ui.gps.location.access_gps_location_btn') }}
+          {{
+            gpsStatus.isAcquiring ? $t('ui.gps.location.acquiring_gps_location_btn') : $t('ui.gps.location.access_gps_location_btn')
+          }}
         </el-button>
       </div>
       <div>

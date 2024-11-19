@@ -1,4 +1,3 @@
-/// <reference path="./currentData.d.ts" />
 
 import {defineStore} from "pinia";
 

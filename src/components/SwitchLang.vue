@@ -1,9 +1,12 @@
 <script setup>
 import {useI18n} from 'vue-i18n';
 import {watch} from "vue";
+import {useSettingStore} from "@/stores/UseSettingStore.ts";
+import {notifySuccess} from "@/Utils/Notify.ts";
 
 const {locale} = useI18n();
 
+const setting = useSettingStore();
 const availableLang = {
   "zh-cn": {
     name: "简体中文",
@@ -12,24 +15,13 @@ const availableLang = {
   "en-us": {
     name: "English",
     avail: true
-  },
-  "ja-jp": {
-    name: "日本語",
-    avail: true
-  },
-  "zh-nyaa": {
-    name: "简体中文-猫娘",
-    avail: true
-  },
-  "zh-tw": {
-    name: "正體中文-臺灣",
-    avail: true
   }
 }
 
 watch(locale, (newLocale) => {
-  console.log("call watch with " + newLocale)
-  localStorage.setItem('ui.lang', newLocale);
+  setting.updateLanguage(newLocale);
+  notifySuccess(`语言已更改为 ${newLocale}`)
+  console.log(`change language to ${newLocale}`);
 })
 </script>
 

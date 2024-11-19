@@ -1,22 +1,15 @@
 <script setup>
 
 import {useI18n} from "vue-i18n";
-import {useCurrentData} from "@/stores/currentData.ts"
 import {ref} from "vue";
-import {useCurrentGpsStatus} from "@/stores/currentGpsStatus.ts";
+import AddPage from "@/Views/AddPage.vue";
+import Settings from "@/Views/Settings.vue";
 
 const {t} = useI18n()
 
 const v = VITE_APP_VERSION
 const b = VITE_BUILD_TIME
 const isDevVersion = import.meta.env.VITE_IS_DEV_VERSION === "true"
-
-const data = useCurrentData()
-
-const resetData = () => {
-  data.reset()
-  useCurrentGpsStatus().reset()
-}
 
 const font = ref({
   color: 'rgba(0, 0, 0, .08)',
@@ -29,11 +22,11 @@ const watermark = () => {
     return [v]
   }
 }
-
+const tab = ref('create')
 </script>
 
-<template>
 
+<template>
   <div>
     <el-watermark :font="font" :content=watermark()>
       <div class="title">
@@ -46,24 +39,33 @@ const watermark = () => {
         </div>
         <el-text class="no-warp-text slogan">"{{ $t('ui.slogan') }}"</el-text>
         <el-text v-if="isDevVersion" type="danger">当前分支为 Dev 测试版本</el-text>
-        <el-text size="small">Language:</el-text>
-        <switch-lang class="language-selector"/>
         <hr>
-        <el-button type="danger" @click="resetData()">{{ $t("ui.general.resetAll") }}</el-button>
       </div>
-
 
       <el-backtop :right="40" :bottom="100"/>
 
 
-      <router-view></router-view>
+      <el-tabs v-model=tab type="card">
+        <el-tab-pane label="创建" name="create">
+          <add-page></add-page>
+        </el-tab-pane>
+
+        <el-tab-pane disabled label="查询" name="search">
+
+        </el-tab-pane>
+
+        <el-tab-pane label="设置" name="settings">
+          <Settings></Settings>
+        </el-tab-pane>
+
+      </el-tabs>
+
     </el-watermark>
   </div>
 
 </template>
 
 <style scoped>
-
 
 .title {
   display: flex;
@@ -76,13 +78,6 @@ const watermark = () => {
   margin-bottom: 10px;
 }
 
-.language-selector {
-  width: 200px;
-  min-width: 100px;
-  max-width: 800px;
-  //width: auto;
-}
-
 .main-title-text {
   font-size: calc(16px + 2vw);
   white-space: nowrap;
@@ -92,9 +87,11 @@ const watermark = () => {
   width: 100%;
   font-size: 3vw; /* 根据视口宽度动态调整字体大小 */
 }
-.slogan{
+
+.slogan {
   font-style: italic;
 }
+
 @media (min-width: 350px) {
   .no-warp-text {
     font-size: 12px;

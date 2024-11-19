@@ -9,26 +9,38 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 
 import zh from '@/i18n/zh-cn.js'
 import en from '@/i18n/en-us.js'
-import jp from '@/i18n/ja-jp.js'
-import zh_nyaa from '@/i18n/zh-nyaa.js'
-import zh_tw from '@/i18n/zh-tw.js'
-
 import SwitchLang from "@/components/SwitchLang.vue";
 import {registerSW} from "virtual:pwa-register";
 import {createPinia} from "pinia";
-import AddPage from "@/components/pages/AddPage.vue";
+import AddPage from "@/Views/AddPage.vue";
+import TestPage from "@/components/TabComponent.vue";
+import {useSettingStore} from "@/stores/UseSettingStore.ts";
+
+
+const app = createApp(App)
+app.use(ElementPlus)
+
+
+const pinia = createPinia()
+app.use(pinia)
+
 
 registerSW({immediate: true})
 
+const settings = useSettingStore()
+
 const i18n = createI18n({
     legacy: false,
-    locale: localStorage.getItem("ui.lang") || 'zh-cn',
+    locale: settings.language,
     fallbackLocale: 'zh-cn',
-    messages: {"zh-cn": zh, "en-us": en, "ja-jp": jp, "zh-nyaa": zh_nyaa, "zh-tw": zh_tw}
+    messages: {"zh-cn": zh, "en-us": en}
 })
 
+app.use(i18n)
+
 const routes = [
-    {path: '/', component: AddPage}
+    {path: '/', component: AddPage},
+    {path: '/test', component: TestPage},
 ]
 
 const router = createRouter(
@@ -38,12 +50,8 @@ const router = createRouter(
     }
 )
 
-const pinia = createPinia()
 
-createApp(App)
-    .component("switch-lang", SwitchLang)
-    .use(i18n)
-    .use(ElementPlus)
-    .use(pinia)
+app.component("switch-lang", SwitchLang)
     .use(router)
     .mount('#app')
+
