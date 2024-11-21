@@ -4,6 +4,7 @@ import {useI18n} from "vue-i18n";
 import {ref} from "vue";
 import AddPage from "@/Views/AddPage.vue";
 import Settings from "@/Views/Settings.vue";
+import LookupPage from "@/Views/LookupPage.vue";
 
 const {t} = useI18n()
 
@@ -27,7 +28,7 @@ const tab = ref('create')
 
 
 <template>
-  <div>
+  <div class="max-w-7xl mx-auto ">
     <el-watermark :font="font" :content=watermark()>
       <div class="title">
         <div>
@@ -37,7 +38,7 @@ const tab = ref('create')
             {{ v }} | Build: {{ b }}
           </el-link>
         </div>
-        <el-text class="no-warp-text slogan">"{{ $t('ui.slogan') }}"</el-text>
+        <el-text class="no-warp-text italic">"{{ $t('ui.slogan') }}"</el-text>
         <el-text v-if="isDevVersion" type="danger">当前分支为 Dev 测试版本</el-text>
         <hr>
       </div>
@@ -50,8 +51,8 @@ const tab = ref('create')
           <add-page></add-page>
         </el-tab-pane>
 
-        <el-tab-pane disabled label="查询" name="search">
-
+        <el-tab-pane label="查询" name="search">
+          <lookup-page/>
         </el-tab-pane>
 
         <el-tab-pane label="设置" name="settings">
@@ -88,9 +89,6 @@ const tab = ref('create')
   font-size: 3vw; /* 根据视口宽度动态调整字体大小 */
 }
 
-.slogan {
-  font-style: italic;
-}
 
 @media (min-width: 350px) {
   .no-warp-text {

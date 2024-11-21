@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {useCurrentData} from "@/stores/currentData"
-import {storeToRefs} from "pinia";
+import {StoreGeneric, storeToRefs} from "pinia";
+import {inject} from "vue";
 
-const data = useCurrentData()
+const data = inject("currentData") as StoreGeneric;
 const time = data.time
 </script>
 

@@ -5,6 +5,7 @@ export const useSettingStore = defineStore('global.settings', {
     state: () => ({
         isDebug: localStorage.getItem(SETTINGS_KEYS.IS_DEBUG) === 'true',
         language: localStorage.getItem(SETTINGS_KEYS.LANGUAGE) || 'zh-cn',
+        test: false,
     }),
     actions: {
         updateSettings(k, v) {

@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import {onMounted, ref, watch} from 'vue';
+import {inject, onMounted, ref, watch} from 'vue';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import {fromLonLat} from 'ol/proj';
-import {useCurrentData} from "@/stores/currentData"
 import VectorLayer from "ol/layer/Vector.js";
 import VectorSource from "ol/source/Vector.js";
 import {Feature} from "ol";
 import {Circle as CircleGeometry, Geometry, Point} from 'ol/geom';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
-import {storeToRefs} from "pinia";
+import {StoreGeneric, storeToRefs} from "pinia";
+
+const data = inject("currentData") as StoreGeneric;
+//这里是解构赋值吗？
+const gpsCoord = (storeToRefs(data)).loc
 
 
 // 使用 ref 创建一个 DOM 元素引用
@@ -92,8 +95,6 @@ onMounted(() => {
   }
 });
 
-const data = useCurrentData()
-const {gpsCoord} = storeToRefs(data)
 
 watch(gpsCoord, (coords, _) => {
   console.log("watch坐标变更" + gpsCoord.toString())

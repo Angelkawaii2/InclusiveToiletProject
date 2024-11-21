@@ -1,6 +1,6 @@
 {
   "name": "inclusive_toilet_project",
-  "version": "v0.4.0.20241119",
+  "version": "v0.5.0.20241121",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,6 +20,9 @@
   "devDependencies": {
     "@types/ol": "^7.0.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
     "typescript": "^5.4.5",
     "vite": "5.4.6",
     "vite-plugin-pwa": "^0.20.0"

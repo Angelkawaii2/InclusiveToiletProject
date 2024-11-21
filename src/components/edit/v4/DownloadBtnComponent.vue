@@ -1,0 +1,53 @@
+<script setup lang="ts">
+import {computed, inject} from "vue";
+import {StoreGeneric} from "pinia";
+
+const data = inject("currentData") as StoreGeneric
+const gpsStatus = data.gpsCoord
+
+function downloadData() {
+  const blob = new Blob([JSON.stringify(data.$state, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = data.timestamp + '.json';
+  link.click();
+
+  // 释放URL对象
+  URL.revokeObjectURL(url);
+}
+
+const isGPSDataAvailable = computed(() => {
+  const requiredField = ['lat', 'lon']
+  return data.loc != null && requiredField.every((f) => data.loc.hasOwnProperty(f) && data.loc[f] !== undefined);
+})
+
+</script>
+
+<template>
+  <div>
+
+    <!--    <el-button size="large" type="danger" disabled v-show="data.timestamp===0||data.gpsCoord.lon==null">-->
+    <!--      {{ $t("ui.gps.acquire.gps_no_data") }}-->
+    <!--    </el-button>-->
+
+    <el-button size="large" type="success" @click="downloadData"
+               :disabled="!isGPSDataAvailable">
+      {{ $t("ui.general.save") }}
+
+    </el-button>
+
+    <!--    <el-button size="large" type="warning" @click="downloadData"-->
+    <!--               v-show="data.loc.lon!=null ">-->
+    <!--      {{ $t("ui.general.save") }} - {{ $t("ui.gps.acquire.gps_expired") }}-->
+    <!--    </el-button>-->
+
+
+  </div>
+
+</template>
+
+<style scoped>
+
+</style>

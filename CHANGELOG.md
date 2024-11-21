@@ -86,7 +86,7 @@ v0.2.0-dev1 变更 (20240301)
 1. 解耦 GPSLocation 组件
 2. 测试 同时部署多个分支到 GitHub Pages 以避免变更影响到 release 版本
 3. 添加 DEBUG节点到data数据中，存储项目编译时间和app版本供未来可能的升级使用
-4. 修复 data.toiletMetadata.score.recommendation 节点更新错误的问题
+4. 修复 data.properties.score.recommendation 节点更新错误的问题
 
 已知问题
 

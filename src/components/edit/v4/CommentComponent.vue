@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {useCurrentData} from "@/stores/currentData";
-import {storeToRefs} from "pinia";
+import {StoreGeneric, storeToRefs} from "pinia";
 import {useI18n} from "vue-i18n";
+import {inject} from "vue";
 
 const {t} = useI18n();
-const data = useCurrentData()
+const data = inject("currentData") as StoreGeneric;
 const comment = storeToRefs(data).comments
 const name = storeToRefs(data).name
 
@@ -45,7 +45,7 @@ const handleBtnClick = (v: string) => {
     </template>
 
     <div>
-      <el-text>{{$t('ui.comments.name')}}</el-text>
+      <el-text>{{ $t('ui.comments.name') }}</el-text>
       <el-input type="text" placeholder="name" v-model="name"></el-input>
     </div>
     <div>

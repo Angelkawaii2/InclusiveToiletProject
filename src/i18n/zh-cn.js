@@ -1,11 +1,15 @@
 export default {
     "metadata": {
-        "lastUpdate": "2024-03-21",
+        "lastUpdate": "2024-11-21",
         "translators": [
             'Jiean Ru'
         ]
     },
     'ui': {
+        "debug": {
+            "app_version": "App版本号",
+            "build_date": "构建时间",
+        },
         "slogan": "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
         "general": {
             "select": {
@@ -18,6 +22,13 @@ export default {
         },
         "title": "包容性卫生间项目-数据采集工具",
         "unsupported_browser": "您当前使用的浏览器不支持获取GPS位置信息，请更换浏览器后重试。",
+        "basicinfo": {
+            "title": "基本信息",
+            "version": "数据版本号",
+            "name": "卫生间名称",
+            "isDisabled": "卫生间无法使用",
+            "lastupdateat": "最后更新于"
+        },
         "gps": {
             "title": "🛰️位置信息",
             "check_permission": "获取GPS坐标失败，请检查是否授予位置信息权限。",
@@ -68,10 +79,12 @@ export default {
             "unisex": "无性别卫生间",
             "undefined": "其他"
         },
-        "accessible_extend": {
-            "title": "第三卫生间-附加信息",
-            "isLocked": "🔒是否被锁上？",
-            "isInBinary": "🚻是否位于男女卫生间内？"
+        "accessible": {
+            "metadata": {
+                "title": "无障碍卫生间-附加信息",
+                "islocked": "🔒是否被锁上？",
+                "comments": "备注"
+            }
         },
         "comments": {
             "title": "✏️备注",
@@ -89,12 +102,13 @@ export default {
         },
         "metadata": {
             "title": "ℹ️额外信息",
-            "isFree": "🆓是否免费？",
+            "isFree": "🆓免费？",
             "isPrivateProperty": "🏨是否位于私家区域（例如单位、公司内部）？",
-            "hasHook": "👚有无挂衣钩？",
-            "hasMirror": "🪞有无镜子？",
-            "hasDryer": "🌀有无吹风机？",
-            "recommendation_title": "⭐推荐程度"
+            "hasHook": "👚有挂衣钩？",
+            "hasAccessibilityFeature": "🧑‍🦽‍➡️有无障碍设施？",
+            "hasShower": "🚿有淋浴？",
+            "hasMirror": "🪞有镜子？",
+            "hasDryer": "🌀有吹风机？",
         }
     }
 };

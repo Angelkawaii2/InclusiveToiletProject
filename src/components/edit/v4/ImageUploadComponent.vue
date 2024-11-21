@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
 import {Plus} from "@element-plus/icons-vue";
-import {ref} from "vue";
+import {inject, ref} from "vue";
 import {useCurrentData} from "@/stores/currentData"
-import {storeToRefs} from "pinia";
+import {StoreGeneric, storeToRefs} from "pinia";
 
-const data = useCurrentData()
+const data = inject("currentData") as StoreGeneric
 
-const img = storeToRefs(data).img
+const img = data.img
 
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
