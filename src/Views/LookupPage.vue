@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import MapComponent from "@/components/edit/v5/MapComponent.vue";
 import {ref} from "vue";
@@ -30,7 +30,7 @@ function readFiles(fs) {
 
 
         bathroomList.value.push(jsonData);
-        mapComponent.value.addPointToMap(jsonData.loc.lon,jsonData.loc.lat)
+        mapComponent.value.addPointToMap(jsonData.loc.lon, jsonData.loc.lat)
 
         //console.log('File content:', jsonData); // 输出读取的JSON内容
       } catch (err) {
@@ -58,21 +58,21 @@ function readFiles(fs) {
     <map-component ref="mapComponent"></map-component>
 
 
-    <el-button type="primary" class="">初始化DB</el-button>
-    <el-button type="primary" class="">导入数据</el-button>
-    <input type="file"
+    <el-button class="" type="primary">初始化DB</el-button>
+    <el-button class="" type="primary">导入数据</el-button>
+    <input ref="fileInput"
            accept=".json"
-           ref="fileInput"
            multiple
+           type="file"
            @change="handleFiles"/>
 
-    <el-button type="primary" @click="processFiles" class="">处理数据</el-button>
+    <el-button class="" type="primary" @click="processFiles">处理数据</el-button>
 
 
     <div>
       <template v-for="(item,idx) in bathroomList">
         <div>
-          <div> id:${{idx}} ${{item.name}} </div>
+          <div> id:${{ idx }} ${{ item.name }}</div>
         </div>
       </template>
     </div>

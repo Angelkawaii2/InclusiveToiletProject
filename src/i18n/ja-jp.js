@@ -6,7 +6,7 @@ export default {
         ]
     },
     'ui': {
-        "slogan":"不安やうつには決して屈せず、この世界には確かに私たちの居場所が存在する。",
+        "slogan": "不安やうつには決して屈せず、この世界には確かに私たちの居場所が存在する。",
         "general": {
             "select": {
                 "yes": "⭕はい",
@@ -74,7 +74,7 @@ export default {
         },
         "metadata": {
             "title": "ℹ️追加の情報",
-            "isFree":"🆓無料で利用できますか？",
+            "isFree": "🆓無料で利用できますか？",
             "isPrivateProperty": "🏨私有地内にありますか（例：ビル、企業内など）？",
             "hasHook": "👚コート掛けはありますか？",
             "hasMirror": "🪞鏡はありますか？",

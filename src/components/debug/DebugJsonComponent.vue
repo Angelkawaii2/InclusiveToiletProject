@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {useCurrentData} from "@/stores/currentData";
 import {computed} from "vue";
@@ -16,9 +16,9 @@ const renderedJsonData = computed(() => {
   <el-input
       v-model=renderedJsonData
       :autosize="{ minRows: 2 }"
-      type="textarea"
-      show-word-limit
       readonly
+      show-word-limit
+      type="textarea"
   />
 
 </template>

@@ -1,11 +1,13 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {inject, ref} from "vue";
 import {useCurrentData} from "@/stores/currentData";
 import {useSettingStore} from "@/stores/UseSettingStore";
+import {useI18n} from "vue-i18n";
 
 const data = inject<ReturnType<typeof useCurrentData>>("currentData");
 const comments = data.comments;
 const settings = useSettingStore()
+const {t} = useI18n()
 
 const comment = ref("")
 const debug = ref(false);
@@ -24,7 +26,7 @@ const addComment = () => {
 <template>
   <el-card>
     <template #header>
-      <h3>{{ $t('ui.comments.title') }}</h3>
+      <h3>{{ t('ui.comments.title') }}</h3>
       <div v-if="settings.isDebug">
         <el-text>debug</el-text>
         <el-switch v-model="debug"></el-switch>
@@ -39,7 +41,7 @@ const addComment = () => {
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-lg font-semibold text-gray-800">{{ x.author }}</h3>
-            <p class="text-sm text-gray-500" v-if="debug">UID: {{ x.authorUID }}</p>
+            <p v-if="debug" class="text-sm text-gray-500">UID: {{ x.authorUID }}</p>
           </div>
           <div class="flex items-center space-x-1">
             <!-- Display Star Ratings -->
@@ -69,16 +71,16 @@ const addComment = () => {
         <!-- 评论框 -->
         <textarea
             v-model="comment"
-            placeholder="请输入您的评论..."
             class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="请输入您的评论..."
             rows="4"
         ></textarea>
 
         <!-- 发送按钮 -->
         <button
-            @click="addComment()"
             :disabled="!comment.trim()"
             class="mt-4 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            @click="addComment()"
         >
           发送
         </button>

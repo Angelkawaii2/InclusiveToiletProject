@@ -1,9 +1,10 @@
-<script setup lang="ts">
-import {StoreGeneric} from "pinia";
-import {computed, inject, reactive} from "vue";
+<script lang="ts" setup>
+import {computed, inject} from "vue";
 import {useCurrentData} from "@/stores/currentData";
+import {useI18n} from "vue-i18n";
 
 const data = inject<ReturnType<typeof useCurrentData>>("currentData");
+const {t} = useI18n()
 
 function initTime() {
   console.log(isTimeAvailable.value)
@@ -27,9 +28,9 @@ const isTimeAvailable = computed(() => {
   <el-card>
     <template #header>
       <div class="card-header">
-        <h3>{{ $t('ui.time.title') }}</h3>
+        <h3>{{ t('ui.time.title') }}</h3>
         <el-button size="large" @click="initTime()">
-          {{ !isTimeAvailable ? $t("ui.time.create") : $t("ui.time.remove") }}
+          {{ !isTimeAvailable ? t("ui.time.create") : t("ui.time.remove") }}
         </el-button>
       </div>
     </template>
@@ -38,26 +39,26 @@ const isTimeAvailable = computed(() => {
     <div v-if="isTimeAvailable">
       <el-switch
           v-model="data.time.allDay"
+          :active-text="t('ui.time.is24Hour.true')"
+          :inactive-text="t('ui.time.is24Hour.false')"
           class="mb-2"
-          :active-text="$t('ui.time.is24Hour.true')"
-          :inactive-text="$t('ui.time.is24Hour.false')"
       />
       <!--        时间选择器-->
       <div v-show="!data.time.allDay">
         <el-time-select
-            size="large"
             v-model="data.time.openAt"
+            end="24:00"
+            size="large"
             start="00:00"
             step="00:30"
-            end="24:00"
         />
 
         <el-time-select
-            size="large"
             v-model="data.time.closeAt"
+            end="24:00"
+            size="large"
             start="00:00"
             step="00:30"
-            end="24:00"
         />
       </div>
     </div>

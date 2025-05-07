@@ -1,9 +1,11 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useCurrentData} from "@/stores/currentData"
 import {storeToRefs} from "pinia";
+import {useI18n} from "vue-i18n";
 
 const data = useCurrentData()
 const toiletMeta = storeToRefs(data).toiletMetadata
+const {t} = useI18n()
 
 </script>
 
@@ -12,24 +14,24 @@ const toiletMeta = storeToRefs(data).toiletMetadata
   <!--    第三卫生间拓展-->
   <el-card>
     <template #header>
-      <h3>{{ $t("ui.accessible_extend.title") }}</h3>
+      <h3>{{ t("ui.accessible_extend.title") }}</h3>
     </template>
     <!--    todo 这里用undefined的话element plus会报错-->
     <div class="selector">
-      <h4>{{ $t("ui.accessible_extend.isLocked") }}</h4>
+      <h4>{{ t("ui.accessible_extend.isLocked") }}</h4>
       <el-radio-group v-model="toiletMeta.accessible.isLocked">
-        <el-radio :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
-        <el-radio :value=false>{{ $t("ui.general.select.no") }}</el-radio>
-        <el-radio :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+        <el-radio :value=true>{{ t("ui.general.select.yes") }}</el-radio>
+        <el-radio :value=false>{{ t("ui.general.select.no") }}</el-radio>
+        <el-radio :value=undefined>{{ t("ui.general.select.unknown") }}</el-radio>
       </el-radio-group>
     </div>
 
     <div class="selector">
-      <h4>{{ $t("ui.accessible_extend.isInBinary") }}</h4>
+      <h4>{{ t("ui.accessible_extend.isInBinary") }}</h4>
       <el-radio-group v-model="toiletMeta.accessible.isInBinary">
-        <el-radio :value=true>{{ $t("ui.general.select.yes") }}</el-radio>
-        <el-radio :value=false>{{ $t("ui.general.select.no") }}</el-radio>
-        <el-radio :value=undefined>{{ $t("ui.general.select.unknown") }}</el-radio>
+        <el-radio :value=true>{{ t("ui.general.select.yes") }}</el-radio>
+        <el-radio :value=false>{{ t("ui.general.select.no") }}</el-radio>
+        <el-radio :value=undefined>{{ t("ui.general.select.unknown") }}</el-radio>
       </el-radio-group>
     </div>
 

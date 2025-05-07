@@ -1,9 +1,11 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, inject} from "vue";
 import {StoreGeneric} from "pinia";
+import {useI18n} from "vue-i18n";
 
 const data = inject("currentData") as StoreGeneric
 const gpsStatus = data.gpsCoord
+const {t} = useI18n()
 
 function downloadData() {
   const blob = new Blob([JSON.stringify(data.$state, null, 2)], {type: 'application/json'});
@@ -32,15 +34,15 @@ const isGPSDataAvailable = computed(() => {
     <!--      {{ $t("ui.gps.acquire.gps_no_data") }}-->
     <!--    </el-button>-->
 
-    <el-button size="large" type="success" @click="downloadData"
-               :disabled="!isGPSDataAvailable">
-      {{ $t("ui.general.save") }}
+    <el-button :disabled="!isGPSDataAvailable" size="large" type="success"
+               @click="downloadData">
+      {{ t("ui.general.save") }}
 
     </el-button>
 
     <!--    <el-button size="large" type="warning" @click="downloadData"-->
     <!--               v-show="data.loc.lon!=null ">-->
-    <!--      {{ $t("ui.general.save") }} - {{ $t("ui.gps.acquire.gps_expired") }}-->
+    <!--      {{ t("ui.general.save") }} - {{ t("ui.gps.acquire.gps_expired") }}-->
     <!--    </el-button>-->
 
 

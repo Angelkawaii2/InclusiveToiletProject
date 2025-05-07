@@ -1,9 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {Plus} from "@element-plus/icons-vue";
 import {inject, ref} from "vue";
-import {useCurrentData} from "@/stores/currentData"
-import {StoreGeneric, storeToRefs} from "pinia";
+import {StoreGeneric} from "pinia";
 
 const data = inject("currentData") as StoreGeneric
 
@@ -72,15 +71,15 @@ const beforeUpload = async (uploadFile) => {
   <el-card>
     <template #header>
       <div class="card-header">
-        <h3>{{ $t('ui.photo.title') }}</h3>
+        <h3>{{ t('ui.photo.title') }}</h3>
       </div>
     </template>
     <el-upload
         v-model:file-list="img"
-        list-type="picture-card"
+        :before-upload="beforeUpload"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
-        :before-upload="beforeUpload"
+        list-type="picture-card"
     >
       <el-icon>
         <Plus/>
@@ -88,7 +87,7 @@ const beforeUpload = async (uploadFile) => {
     </el-upload>
 
     <el-dialog v-model="dialogVisible">
-      <img w-full :src="dialogImageUrl" alt="Preview Image"/>
+      <img :src="dialogImageUrl" alt="Preview Image" w-full/>
     </el-dialog>
   </el-card>
 </template>

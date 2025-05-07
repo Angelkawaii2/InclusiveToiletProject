@@ -1,7 +1,7 @@
 export interface Loc {
     lat: number;
     lon: number;
-    alt?: number ;
+    alt?: number;
     accuracy: number;
     type: string;
 }

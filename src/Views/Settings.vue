@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed} from "vue";
 import {SETTINGS_KEYS, useSettingStore} from "@/stores/UseSettingStore";
 import {notifySuccess} from "@/Utils/Notify";
@@ -31,20 +31,20 @@ const isDebug = computed({
       <template v-if="isDebug">
 
         <el-text class="label">速记模式</el-text>
-        <el-switch disabled v-model="setting.test" size="large"></el-switch>
+        <el-switch v-model="setting.test" disabled size="large"></el-switch>
 
         <el-text class="label">自动刷新GPS</el-text>
-        <el-switch disabled v-model="setting.test" size="large"></el-switch>
+        <el-switch v-model="setting.test" disabled size="large"></el-switch>
 
         <el-text class="label">自动更新 LastUpdateAt 字段</el-text>
-        <el-switch disabled v-model="setting.test" size="large"></el-switch>
+        <el-switch v-model="setting.test" disabled size="large"></el-switch>
 
         <el-text class="label">⚠️允许修改内部数据</el-text>
-        <el-switch disabled v-model="setting.test" size="large"></el-switch>
+        <el-switch v-model="setting.test" disabled size="large"></el-switch>
 
 
         <el-text class="label">启用评论签名</el-text>
-        <el-switch disabled v-model="setting.test" size="large"></el-switch>
+        <el-switch v-model="setting.test" disabled size="large"></el-switch>
 
         <el-text class="label">用户名</el-text>
         <el-input disabled size="large"></el-input>

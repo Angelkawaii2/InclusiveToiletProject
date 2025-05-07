@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {StoreGeneric, storeToRefs} from "pinia";
 import {useI18n} from "vue-i18n";
 import {inject} from "vue";
@@ -40,20 +40,20 @@ const handleBtnClick = (v: string) => {
   <el-card>
     <template #header>
       <div class="card-header">
-        <h3>{{ $t('ui.comments.title') }}</h3>
+        <h3>{{ t('ui.comments.title') }}</h3>
       </div>
     </template>
 
     <div>
-      <el-text>{{ $t('ui.comments.name') }}</el-text>
-      <el-input type="text" placeholder="name" v-model="name"></el-input>
+      <el-text>{{ t('ui.comments.name') }}</el-text>
+      <el-input v-model="name" placeholder="name" type="text"></el-input>
     </div>
     <div>
-      <el-input type="textarea" rows="3" placeholder="t-comments" v-model="comment"/>
+      <el-input v-model="comment" placeholder="t-comments" rows="3" type="textarea"/>
     </div>
     <div>
-      <el-button size="large" class="btn" :type="ifContainsInComment(k)?'primary':''" @click=handleBtnClick(k)
-                 v-for="k in cmtMap">{{ k }}
+      <el-button v-for="k in cmtMap" :type="ifContainsInComment(k)?'primary':''" class="btn" size="large"
+                 @click=handleBtnClick(k)>{{ k }}
       </el-button>
     </div>
   </el-card>

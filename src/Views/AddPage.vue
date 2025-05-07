@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import DownloadBtnComponent from "@/components/edit/v5/DownloadBtnComponent.vue";
 import GpsLocationComponent from "@/components/edit/v5/GpsLocationComponent.vue";
@@ -14,9 +14,11 @@ import CommentComponent from "@/components/edit/v5/CommentComponent.vue";
 import ImageUploadComponent from "@/components/edit/v5/ImageUploadComponent.vue";
 import TimeSelectorComponent from "@/components/edit/v5/TimeSelectorComponent.vue";
 import AccessibleMetadataComponent from "@/components/edit/v5/AccessibleMetadataComponent.vue";
+import {useI18n} from "vue-i18n";
 
 const data = useCurrentData()
 const settings = useSettingStore();
+const {t} = useI18n()
 
 provide("currentData", data)
 
@@ -55,7 +57,7 @@ const comp = computed(() => {
 
     <div class="flex justify-evenly items-stretch">
       <span class="">
-        <el-button type="danger" @click="resetData()">{{ $t("ui.general.resetAll") }}</el-button>
+        <el-button type="danger" @click="resetData()">{{ t("ui.general.resetAll") }}</el-button>
       </span>
       <span>
         <download-btn-component/>
@@ -68,7 +70,7 @@ const comp = computed(() => {
 
       <div v-for="item in comp"
            class="row-auto mb-2 transition-transform  hover:scale-105 duration-300 hover:shadow-lg">
-        <component v-show="item.cond" :is="item.comp"/>
+        <component :is="item.comp" v-show="item.cond"/>
       </div>
 
     </div>

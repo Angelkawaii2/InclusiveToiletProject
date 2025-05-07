@@ -1,6 +1,6 @@
 {
   "name": "inclusive_toilet_project",
-  "version": "v0.5.1.20241121",
+  "version": "v0.5.3.20250507",
   "private": true,
   "type": "module",
   "scripts": {
@@ -24,7 +24,7 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.4.5",
-    "vite": "5.4.6",
+    "vite": "6.3.4",
     "vite-plugin-pwa": "^0.20.0"
   }
 }

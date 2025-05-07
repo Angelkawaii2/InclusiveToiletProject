@@ -28,7 +28,7 @@ watch(locale, (newLocale) => {
 <template>
   <div :class="$attrs.class">
     <el-select v-model="locale" size="small">
-      <el-option v-for="(v,k) in availableLang" :key=k :label=v.name :value="k" :disabled=!v.avail></el-option>
+      <el-option v-for="(v,k) in availableLang" :key=k :disabled=!v.avail :label=v.name :value="k"></el-option>
     </el-select>
   </div>
 </template>

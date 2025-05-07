@@ -4,6 +4,7 @@ interface ImportMetaEnv {
     VITE_BUILD_TIME: string;
     VITE_DATA_VERSION: string;
 }
+
 interface ImportMeta {
     readonly env: ImportMetaEnv;
 }

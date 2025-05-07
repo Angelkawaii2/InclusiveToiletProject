@@ -1,7 +1,5 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import AddPage from "@/Views/AddPage.vue";
-import Settings from "@/Views/Settings.vue";
 import {ref} from "vue";
 
 

@@ -29,21 +29,21 @@ const tab = ref('create')
 
 <template>
   <div class="max-w-7xl mx-auto ">
-    <el-watermark :font="font" :content=watermark()>
+    <el-watermark :content=watermark() :font="font">
       <div class="title">
         <div>
-          <h2 class="main-title-text">{{ $t("ui.title") }}</h2>
-          <el-link target="_blank" href="https://github.com/Angelkawaii2/InclusiveToiletProject" type="primary">GitHub
+          <h2 class="main-title-text">{{ t("ui.title") }}</h2>
+          <el-link href="https://github.com/Angelkawaii2/InclusiveToiletProject" target="_blank" type="primary">GitHub
             Project | Version:
             {{ v }} | Build: {{ b }}
           </el-link>
         </div>
-        <el-text class="no-warp-text italic">"{{ $t('ui.slogan') }}"</el-text>
+        <el-text class="no-warp-text italic">"{{ t('ui.slogan') }}"</el-text>
         <el-text v-if="isDevVersion" type="danger">当前分支为 Dev 测试版本</el-text>
         <hr>
       </div>
 
-      <el-backtop :right="40" :bottom="100"/>
+      <el-backtop :bottom="100" :right="40"/>
 
 
       <el-tabs v-model=tab type="card">

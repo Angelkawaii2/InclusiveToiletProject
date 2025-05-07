@@ -40,10 +40,10 @@ function cancel() {
 
 <template>
   <el-dialog
-      title="发现新版本！"
-      :visible.sync="dialogVisible"
-      :show-close="false"
       :modal-append-to-body="false"
+      :show-close="false"
+      :visible.sync="dialogVisible"
+      title="发现新版本！"
   >
     <p>检测到新版本，点击刷新按钮更新。</p>
     <span slot="footer" class="dialog-footer">

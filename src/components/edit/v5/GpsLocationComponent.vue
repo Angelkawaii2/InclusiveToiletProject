@@ -1,9 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {inject, ref} from 'vue';
 import {useI18n} from "vue-i18n";
 import {StoreGeneric, storeToRefs} from "pinia";
 import {notifyError} from "@/Utils/Notify";
-import {Loc} from "@/types/ToiletData-V5";
 
 const {t} = useI18n();
 const data = inject("currentData") as StoreGeneric
@@ -67,14 +66,14 @@ const getGpsLocation = () => {
   <el-card class="">
     <template #header>
       <div class="card-header">
-        <h3> {{ $t("ui.gps.title") }}</h3>
+        <h3> {{ t("ui.gps.title") }}</h3>
         <el-button
             size="large"
             type="primary"
             :disabled="isAcquiring"
             @click="getGpsLocation">
           {{
-            isAcquiring ? $t('ui.gps.location.acquiring_gps_location_btn') : $t('ui.gps.location.access_gps_location_btn')
+            isAcquiring ? t('ui.gps.location.acquiring_gps_location_btn') : t('ui.gps.location.access_gps_location_btn')
           }}
         </el-button>
       </div>

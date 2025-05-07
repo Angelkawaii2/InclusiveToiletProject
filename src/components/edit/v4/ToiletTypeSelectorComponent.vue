@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import {useCurrentData} from "@/stores/currentData"
+<script lang="ts" setup>
 import {StoreGeneric, storeToRefs} from "pinia";
 import {inject} from "vue";
+import {useI18n} from "vue-i18n";
 
 const toiletTypeMap = {
   'ui.toilet_type.binary': 1,
@@ -11,6 +11,7 @@ const toiletTypeMap = {
 }
 
 const data = inject("currentData") as StoreGeneric
+const {t} = useI18n()
 
 const toiletType = storeToRefs(data).toiletType
 
@@ -19,11 +20,11 @@ const toiletType = storeToRefs(data).toiletType
 <template>
   <el-card>
     <template #header>
-      <h3>{{ $t('ui.toilet_type.title') }}</h3>
+      <h3>{{ t('ui.toilet_type.title') }}</h3>
     </template>
     <el-checkbox-group v-model="toiletType">
-      <el-checkbox style="margin: 5px" size="large" border v-for="(v,k) in toiletTypeMap" :key="k" :value="v">
-        {{ $t(k) }}
+      <el-checkbox v-for="(v,k) in toiletTypeMap" :key="k" :value="v" border size="large" style="margin: 5px">
+        {{ t(k) }}
       </el-checkbox>
     </el-checkbox-group>
   </el-card>

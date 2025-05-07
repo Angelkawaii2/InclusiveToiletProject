@@ -80,9 +80,7 @@ function initData(): Bathroom {
             closeAt: "22:00"
         },
         images: [],
-        comments: [
-
-        ]
+        comments: []
     };
 }
 

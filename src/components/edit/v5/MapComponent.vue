@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {inject, onMounted, ref} from 'vue';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -11,8 +11,10 @@ import {Feature} from "ol";
 import {Circle as CircleGeometry, Point} from 'ol/geom';
 import {Fill, Stroke, Style} from 'ol/style';
 import {StoreGeneric} from "pinia";
+import {useI18n} from "vue-i18n";
 
 const data = inject("currentData") as StoreGeneric;
+const {t} = useI18n()
 
 // 使用 ref 创建一个 DOM 元素引用
 const mapElement = ref<HTMLElement | null>(null);
@@ -81,7 +83,7 @@ defineExpose({
   <el-card>
     <template #header>
       <div class="card-header">
-        <h3> {{ $t("ui.map.title") }}</h3>
+        <h3> {{ t("ui.map.title") }}</h3>
       </div>
     </template>
 

@@ -14,6 +14,11 @@
 
 ## 当前分支版本 | App Version
 
+### v0.5.3.20250507 (20241121)
+1. 修复i18n t符号warning
+2. el-radio 增加 label（未完成
+3. 修复.env版本号未更新问题
+
 ### v0.5.2.20250507 (20241121)
 1. 移除pwa包（依赖冲突）
 2. 修复typescript支持（``tsconfig include /types``）

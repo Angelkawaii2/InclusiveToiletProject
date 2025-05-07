@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {inject, onMounted, ref, watch} from 'vue';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -11,10 +11,12 @@ import {Feature} from "ol";
 import {Circle as CircleGeometry, Geometry, Point} from 'ol/geom';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import {StoreGeneric, storeToRefs} from "pinia";
+import {useI18n} from "vue-i18n";
 
 const data = inject("currentData") as StoreGeneric;
 //这里是解构赋值吗？
 const gpsCoord = (storeToRefs(data)).loc
+const {t} = useI18n()
 
 
 // 使用 ref 创建一个 DOM 元素引用
@@ -132,7 +134,7 @@ watch(gpsCoord, (coords, _) => {
   <el-card>
     <template #header>
       <div class="card-header">
-        <h3> {{ $t("ui.map.title") }}</h3>
+        <h3> {{ t("ui.map.title") }}</h3>
       </div>
     </template>
 

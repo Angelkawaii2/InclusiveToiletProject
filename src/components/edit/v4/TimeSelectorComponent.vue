@@ -1,10 +1,11 @@
-<script setup lang="ts">
-import {useCurrentData} from "@/stores/currentData"
-import {StoreGeneric, storeToRefs} from "pinia";
+<script lang="ts" setup>
+import {StoreGeneric} from "pinia";
 import {inject} from "vue";
+import {useI18n} from "vue-i18n";
 
 const data = inject("currentData") as StoreGeneric;
 const time = data.time
+const {t} = useI18n();
 </script>
 
 <template>
@@ -12,9 +13,9 @@ const time = data.time
   <el-card>
     <template #header>
       <div class="card-header">
-        <h3>{{ $t('ui.time.title') }}</h3>
+        <h3>{{ t('ui.time.title') }}</h3>
         <el-button size="large" @click="time.unknown=!time.unknown">
-          {{ time.unknown ? $t("ui.time.create") : $t("ui.time.remove") }}
+          {{ time.unknown ? t("ui.time.create") : t("ui.time.remove") }}
         </el-button>
       </div>
     </template>
@@ -23,26 +24,26 @@ const time = data.time
     <div v-show="!time.unknown">
       <el-switch
           v-model="time.allDay"
+          :active-text="t('ui.time.is24Hour.true')"
+          :inactive-text="t('ui.time.is24Hour.false')"
           class="mb-2"
-          :active-text="$t('ui.time.is24Hour.true')"
-          :inactive-text="$t('ui.time.is24Hour.false')"
       />
       <!--        时间选择器-->
       <div v-show="!time.allDay">
         <el-time-select
-            size="large"
             v-model="time.startTime"
+            end="24:00"
+            size="large"
             start="00:00"
             step="00:30"
-            end="24:00"
         />
 
         <el-time-select
-            size="large"
             v-model="time.endTime"
+            end="24:00"
+            size="large"
             start="00:00"
             step="00:30"
-            end="24:00"
         />
       </div>
     </div>
