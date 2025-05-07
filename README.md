@@ -8,11 +8,17 @@
 
 [//]: # (【稳定版&#40;经过测试&#41;】[➡️ 在线体验&#40;支持PWA&#41;]&#40;https://angelkawaii2.github.io/InclusiveToiletProject/&#41;)
 
-在线访问：【测试版(最新功能预览)】[🛠️ Dev 测试分支](https://angelkawaii2.github.io/InclusiveToiletProject/dev/)
+在线访问：=> [🛠️ Dev 测试分支](https://angelkawaii2.github.io/InclusiveToiletProject/dev/) <=
 
 ---
 
 ## 当前分支版本 | App Version
+
+### v0.5.2.20250507 (20241121)
+1. 移除pwa包（依赖冲突）
+2. 修复typescript支持（``tsconfig include /types``）
+3. 更新三方依赖版本
+4. 更新``en-us``翻译
 
 ### v0.5.1.20241121 (20241121)
 
