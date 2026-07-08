@@ -1,8 +1,16 @@
 <script lang="ts" setup>
 
 import ToiletMap from "@/components/map/ToiletMap.vue";
-import {computed, nextTick, onMounted, ref} from "vue";
-import {normalizeImportedToilets, type ToiletDatasetManifest, type ToiletPlace} from "@/domain/toilet/v6";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
+import {
+  ACCESS_RESTRICTION_OPTIONS,
+  normalizeImportedToilets,
+  TOILET_KIND_OPTIONS,
+  type AccessRestriction,
+  type ToiletDatasetManifest,
+  type ToiletKind,
+  type ToiletPlace
+} from "@/domain/toilet/v6";
 import {Aim, Download, Edit, Location, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
@@ -17,8 +25,16 @@ const loadError = ref("")
 const selectedId = ref("")
 const sortByNearest = ref(false)
 const userLocation = ref<{ lat: number; lon: number } | null>(null)
+const userLocationAccuracy = ref<number | null>(null)
+const isLocating = ref(false)
 const detailVisible = ref(false)
 const detailToilet = ref<ToiletPlace | null>(null)
+const selectedKinds = ref<ToiletKind[]>([])
+const selectedRestrictions = ref<AccessRestriction[]>([])
+const activeFilter = ref<"all" | "active" | "inactive">("all")
+const accessibleFilter = ref<"all" | "yes" | "no" | "unknown">("all")
+const separateStallFilter = ref<"all" | "yes" | "no" | "unknown">("all")
+const lockedFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 
 const mapComponent = ref<InstanceType<typeof ToiletMap> | null>(null)
 
@@ -79,7 +95,7 @@ async function loadStaticMockData() {
 }
 
 function renderPoints() {
-  const points = dataset.toilets
+  const points = filteredBathrooms.value
       .filter((item) => Number.isFinite(item.location?.lon) && Number.isFinite(item.location?.lat))
       .map((item) => ({lon: item.location.lon, lat: item.location.lat}));
   mapComponent.value?.setPoints(points);
@@ -112,24 +128,36 @@ function formatDistance(item: ToiletPlace) {
   return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
 }
 
-function sortNearest() {
+function updateCurrentLocation(sortAfterLocated = false) {
   loadError.value = "";
   if (!navigator.geolocation) {
-    loadError.value = "当前浏览器不支持定位，无法按最近排序。";
+    loadError.value = "当前浏览器不支持定位，无法显示距离。";
     return;
   }
+  isLocating.value = true;
   navigator.geolocation.getCurrentPosition((position) => {
     userLocation.value = {
       lat: position.coords.latitude,
       lon: position.coords.longitude
     };
-    sortByNearest.value = true;
+    userLocationAccuracy.value = Math.round(position.coords.accuracy);
+    if (sortAfterLocated) sortByNearest.value = true;
+    isLocating.value = false;
   }, () => {
     loadError.value = "定位失败，请检查浏览器定位权限后重试。";
+    isLocating.value = false;
   }, {
     timeout: 8000,
     enableHighAccuracy: true
   });
+}
+
+function sortNearest() {
+  if (userLocation.value) {
+    sortByNearest.value = true;
+    return;
+  }
+  updateCurrentLocation(true);
 }
 
 function selectToilet(item: ToiletPlace) {
@@ -165,10 +193,27 @@ function formatAddress(item: ToiletPlace | null) {
   ].filter(Boolean).join(" ") || "地址未知";
 }
 
+function matchesTriState(value: boolean | null | undefined, filter: "all" | "yes" | "no" | "unknown") {
+  if (filter === "all") return true;
+  if (filter === "unknown") return value === null || value === undefined;
+  return filter === "yes" ? value === true : value === false;
+}
+
+function resetFilters() {
+  keyword.value = "";
+  selectedKinds.value = [];
+  selectedRestrictions.value = [];
+  activeFilter.value = "all";
+  accessibleFilter.value = "all";
+  separateStallFilter.value = "all";
+  lockedFilter.value = "all";
+  sortByNearest.value = false;
+}
+
 const filteredBathrooms = computed(() => {
   const q = keyword.value.trim().toLowerCase()
-  const filtered = !q ? dataset.toilets : dataset.toilets.filter((item) => {
-    return [
+  const filtered = dataset.toilets.filter((item) => {
+    const matchesKeyword = !q || [
       item.name,
       item.address?.country,
       item.address?.province,
@@ -179,12 +224,26 @@ const filteredBathrooms = computed(() => {
       item.access.restriction,
       ...(item.kinds || [])
     ].some((value) => value?.toLowerCase().includes(q))
+    const matchesKind = selectedKinds.value.length === 0 || selectedKinds.value.some((kind) => item.kinds.includes(kind));
+    const matchesRestriction = selectedRestrictions.value.length === 0 || selectedRestrictions.value.includes(item.access.restriction);
+    const matchesActive = activeFilter.value === "all" || (activeFilter.value === "active" ? item.isActive : !item.isActive);
+    return matchesKeyword
+        && matchesKind
+        && matchesRestriction
+        && matchesActive
+        && matchesTriState(item.accessibility.hasAccessibleToilet, accessibleFilter.value)
+        && matchesTriState(item.accessibility.isSeparateStall, separateStallFilter.value)
+        && matchesTriState(item.accessibility.isLocked, lockedFilter.value);
   })
   if (!sortByNearest.value || !userLocation.value) return filtered;
   return [...filtered].sort((a, b) => {
     return distanceInMeters(userLocation.value!, a.location) - distanceInMeters(userLocation.value!, b.location);
   });
 })
+
+watch(filteredBathrooms, () => {
+  renderPoints();
+}, {flush: "post"});
 
 onMounted(() => {
   loadStaticMockData();
@@ -225,6 +284,10 @@ onMounted(() => {
             </template>
           </el-input>
           <div class="toolbar-actions">
+            <el-button :loading="isLocating" @click="updateCurrentLocation(false)">
+              <el-icon><Location /></el-icon>
+              获取当前位置
+            </el-button>
             <el-button :type="sortByNearest ? 'primary' : 'default'" @click="sortNearest">
               <el-icon><Location /></el-icon>
               按最近排序
@@ -232,10 +295,64 @@ onMounted(() => {
             <el-button v-if="sortByNearest" @click="sortByNearest = false">
               恢复默认排序
             </el-button>
+            <el-button @click="resetFilters">
+              清空条件
+            </el-button>
+          </div>
+          <div class="filter-panel">
+            <el-form label-position="top">
+              <div class="filter-grid">
+                <el-form-item label="卫生间类型">
+                  <el-select v-model="selectedKinds" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部类型">
+                    <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="进入限制">
+                  <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
+                    <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="记录状态">
+                  <el-select v-model="activeFilter">
+                    <el-option label="全部" value="all"/>
+                    <el-option label="启用" value="active"/>
+                    <el-option label="停用" value="inactive"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="无障碍卫生间">
+                  <el-select v-model="accessibleFilter">
+                    <el-option label="全部" value="all"/>
+                    <el-option label="有" value="yes"/>
+                    <el-option label="无" value="no"/>
+                    <el-option label="未知" value="unknown"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="单独隔间">
+                  <el-select v-model="separateStallFilter">
+                    <el-option label="全部" value="all"/>
+                    <el-option label="是" value="yes"/>
+                    <el-option label="否" value="no"/>
+                    <el-option label="未知" value="unknown"/>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="是否上锁">
+                  <el-select v-model="lockedFilter">
+                    <el-option label="全部" value="all"/>
+                    <el-option label="是" value="yes"/>
+                    <el-option label="否" value="no"/>
+                    <el-option label="未知" value="unknown"/>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </el-form>
           </div>
           <div class="result-meta">
             <span>{{ dataset.dataSourceName }}</span>
             <span>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</span>
+          </div>
+          <div v-if="userLocation" class="location-meta">
+            当前位置：{{ userLocation.lat.toFixed(5) }}, {{ userLocation.lon.toFixed(5) }}
+            <span v-if="userLocationAccuracy">精度约 {{ userLocationAccuracy }} m</span>
           </div>
           <el-alert v-if="loadError" :title="loadError" show-icon type="error"/>
           <el-alert v-if="isLoading" title="正在加载静态模拟数据" show-icon type="info"/>
@@ -313,6 +430,10 @@ onMounted(() => {
             <div>
               <dt>定位精度</dt>
               <dd>{{ detailToilet.location.accuracy ? `${detailToilet.location.accuracy} m` : "未知" }}</dd>
+            </div>
+            <div>
+              <dt>离当前位置</dt>
+              <dd>{{ userLocation ? formatDistance(detailToilet) : "未获取当前位置" }}</dd>
             </div>
           </dl>
         </section>
@@ -441,10 +562,35 @@ onMounted(() => {
   gap: 8px;
 }
 
+.filter-panel {
+  padding: 12px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface-soft);
+}
+
+.filter-panel :deep(.el-form-item) {
+  margin-bottom: 0;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .result-meta {
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  color: var(--itp-text-muted);
+  font-size: 13px;
+}
+
+.location-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   color: var(--itp-text-muted);
   font-size: 13px;
 }
@@ -507,6 +653,11 @@ onMounted(() => {
   margin: 0;
   color: var(--itp-text-muted);
   font-size: 13px;
+}
+
+.distance {
+  color: var(--itp-primary);
+  font-weight: 700;
 }
 
 .result-footer,
@@ -593,6 +744,18 @@ onMounted(() => {
 @media (max-width: 920px) {
   .search-layout {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-footer,
+  .item-actions {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
