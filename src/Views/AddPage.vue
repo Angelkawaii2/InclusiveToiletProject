@@ -4,6 +4,7 @@ import {Download, Location, RefreshLeft} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import {AccessRestriction, ToiletKind, ToiletPlace} from "@/types/ToiletData-V6";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
+import {DATA_VERSION} from "@/constants/projectVersions";
 
 defineProps<{
   embedded?: boolean
@@ -98,7 +99,7 @@ function buildRecord(): ToiletPlace {
   const id = `local-${now}-${Math.random().toString(36).slice(2, 8)}`;
   return {
     id,
-    version: "20260708",
+    version: DATA_VERSION,
     name: draft.name.trim() || "未命名卫生间",
     isActive: draft.isActive,
     location: {

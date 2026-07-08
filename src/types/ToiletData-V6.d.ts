@@ -1,4 +1,6 @@
-export type DataVersion = "20260708";
+import type {DATA_VERSION} from "@/constants/projectVersions";
+
+export type DataVersion = typeof DATA_VERSION;
 
 export type Unknownable<T> = T | null;
 

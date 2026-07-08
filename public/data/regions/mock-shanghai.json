@@ -1,7 +1,7 @@
 [
   {
     "id": "mock-shanghai-001",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区大学包容卫生间 1",
     "aliases": [
       "大学1号卫生间"
@@ -58,21 +58,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1783525114964
+        "createdAt": 1783526154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-001"
     },
     "audit": {
-      "createdAt": 1783525114964,
-      "updatedAt": 1783525114964,
+      "createdAt": 1783526154865,
+      "updatedAt": 1783526154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-002",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区图书馆包容卫生间 2",
     "aliases": [
       "图书馆2号卫生间"
@@ -140,21 +140,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1783438714964
+        "createdAt": 1783439754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-002"
     },
     "audit": {
-      "createdAt": 1783438714964,
-      "updatedAt": 1783521514964,
+      "createdAt": 1783439754865,
+      "updatedAt": 1783522554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-003",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区公园包容卫生间 3",
     "aliases": [
       "公园3号卫生间"
@@ -222,21 +222,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1783352314964
+        "createdAt": 1783353354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-003"
     },
     "audit": {
-      "createdAt": 1783352314964,
-      "updatedAt": 1783517914964,
+      "createdAt": 1783353354865,
+      "updatedAt": 1783518954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-004",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区大学包容卫生间 4",
     "aliases": [
       "大学4号卫生间"
@@ -306,21 +306,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1783265914964
+        "createdAt": 1783266954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-004"
     },
     "audit": {
-      "createdAt": 1783265914964,
-      "updatedAt": 1783514314964,
+      "createdAt": 1783266954865,
+      "updatedAt": 1783515354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-005",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区公园包容卫生间 5",
     "aliases": [
       "公园5号卫生间"
@@ -388,21 +388,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1783179514964
+        "createdAt": 1783180554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-005"
     },
     "audit": {
-      "createdAt": 1783179514964,
-      "updatedAt": 1783510714964,
+      "createdAt": 1783180554865,
+      "updatedAt": 1783511754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-006",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区医院包容卫生间 6",
     "aliases": [
       "医院6号卫生间"
@@ -470,21 +470,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1783093114964
+        "createdAt": 1783094154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-006"
     },
     "audit": {
-      "createdAt": 1783093114964,
-      "updatedAt": 1783507114964,
+      "createdAt": 1783094154865,
+      "updatedAt": 1783508154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-007",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区地铁站包容卫生间 7",
     "aliases": [
       "地铁站7号卫生间"
@@ -554,21 +554,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1783006714964
+        "createdAt": 1783007754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-007"
     },
     "audit": {
-      "createdAt": 1783006714964,
-      "updatedAt": 1783503514964,
+      "createdAt": 1783007754865,
+      "updatedAt": 1783504554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-008",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区办公楼包容卫生间 8",
     "aliases": [
       "办公楼8号卫生间"
@@ -621,21 +621,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782920314964
+        "createdAt": 1782921354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-008"
     },
     "audit": {
-      "createdAt": 1782920314964,
-      "updatedAt": 1783499914964,
+      "createdAt": 1782921354865,
+      "updatedAt": 1783500954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-009",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区医院包容卫生间 9",
     "aliases": [
       "医院9号卫生间"
@@ -704,21 +704,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782833914964
+        "createdAt": 1782834954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-009"
     },
     "audit": {
-      "createdAt": 1782833914964,
-      "updatedAt": 1783496314964,
+      "createdAt": 1782834954865,
+      "updatedAt": 1783497354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-010",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区游客中心包容卫生间 10",
     "aliases": [
       "游客中心10号卫生间"
@@ -788,21 +788,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782747514964
+        "createdAt": 1782748554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-010"
     },
     "audit": {
-      "createdAt": 1782747514964,
-      "updatedAt": 1783492714964,
+      "createdAt": 1782748554865,
+      "updatedAt": 1783493754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-011",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区游客中心包容卫生间 11",
     "aliases": [
       "游客中心11号卫生间"
@@ -870,21 +870,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782661114964
+        "createdAt": 1782662154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-011"
     },
     "audit": {
-      "createdAt": 1782661114964,
-      "updatedAt": 1783489114964,
+      "createdAt": 1782662154865,
+      "updatedAt": 1783490154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-012",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区医院包容卫生间 12",
     "aliases": [
       "医院12号卫生间"
@@ -952,21 +952,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782574714964
+        "createdAt": 1782575754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-012"
     },
     "audit": {
-      "createdAt": 1782574714964,
-      "updatedAt": 1783485514964,
+      "createdAt": 1782575754865,
+      "updatedAt": 1783486554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-013",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区商场包容卫生间 13",
     "aliases": [
       "商场13号卫生间"
@@ -1037,21 +1037,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782488314964
+        "createdAt": 1782489354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-013"
     },
     "audit": {
-      "createdAt": 1782488314964,
-      "updatedAt": 1783481914964,
+      "createdAt": 1782489354865,
+      "updatedAt": 1783482954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-014",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区图书馆包容卫生间 14",
     "aliases": [
       "图书馆14号卫生间"
@@ -1119,21 +1119,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782401914964
+        "createdAt": 1782402954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-014"
     },
     "audit": {
-      "createdAt": 1782401914964,
-      "updatedAt": 1783478314964,
+      "createdAt": 1782402954865,
+      "updatedAt": 1783479354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-015",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区办公楼包容卫生间 15",
     "aliases": [
       "办公楼15号卫生间"
@@ -1186,21 +1186,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782315514964
+        "createdAt": 1782316554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-015"
     },
     "audit": {
-      "createdAt": 1782315514964,
-      "updatedAt": 1783474714964,
+      "createdAt": 1782316554865,
+      "updatedAt": 1783475754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-016",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区文化馆包容卫生间 16",
     "aliases": [
       "文化馆16号卫生间"
@@ -1270,21 +1270,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782229114964
+        "createdAt": 1782230154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-016"
     },
     "audit": {
-      "createdAt": 1782229114964,
-      "updatedAt": 1783471114964,
+      "createdAt": 1782230154865,
+      "updatedAt": 1783472154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-017",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区文化馆包容卫生间 17",
     "aliases": [
       "文化馆17号卫生间"
@@ -1353,21 +1353,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782142714964
+        "createdAt": 1782143754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-017"
     },
     "audit": {
-      "createdAt": 1782142714964,
-      "updatedAt": 1783467514964,
+      "createdAt": 1782143754865,
+      "updatedAt": 1783468554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-018",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区地铁站包容卫生间 18",
     "aliases": [
       "地铁站18号卫生间"
@@ -1435,21 +1435,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1782056314964
+        "createdAt": 1782057354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-018"
     },
     "audit": {
-      "createdAt": 1782056314964,
-      "updatedAt": 1783463914964,
+      "createdAt": 1782057354865,
+      "updatedAt": 1783464954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-019",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区地铁站包容卫生间 19",
     "aliases": [
       "地铁站19号卫生间"
@@ -1519,21 +1519,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781969914964
+        "createdAt": 1781970954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-019"
     },
     "audit": {
-      "createdAt": 1781969914964,
-      "updatedAt": 1783460314964,
+      "createdAt": 1781970954865,
+      "updatedAt": 1783461354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-020",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区地铁站包容卫生间 20",
     "aliases": [
       "地铁站20号卫生间"
@@ -1601,21 +1601,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781883514964
+        "createdAt": 1781884554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-020"
     },
     "audit": {
-      "createdAt": 1781883514964,
-      "updatedAt": 1783456714964,
+      "createdAt": 1781884554865,
+      "updatedAt": 1783457754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-021",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区社区中心包容卫生间 21",
     "aliases": [
       "社区中心21号卫生间"
@@ -1683,21 +1683,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781797114964
+        "createdAt": 1781798154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-021"
     },
     "audit": {
-      "createdAt": 1781797114964,
-      "updatedAt": 1783453114964,
+      "createdAt": 1781798154865,
+      "updatedAt": 1783454154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-022",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区文化馆包容卫生间 22",
     "aliases": [
       "文化馆22号卫生间"
@@ -1752,21 +1752,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781710714964
+        "createdAt": 1781711754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-022"
     },
     "audit": {
-      "createdAt": 1781710714964,
-      "updatedAt": 1783449514964,
+      "createdAt": 1781711754865,
+      "updatedAt": 1783450554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-023",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区图书馆包容卫生间 23",
     "aliases": [
       "图书馆23号卫生间"
@@ -1834,21 +1834,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781624314964
+        "createdAt": 1781625354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-023"
     },
     "audit": {
-      "createdAt": 1781624314964,
-      "updatedAt": 1783445914964,
+      "createdAt": 1781625354865,
+      "updatedAt": 1783446954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-024",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区游客中心包容卫生间 24",
     "aliases": [
       "游客中心24号卫生间"
@@ -1916,21 +1916,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781537914964
+        "createdAt": 1781538954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-024"
     },
     "audit": {
-      "createdAt": 1781537914964,
-      "updatedAt": 1783442314964,
+      "createdAt": 1781538954865,
+      "updatedAt": 1783443354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-025",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区社区中心包容卫生间 25",
     "aliases": [
       "社区中心25号卫生间"
@@ -2002,21 +2002,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781451514964
+        "createdAt": 1781452554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-025"
     },
     "audit": {
-      "createdAt": 1781451514964,
-      "updatedAt": 1783438714964,
+      "createdAt": 1781452554865,
+      "updatedAt": 1783439754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-026",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区文化馆包容卫生间 26",
     "aliases": [
       "文化馆26号卫生间"
@@ -2084,21 +2084,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781365114964
+        "createdAt": 1781366154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-026"
     },
     "audit": {
-      "createdAt": 1781365114964,
-      "updatedAt": 1783435114964,
+      "createdAt": 1781366154865,
+      "updatedAt": 1783436154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-027",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区文化馆包容卫生间 27",
     "aliases": [
       "文化馆27号卫生间"
@@ -2166,21 +2166,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781278714964
+        "createdAt": 1781279754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-027"
     },
     "audit": {
-      "createdAt": 1781278714964,
-      "updatedAt": 1783431514964,
+      "createdAt": 1781279754865,
+      "updatedAt": 1783432554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-028",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区游客中心包容卫生间 28",
     "aliases": [
       "游客中心28号卫生间"
@@ -2250,21 +2250,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781192314964
+        "createdAt": 1781193354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-028"
     },
     "audit": {
-      "createdAt": 1781192314964,
-      "updatedAt": 1783427914964,
+      "createdAt": 1781193354865,
+      "updatedAt": 1783428954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-029",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区办公楼包容卫生间 29",
     "aliases": [
       "办公楼29号卫生间"
@@ -2317,21 +2317,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781105914964
+        "createdAt": 1781106954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-029"
     },
     "audit": {
-      "createdAt": 1781105914964,
-      "updatedAt": 1783424314964,
+      "createdAt": 1781106954865,
+      "updatedAt": 1783425354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-030",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区图书馆包容卫生间 30",
     "aliases": [
       "图书馆30号卫生间"
@@ -2399,21 +2399,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1781019514964
+        "createdAt": 1781020554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-030"
     },
     "audit": {
-      "createdAt": 1781019514964,
-      "updatedAt": 1783420714964,
+      "createdAt": 1781020554865,
+      "updatedAt": 1783421754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-031",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区医院包容卫生间 31",
     "aliases": [
       "医院31号卫生间"
@@ -2483,21 +2483,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780933114964
+        "createdAt": 1780934154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-031"
     },
     "audit": {
-      "createdAt": 1780933114964,
-      "updatedAt": 1783417114964,
+      "createdAt": 1780934154865,
+      "updatedAt": 1783418154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-032",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区图书馆包容卫生间 32",
     "aliases": [
       "图书馆32号卫生间"
@@ -2565,21 +2565,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780846714964
+        "createdAt": 1780847754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-032"
     },
     "audit": {
-      "createdAt": 1780846714964,
-      "updatedAt": 1783413514964,
+      "createdAt": 1780847754865,
+      "updatedAt": 1783414554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-033",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区公园包容卫生间 33",
     "aliases": [
       "公园33号卫生间"
@@ -2648,21 +2648,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780760314964
+        "createdAt": 1780761354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-033"
     },
     "audit": {
-      "createdAt": 1780760314964,
-      "updatedAt": 1783409914964,
+      "createdAt": 1780761354865,
+      "updatedAt": 1783410954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-034",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区地铁站包容卫生间 34",
     "aliases": [
       "地铁站34号卫生间"
@@ -2732,21 +2732,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780673914964
+        "createdAt": 1780674954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-034"
     },
     "audit": {
-      "createdAt": 1780673914964,
-      "updatedAt": 1783406314964,
+      "createdAt": 1780674954865,
+      "updatedAt": 1783407354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-035",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区社区中心包容卫生间 35",
     "aliases": [
       "社区中心35号卫生间"
@@ -2814,21 +2814,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780587514964
+        "createdAt": 1780588554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-035"
     },
     "audit": {
-      "createdAt": 1780587514964,
-      "updatedAt": 1783402714964,
+      "createdAt": 1780588554865,
+      "updatedAt": 1783403754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-036",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区文化馆包容卫生间 36",
     "aliases": [
       "文化馆36号卫生间"
@@ -2881,21 +2881,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780501114964
+        "createdAt": 1780502154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-036"
     },
     "audit": {
-      "createdAt": 1780501114964,
-      "updatedAt": 1783399114964,
+      "createdAt": 1780502154865,
+      "updatedAt": 1783400154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-037",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区游客中心包容卫生间 37",
     "aliases": [
       "游客中心37号卫生间"
@@ -2966,21 +2966,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780414714964
+        "createdAt": 1780415754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-037"
     },
     "audit": {
-      "createdAt": 1780414714964,
-      "updatedAt": 1783395514964,
+      "createdAt": 1780415754865,
+      "updatedAt": 1783396554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-038",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区医院包容卫生间 38",
     "aliases": [
       "医院38号卫生间"
@@ -3048,21 +3048,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780328314964
+        "createdAt": 1780329354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-038"
     },
     "audit": {
-      "createdAt": 1780328314964,
-      "updatedAt": 1783391914964,
+      "createdAt": 1780329354865,
+      "updatedAt": 1783392954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-039",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区文化馆包容卫生间 39",
     "aliases": [
       "文化馆39号卫生间"
@@ -3130,21 +3130,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780241914964
+        "createdAt": 1780242954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-039"
     },
     "audit": {
-      "createdAt": 1780241914964,
-      "updatedAt": 1783388314964,
+      "createdAt": 1780242954865,
+      "updatedAt": 1783389354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-040",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区文化馆包容卫生间 40",
     "aliases": [
       "文化馆40号卫生间"
@@ -3214,21 +3214,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780155514964
+        "createdAt": 1780156554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-040"
     },
     "audit": {
-      "createdAt": 1780155514964,
-      "updatedAt": 1783384714964,
+      "createdAt": 1780156554865,
+      "updatedAt": 1783385754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-041",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区商场包容卫生间 41",
     "aliases": [
       "商场41号卫生间"
@@ -3297,21 +3297,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1780069114964
+        "createdAt": 1780070154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-041"
     },
     "audit": {
-      "createdAt": 1780069114964,
-      "updatedAt": 1783381114964,
+      "createdAt": 1780070154865,
+      "updatedAt": 1783382154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-042",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区文化馆包容卫生间 42",
     "aliases": [
       "文化馆42号卫生间"
@@ -3379,21 +3379,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779982714964
+        "createdAt": 1779983754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-042"
     },
     "audit": {
-      "createdAt": 1779982714964,
-      "updatedAt": 1783377514964,
+      "createdAt": 1779983754865,
+      "updatedAt": 1783378554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-043",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区大学包容卫生间 43",
     "aliases": [
       "大学43号卫生间"
@@ -3448,21 +3448,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779896314964
+        "createdAt": 1779897354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-043"
     },
     "audit": {
-      "createdAt": 1779896314964,
-      "updatedAt": 1783373914964,
+      "createdAt": 1779897354865,
+      "updatedAt": 1783374954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-044",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区医院包容卫生间 44",
     "aliases": [
       "医院44号卫生间"
@@ -3530,21 +3530,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779809914964
+        "createdAt": 1779810954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-044"
     },
     "audit": {
-      "createdAt": 1779809914964,
-      "updatedAt": 1783370314964,
+      "createdAt": 1779810954865,
+      "updatedAt": 1783371354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-045",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区公园包容卫生间 45",
     "aliases": [
       "公园45号卫生间"
@@ -3612,21 +3612,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779723514964
+        "createdAt": 1779724554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-045"
     },
     "audit": {
-      "createdAt": 1779723514964,
-      "updatedAt": 1783366714964,
+      "createdAt": 1779724554865,
+      "updatedAt": 1783367754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-046",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区图书馆包容卫生间 46",
     "aliases": [
       "图书馆46号卫生间"
@@ -3696,21 +3696,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779637114964
+        "createdAt": 1779638154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-046"
     },
     "audit": {
-      "createdAt": 1779637114964,
-      "updatedAt": 1783363114964,
+      "createdAt": 1779638154865,
+      "updatedAt": 1783364154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-047",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区大学包容卫生间 47",
     "aliases": [
       "大学47号卫生间"
@@ -3778,21 +3778,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779550714964
+        "createdAt": 1779551754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-047"
     },
     "audit": {
-      "createdAt": 1779550714964,
-      "updatedAt": 1783359514964,
+      "createdAt": 1779551754865,
+      "updatedAt": 1783360554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-048",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区办公楼包容卫生间 48",
     "aliases": [
       "办公楼48号卫生间"
@@ -3860,21 +3860,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779464314964
+        "createdAt": 1779465354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-048"
     },
     "audit": {
-      "createdAt": 1779464314964,
-      "updatedAt": 1783355914964,
+      "createdAt": 1779465354865,
+      "updatedAt": 1783356954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-049",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区大学包容卫生间 49",
     "aliases": [
       "大学49号卫生间"
@@ -3946,21 +3946,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779377914964
+        "createdAt": 1779378954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-049"
     },
     "audit": {
-      "createdAt": 1779377914964,
-      "updatedAt": 1783352314964,
+      "createdAt": 1779378954865,
+      "updatedAt": 1783353354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-050",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区社区中心包容卫生间 50",
     "aliases": [
       "社区中心50号卫生间"
@@ -4013,21 +4013,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779291514964
+        "createdAt": 1779292554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-050"
     },
     "audit": {
-      "createdAt": 1779291514964,
-      "updatedAt": 1783348714964,
+      "createdAt": 1779292554865,
+      "updatedAt": 1783349754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-051",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区大学包容卫生间 51",
     "aliases": [
       "大学51号卫生间"
@@ -4095,21 +4095,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779205114964
+        "createdAt": 1779206154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-051"
     },
     "audit": {
-      "createdAt": 1779205114964,
-      "updatedAt": 1783345114964,
+      "createdAt": 1779206154865,
+      "updatedAt": 1783346154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-052",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区图书馆包容卫生间 52",
     "aliases": [
       "图书馆52号卫生间"
@@ -4179,21 +4179,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779118714964
+        "createdAt": 1779119754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-052"
     },
     "audit": {
-      "createdAt": 1779118714964,
-      "updatedAt": 1783341514964,
+      "createdAt": 1779119754865,
+      "updatedAt": 1783342554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-053",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区办公楼包容卫生间 53",
     "aliases": [
       "办公楼53号卫生间"
@@ -4261,21 +4261,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1779032314964
+        "createdAt": 1779033354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-053"
     },
     "audit": {
-      "createdAt": 1779032314964,
-      "updatedAt": 1783337914964,
+      "createdAt": 1779033354865,
+      "updatedAt": 1783338954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-054",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区公园包容卫生间 54",
     "aliases": [
       "公园54号卫生间"
@@ -4343,21 +4343,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778945914964
+        "createdAt": 1778946954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-054"
     },
     "audit": {
-      "createdAt": 1778945914964,
-      "updatedAt": 1783334314964,
+      "createdAt": 1778946954865,
+      "updatedAt": 1783335354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-055",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区公园包容卫生间 55",
     "aliases": [
       "公园55号卫生间"
@@ -4427,21 +4427,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778859514964
+        "createdAt": 1778860554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-055"
     },
     "audit": {
-      "createdAt": 1778859514964,
-      "updatedAt": 1783330714964,
+      "createdAt": 1778860554865,
+      "updatedAt": 1783331754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-056",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区医院包容卫生间 56",
     "aliases": [
       "医院56号卫生间"
@@ -4509,21 +4509,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778773114964
+        "createdAt": 1778774154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-056"
     },
     "audit": {
-      "createdAt": 1778773114964,
-      "updatedAt": 1783327114964,
+      "createdAt": 1778774154865,
+      "updatedAt": 1783328154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-057",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区商场包容卫生间 57",
     "aliases": [
       "商场57号卫生间"
@@ -4577,21 +4577,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778686714964
+        "createdAt": 1778687754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-057"
     },
     "audit": {
-      "createdAt": 1778686714964,
-      "updatedAt": 1783323514964,
+      "createdAt": 1778687754865,
+      "updatedAt": 1783324554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-058",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区公园包容卫生间 58",
     "aliases": [
       "公园58号卫生间"
@@ -4661,21 +4661,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778600314964
+        "createdAt": 1778601354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-058"
     },
     "audit": {
-      "createdAt": 1778600314964,
-      "updatedAt": 1783319914964,
+      "createdAt": 1778601354865,
+      "updatedAt": 1783320954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-059",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区地铁站包容卫生间 59",
     "aliases": [
       "地铁站59号卫生间"
@@ -4743,21 +4743,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778513914964
+        "createdAt": 1778514954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-059"
     },
     "audit": {
-      "createdAt": 1778513914964,
-      "updatedAt": 1783316314964,
+      "createdAt": 1778514954865,
+      "updatedAt": 1783317354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-060",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区图书馆包容卫生间 60",
     "aliases": [
       "图书馆60号卫生间"
@@ -4825,21 +4825,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778427514964
+        "createdAt": 1778428554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-060"
     },
     "audit": {
-      "createdAt": 1778427514964,
-      "updatedAt": 1783312714964,
+      "createdAt": 1778428554865,
+      "updatedAt": 1783313754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-061",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区公园包容卫生间 61",
     "aliases": [
       "公园61号卫生间"
@@ -4910,21 +4910,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778341114964
+        "createdAt": 1778342154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-061"
     },
     "audit": {
-      "createdAt": 1778341114964,
-      "updatedAt": 1783309114964,
+      "createdAt": 1778342154865,
+      "updatedAt": 1783310154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-062",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区商场包容卫生间 62",
     "aliases": [
       "商场62号卫生间"
@@ -4992,21 +4992,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778254714964
+        "createdAt": 1778255754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-062"
     },
     "audit": {
-      "createdAt": 1778254714964,
-      "updatedAt": 1783305514964,
+      "createdAt": 1778255754865,
+      "updatedAt": 1783306554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-063",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区公园包容卫生间 63",
     "aliases": [
       "公园63号卫生间"
@@ -5074,21 +5074,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778168314964
+        "createdAt": 1778169354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-063"
     },
     "audit": {
-      "createdAt": 1778168314964,
-      "updatedAt": 1783301914964,
+      "createdAt": 1778169354865,
+      "updatedAt": 1783302954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-064",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区游客中心包容卫生间 64",
     "aliases": [
       "游客中心64号卫生间"
@@ -5143,21 +5143,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1778081914964
+        "createdAt": 1778082954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-064"
     },
     "audit": {
-      "createdAt": 1778081914964,
-      "updatedAt": 1783298314964,
+      "createdAt": 1778082954865,
+      "updatedAt": 1783299354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-065",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区大学包容卫生间 65",
     "aliases": [
       "大学65号卫生间"
@@ -5226,21 +5226,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777995514964
+        "createdAt": 1777996554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-065"
     },
     "audit": {
-      "createdAt": 1777995514964,
-      "updatedAt": 1783294714964,
+      "createdAt": 1777996554865,
+      "updatedAt": 1783295754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-066",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区公园包容卫生间 66",
     "aliases": [
       "公园66号卫生间"
@@ -5308,21 +5308,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777909114964
+        "createdAt": 1777910154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-066"
     },
     "audit": {
-      "createdAt": 1777909114964,
-      "updatedAt": 1783291114964,
+      "createdAt": 1777910154865,
+      "updatedAt": 1783292154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-067",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区医院包容卫生间 67",
     "aliases": [
       "医院67号卫生间"
@@ -5392,21 +5392,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777822714964
+        "createdAt": 1777823754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-067"
     },
     "audit": {
-      "createdAt": 1777822714964,
-      "updatedAt": 1783287514964,
+      "createdAt": 1777823754865,
+      "updatedAt": 1783288554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-068",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区文化馆包容卫生间 68",
     "aliases": [
       "文化馆68号卫生间"
@@ -5474,21 +5474,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777736314964
+        "createdAt": 1777737354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-068"
     },
     "audit": {
-      "createdAt": 1777736314964,
-      "updatedAt": 1783283914964,
+      "createdAt": 1777737354865,
+      "updatedAt": 1783284954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-069",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区商场包容卫生间 69",
     "aliases": [
       "商场69号卫生间"
@@ -5556,21 +5556,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777649914964
+        "createdAt": 1777650954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-069"
     },
     "audit": {
-      "createdAt": 1777649914964,
-      "updatedAt": 1783280314964,
+      "createdAt": 1777650954865,
+      "updatedAt": 1783281354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-070",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区社区中心包容卫生间 70",
     "aliases": [
       "社区中心70号卫生间"
@@ -5640,21 +5640,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777563514964
+        "createdAt": 1777564554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-070"
     },
     "audit": {
-      "createdAt": 1777563514964,
-      "updatedAt": 1783276714964,
+      "createdAt": 1777564554865,
+      "updatedAt": 1783277754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-071",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区图书馆包容卫生间 71",
     "aliases": [
       "图书馆71号卫生间"
@@ -5707,21 +5707,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777477114964
+        "createdAt": 1777478154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-071"
     },
     "audit": {
-      "createdAt": 1777477114964,
-      "updatedAt": 1783273114964,
+      "createdAt": 1777478154865,
+      "updatedAt": 1783274154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-072",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区医院包容卫生间 72",
     "aliases": [
       "医院72号卫生间"
@@ -5789,21 +5789,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777390714964
+        "createdAt": 1777391754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-072"
     },
     "audit": {
-      "createdAt": 1777390714964,
-      "updatedAt": 1783269514964,
+      "createdAt": 1777391754865,
+      "updatedAt": 1783270554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-073",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区办公楼包容卫生间 73",
     "aliases": [
       "办公楼73号卫生间"
@@ -5875,21 +5875,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777304314964
+        "createdAt": 1777305354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-073"
     },
     "audit": {
-      "createdAt": 1777304314964,
-      "updatedAt": 1783265914964,
+      "createdAt": 1777305354865,
+      "updatedAt": 1783266954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-074",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区地铁站包容卫生间 74",
     "aliases": [
       "地铁站74号卫生间"
@@ -5957,21 +5957,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777217914964
+        "createdAt": 1777218954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-074"
     },
     "audit": {
-      "createdAt": 1777217914964,
-      "updatedAt": 1783262314964,
+      "createdAt": 1777218954865,
+      "updatedAt": 1783263354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-075",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区公园包容卫生间 75",
     "aliases": [
       "公园75号卫生间"
@@ -6039,21 +6039,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777131514964
+        "createdAt": 1777132554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-075"
     },
     "audit": {
-      "createdAt": 1777131514964,
-      "updatedAt": 1783258714964,
+      "createdAt": 1777132554865,
+      "updatedAt": 1783259754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-076",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区商场包容卫生间 76",
     "aliases": [
       "商场76号卫生间"
@@ -6123,21 +6123,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1777045114964
+        "createdAt": 1777046154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-076"
     },
     "audit": {
-      "createdAt": 1777045114964,
-      "updatedAt": 1783255114964,
+      "createdAt": 1777046154865,
+      "updatedAt": 1783256154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-077",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区办公楼包容卫生间 77",
     "aliases": [
       "办公楼77号卫生间"
@@ -6205,21 +6205,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776958714964
+        "createdAt": 1776959754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-077"
     },
     "audit": {
-      "createdAt": 1776958714964,
-      "updatedAt": 1783251514964,
+      "createdAt": 1776959754865,
+      "updatedAt": 1783252554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-078",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区商场包容卫生间 78",
     "aliases": [
       "商场78号卫生间"
@@ -6272,21 +6272,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776872314964
+        "createdAt": 1776873354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-078"
     },
     "audit": {
-      "createdAt": 1776872314964,
-      "updatedAt": 1783247914964,
+      "createdAt": 1776873354865,
+      "updatedAt": 1783248954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-079",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区办公楼包容卫生间 79",
     "aliases": [
       "办公楼79号卫生间"
@@ -6356,21 +6356,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776785914964
+        "createdAt": 1776786954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-079"
     },
     "audit": {
-      "createdAt": 1776785914964,
-      "updatedAt": 1783244314964,
+      "createdAt": 1776786954865,
+      "updatedAt": 1783245354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-080",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区商场包容卫生间 80",
     "aliases": [
       "商场80号卫生间"
@@ -6438,21 +6438,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776699514964
+        "createdAt": 1776700554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-080"
     },
     "audit": {
-      "createdAt": 1776699514964,
-      "updatedAt": 1783240714964,
+      "createdAt": 1776700554865,
+      "updatedAt": 1783241754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-081",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区商场包容卫生间 81",
     "aliases": [
       "商场81号卫生间"
@@ -6521,21 +6521,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776613114964
+        "createdAt": 1776614154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-081"
     },
     "audit": {
-      "createdAt": 1776613114964,
-      "updatedAt": 1783237114964,
+      "createdAt": 1776614154865,
+      "updatedAt": 1783238154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-082",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区办公楼包容卫生间 82",
     "aliases": [
       "办公楼82号卫生间"
@@ -6605,21 +6605,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776526714964
+        "createdAt": 1776527754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-082"
     },
     "audit": {
-      "createdAt": 1776526714964,
-      "updatedAt": 1783233514964,
+      "createdAt": 1776527754865,
+      "updatedAt": 1783234554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-083",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区社区中心包容卫生间 83",
     "aliases": [
       "社区中心83号卫生间"
@@ -6687,21 +6687,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776440314964
+        "createdAt": 1776441354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-083"
     },
     "audit": {
-      "createdAt": 1776440314964,
-      "updatedAt": 1783229914964,
+      "createdAt": 1776441354865,
+      "updatedAt": 1783230954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-084",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区医院包容卫生间 84",
     "aliases": [
       "医院84号卫生间"
@@ -6769,21 +6769,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776353914964
+        "createdAt": 1776354954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-084"
     },
     "audit": {
-      "createdAt": 1776353914964,
-      "updatedAt": 1783226314964,
+      "createdAt": 1776354954865,
+      "updatedAt": 1783227354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-085",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区社区中心包容卫生间 85",
     "aliases": [
       "社区中心85号卫生间"
@@ -6839,21 +6839,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776267514964
+        "createdAt": 1776268554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-085"
     },
     "audit": {
-      "createdAt": 1776267514964,
-      "updatedAt": 1783222714964,
+      "createdAt": 1776268554865,
+      "updatedAt": 1783223754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-086",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区大学包容卫生间 86",
     "aliases": [
       "大学86号卫生间"
@@ -6921,21 +6921,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776181114964
+        "createdAt": 1776182154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-086"
     },
     "audit": {
-      "createdAt": 1776181114964,
-      "updatedAt": 1783219114964,
+      "createdAt": 1776182154865,
+      "updatedAt": 1783220154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-087",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区医院包容卫生间 87",
     "aliases": [
       "医院87号卫生间"
@@ -7003,21 +7003,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776094714964
+        "createdAt": 1776095754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-087"
     },
     "audit": {
-      "createdAt": 1776094714964,
-      "updatedAt": 1783215514964,
+      "createdAt": 1776095754865,
+      "updatedAt": 1783216554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-088",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区办公楼包容卫生间 88",
     "aliases": [
       "办公楼88号卫生间"
@@ -7087,21 +7087,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1776008314964
+        "createdAt": 1776009354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-088"
     },
     "audit": {
-      "createdAt": 1776008314964,
-      "updatedAt": 1783211914964,
+      "createdAt": 1776009354865,
+      "updatedAt": 1783212954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-089",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区文化馆包容卫生间 89",
     "aliases": [
       "文化馆89号卫生间"
@@ -7170,21 +7170,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775921914964
+        "createdAt": 1775922954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-089"
     },
     "audit": {
-      "createdAt": 1775921914964,
-      "updatedAt": 1783208314964,
+      "createdAt": 1775922954865,
+      "updatedAt": 1783209354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-090",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区办公楼包容卫生间 90",
     "aliases": [
       "办公楼90号卫生间"
@@ -7252,21 +7252,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775835514964
+        "createdAt": 1775836554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-090"
     },
     "audit": {
-      "createdAt": 1775835514964,
-      "updatedAt": 1783204714964,
+      "createdAt": 1775836554865,
+      "updatedAt": 1783205754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-091",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区图书馆包容卫生间 91",
     "aliases": [
       "图书馆91号卫生间"
@@ -7336,21 +7336,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775749114964
+        "createdAt": 1775750154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-091"
     },
     "audit": {
-      "createdAt": 1775749114964,
-      "updatedAt": 1783201114964,
+      "createdAt": 1775750154865,
+      "updatedAt": 1783202154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-092",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区图书馆包容卫生间 92",
     "aliases": [
       "图书馆92号卫生间"
@@ -7403,21 +7403,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775662714964
+        "createdAt": 1775663754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-092"
     },
     "audit": {
-      "createdAt": 1775662714964,
-      "updatedAt": 1783197514964,
+      "createdAt": 1775663754865,
+      "updatedAt": 1783198554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-093",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区大学包容卫生间 93",
     "aliases": [
       "大学93号卫生间"
@@ -7485,21 +7485,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775576314964
+        "createdAt": 1775577354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-093"
     },
     "audit": {
-      "createdAt": 1775576314964,
-      "updatedAt": 1783193914964,
+      "createdAt": 1775577354865,
+      "updatedAt": 1783194954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-094",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区游客中心包容卫生间 94",
     "aliases": [
       "游客中心94号卫生间"
@@ -7569,21 +7569,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775489914964
+        "createdAt": 1775490954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-094"
     },
     "audit": {
-      "createdAt": 1775489914964,
-      "updatedAt": 1783190314964,
+      "createdAt": 1775490954865,
+      "updatedAt": 1783191354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-095",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区图书馆包容卫生间 95",
     "aliases": [
       "图书馆95号卫生间"
@@ -7651,21 +7651,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775403514964
+        "createdAt": 1775404554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-095"
     },
     "audit": {
-      "createdAt": 1775403514964,
-      "updatedAt": 1783186714964,
+      "createdAt": 1775404554865,
+      "updatedAt": 1783187754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-096",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区大学包容卫生间 96",
     "aliases": [
       "大学96号卫生间"
@@ -7733,21 +7733,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775317114964
+        "createdAt": 1775318154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-096"
     },
     "audit": {
-      "createdAt": 1775317114964,
-      "updatedAt": 1783183114964,
+      "createdAt": 1775318154865,
+      "updatedAt": 1783184154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-097",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区文化馆包容卫生间 97",
     "aliases": [
       "文化馆97号卫生间"
@@ -7819,21 +7819,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775230714964
+        "createdAt": 1775231754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-097"
     },
     "audit": {
-      "createdAt": 1775230714964,
-      "updatedAt": 1783179514964,
+      "createdAt": 1775231754865,
+      "updatedAt": 1783180554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-098",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区医院包容卫生间 98",
     "aliases": [
       "医院98号卫生间"
@@ -7901,21 +7901,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775144314964
+        "createdAt": 1775145354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-098"
     },
     "audit": {
-      "createdAt": 1775144314964,
-      "updatedAt": 1783175914964,
+      "createdAt": 1775145354865,
+      "updatedAt": 1783176954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-099",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区商场包容卫生间 99",
     "aliases": [
       "商场99号卫生间"
@@ -7968,21 +7968,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1775057914964
+        "createdAt": 1775058954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-099"
     },
     "audit": {
-      "createdAt": 1775057914964,
-      "updatedAt": 1783172314964,
+      "createdAt": 1775058954865,
+      "updatedAt": 1783173354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-100",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区商场包容卫生间 100",
     "aliases": [
       "商场100号卫生间"
@@ -8052,21 +8052,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774971514964
+        "createdAt": 1774972554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-100"
     },
     "audit": {
-      "createdAt": 1774971514964,
-      "updatedAt": 1783168714964,
+      "createdAt": 1774972554865,
+      "updatedAt": 1783169754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-101",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区公园包容卫生间 101",
     "aliases": [
       "公园101号卫生间"
@@ -8134,21 +8134,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774885114964
+        "createdAt": 1774886154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-101"
     },
     "audit": {
-      "createdAt": 1774885114964,
-      "updatedAt": 1783165114964,
+      "createdAt": 1774886154865,
+      "updatedAt": 1783166154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-102",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区地铁站包容卫生间 102",
     "aliases": [
       "地铁站102号卫生间"
@@ -8216,21 +8216,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774798714964
+        "createdAt": 1774799754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-102"
     },
     "audit": {
-      "createdAt": 1774798714964,
-      "updatedAt": 1783161514964,
+      "createdAt": 1774799754865,
+      "updatedAt": 1783162554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-103",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区大学包容卫生间 103",
     "aliases": [
       "大学103号卫生间"
@@ -8300,21 +8300,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774712314964
+        "createdAt": 1774713354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-103"
     },
     "audit": {
-      "createdAt": 1774712314964,
-      "updatedAt": 1783157914964,
+      "createdAt": 1774713354865,
+      "updatedAt": 1783158954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-104",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区商场包容卫生间 104",
     "aliases": [
       "商场104号卫生间"
@@ -8382,21 +8382,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774625914964
+        "createdAt": 1774626954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-104"
     },
     "audit": {
-      "createdAt": 1774625914964,
-      "updatedAt": 1783154314964,
+      "createdAt": 1774626954865,
+      "updatedAt": 1783155354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-105",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区图书馆包容卫生间 105",
     "aliases": [
       "图书馆105号卫生间"
@@ -8465,21 +8465,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774539514964
+        "createdAt": 1774540554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-105"
     },
     "audit": {
-      "createdAt": 1774539514964,
-      "updatedAt": 1783150714964,
+      "createdAt": 1774540554865,
+      "updatedAt": 1783151754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-106",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区办公楼包容卫生间 106",
     "aliases": [
       "办公楼106号卫生间"
@@ -8534,21 +8534,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774453114964
+        "createdAt": 1774454154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-106"
     },
     "audit": {
-      "createdAt": 1774453114964,
-      "updatedAt": 1783147114964,
+      "createdAt": 1774454154865,
+      "updatedAt": 1783148154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-107",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区公园包容卫生间 107",
     "aliases": [
       "公园107号卫生间"
@@ -8616,21 +8616,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774366714964
+        "createdAt": 1774367754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-107"
     },
     "audit": {
-      "createdAt": 1774366714964,
-      "updatedAt": 1783143514964,
+      "createdAt": 1774367754865,
+      "updatedAt": 1783144554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-108",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区商场包容卫生间 108",
     "aliases": [
       "商场108号卫生间"
@@ -8698,21 +8698,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774280314964
+        "createdAt": 1774281354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-108"
     },
     "audit": {
-      "createdAt": 1774280314964,
-      "updatedAt": 1783139914964,
+      "createdAt": 1774281354865,
+      "updatedAt": 1783140954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-109",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区办公楼包容卫生间 109",
     "aliases": [
       "办公楼109号卫生间"
@@ -8783,21 +8783,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774193914964
+        "createdAt": 1774194954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-109"
     },
     "audit": {
-      "createdAt": 1774193914964,
-      "updatedAt": 1783136314964,
+      "createdAt": 1774194954865,
+      "updatedAt": 1783137354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-110",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区社区中心包容卫生间 110",
     "aliases": [
       "社区中心110号卫生间"
@@ -8865,21 +8865,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774107514964
+        "createdAt": 1774108554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-110"
     },
     "audit": {
-      "createdAt": 1774107514964,
-      "updatedAt": 1783132714964,
+      "createdAt": 1774108554865,
+      "updatedAt": 1783133754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-111",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区图书馆包容卫生间 111",
     "aliases": [
       "图书馆111号卫生间"
@@ -8947,21 +8947,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1774021114964
+        "createdAt": 1774022154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-111"
     },
     "audit": {
-      "createdAt": 1774021114964,
-      "updatedAt": 1783129114964,
+      "createdAt": 1774022154865,
+      "updatedAt": 1783130154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-112",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区公园包容卫生间 112",
     "aliases": [
       "公园112号卫生间"
@@ -9031,21 +9031,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773934714964
+        "createdAt": 1773935754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-112"
     },
     "audit": {
-      "createdAt": 1773934714964,
-      "updatedAt": 1783125514964,
+      "createdAt": 1773935754865,
+      "updatedAt": 1783126554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-113",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区社区中心包容卫生间 113",
     "aliases": [
       "社区中心113号卫生间"
@@ -9099,21 +9099,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773848314964
+        "createdAt": 1773849354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-113"
     },
     "audit": {
-      "createdAt": 1773848314964,
-      "updatedAt": 1783121914964,
+      "createdAt": 1773849354865,
+      "updatedAt": 1783122954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-114",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区地铁站包容卫生间 114",
     "aliases": [
       "地铁站114号卫生间"
@@ -9181,21 +9181,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773761914964
+        "createdAt": 1773762954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-114"
     },
     "audit": {
-      "createdAt": 1773761914964,
-      "updatedAt": 1783118314964,
+      "createdAt": 1773762954865,
+      "updatedAt": 1783119354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-115",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区办公楼包容卫生间 115",
     "aliases": [
       "办公楼115号卫生间"
@@ -9265,21 +9265,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773675514964
+        "createdAt": 1773676554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-115"
     },
     "audit": {
-      "createdAt": 1773675514964,
-      "updatedAt": 1783114714964,
+      "createdAt": 1773676554865,
+      "updatedAt": 1783115754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-116",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区商场包容卫生间 116",
     "aliases": [
       "商场116号卫生间"
@@ -9347,21 +9347,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773589114964
+        "createdAt": 1773590154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-116"
     },
     "audit": {
-      "createdAt": 1773589114964,
-      "updatedAt": 1783111114964,
+      "createdAt": 1773590154865,
+      "updatedAt": 1783112154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-117",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区地铁站包容卫生间 117",
     "aliases": [
       "地铁站117号卫生间"
@@ -9429,21 +9429,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773502714964
+        "createdAt": 1773503754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-117"
     },
     "audit": {
-      "createdAt": 1773502714964,
-      "updatedAt": 1783107514964,
+      "createdAt": 1773503754865,
+      "updatedAt": 1783108554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-118",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区图书馆包容卫生间 118",
     "aliases": [
       "图书馆118号卫生间"
@@ -9513,21 +9513,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773416314964
+        "createdAt": 1773417354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-118"
     },
     "audit": {
-      "createdAt": 1773416314964,
-      "updatedAt": 1783103914964,
+      "createdAt": 1773417354865,
+      "updatedAt": 1783104954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-119",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区社区中心包容卫生间 119",
     "aliases": [
       "社区中心119号卫生间"
@@ -9595,21 +9595,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773329914964
+        "createdAt": 1773330954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-119"
     },
     "audit": {
-      "createdAt": 1773329914964,
-      "updatedAt": 1783100314964,
+      "createdAt": 1773330954865,
+      "updatedAt": 1783101354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-120",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区地铁站包容卫生间 120",
     "aliases": [
       "地铁站120号卫生间"
@@ -9662,21 +9662,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773243514964
+        "createdAt": 1773244554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-120"
     },
     "audit": {
-      "createdAt": 1773243514964,
-      "updatedAt": 1783096714964,
+      "createdAt": 1773244554865,
+      "updatedAt": 1783097754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-121",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区地铁站包容卫生间 121",
     "aliases": [
       "地铁站121号卫生间"
@@ -9748,21 +9748,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773157114964
+        "createdAt": 1773158154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-121"
     },
     "audit": {
-      "createdAt": 1773157114964,
-      "updatedAt": 1783093114964,
+      "createdAt": 1773158154865,
+      "updatedAt": 1783094154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-122",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区医院包容卫生间 122",
     "aliases": [
       "医院122号卫生间"
@@ -9830,21 +9830,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1773070714964
+        "createdAt": 1773071754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-122"
     },
     "audit": {
-      "createdAt": 1773070714964,
-      "updatedAt": 1783089514964,
+      "createdAt": 1773071754865,
+      "updatedAt": 1783090554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-123",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区文化馆包容卫生间 123",
     "aliases": [
       "文化馆123号卫生间"
@@ -9912,21 +9912,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772984314964
+        "createdAt": 1772985354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-123"
     },
     "audit": {
-      "createdAt": 1772984314964,
-      "updatedAt": 1783085914964,
+      "createdAt": 1772985354865,
+      "updatedAt": 1783086954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-124",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区医院包容卫生间 124",
     "aliases": [
       "医院124号卫生间"
@@ -9996,21 +9996,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772897914964
+        "createdAt": 1772898954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-124"
     },
     "audit": {
-      "createdAt": 1772897914964,
-      "updatedAt": 1783082314964,
+      "createdAt": 1772898954865,
+      "updatedAt": 1783083354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-125",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区大学包容卫生间 125",
     "aliases": [
       "大学125号卫生间"
@@ -10078,21 +10078,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772811514964
+        "createdAt": 1772812554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-125"
     },
     "audit": {
-      "createdAt": 1772811514964,
-      "updatedAt": 1783078714964,
+      "createdAt": 1772812554865,
+      "updatedAt": 1783079754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-126",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区公园包容卫生间 126",
     "aliases": [
       "公园126号卫生间"
@@ -10160,21 +10160,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772725114964
+        "createdAt": 1772726154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-126"
     },
     "audit": {
-      "createdAt": 1772725114964,
-      "updatedAt": 1783075114964,
+      "createdAt": 1772726154865,
+      "updatedAt": 1783076154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-127",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区商场包容卫生间 127",
     "aliases": [
       "商场127号卫生间"
@@ -10229,21 +10229,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772638714964
+        "createdAt": 1772639754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-127"
     },
     "audit": {
-      "createdAt": 1772638714964,
-      "updatedAt": 1783071514964,
+      "createdAt": 1772639754865,
+      "updatedAt": 1783072554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-128",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区医院包容卫生间 128",
     "aliases": [
       "医院128号卫生间"
@@ -10311,21 +10311,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772552314964
+        "createdAt": 1772553354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-128"
     },
     "audit": {
-      "createdAt": 1772552314964,
-      "updatedAt": 1783067914964,
+      "createdAt": 1772553354865,
+      "updatedAt": 1783068954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-129",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区社区中心包容卫生间 129",
     "aliases": [
       "社区中心129号卫生间"
@@ -10394,21 +10394,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772465914964
+        "createdAt": 1772466954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-129"
     },
     "audit": {
-      "createdAt": 1772465914964,
-      "updatedAt": 1783064314964,
+      "createdAt": 1772466954865,
+      "updatedAt": 1783065354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-130",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区公园包容卫生间 130",
     "aliases": [
       "公园130号卫生间"
@@ -10478,21 +10478,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772379514964
+        "createdAt": 1772380554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-130"
     },
     "audit": {
-      "createdAt": 1772379514964,
-      "updatedAt": 1783060714964,
+      "createdAt": 1772380554865,
+      "updatedAt": 1783061754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-131",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区地铁站包容卫生间 131",
     "aliases": [
       "地铁站131号卫生间"
@@ -10560,21 +10560,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772293114964
+        "createdAt": 1772294154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-131"
     },
     "audit": {
-      "createdAt": 1772293114964,
-      "updatedAt": 1783057114964,
+      "createdAt": 1772294154865,
+      "updatedAt": 1783058154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-132",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区社区中心包容卫生间 132",
     "aliases": [
       "社区中心132号卫生间"
@@ -10642,21 +10642,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772206714964
+        "createdAt": 1772207754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-132"
     },
     "audit": {
-      "createdAt": 1772206714964,
-      "updatedAt": 1783053514964,
+      "createdAt": 1772207754865,
+      "updatedAt": 1783054554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-133",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区图书馆包容卫生间 133",
     "aliases": [
       "图书馆133号卫生间"
@@ -10727,21 +10727,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772120314964
+        "createdAt": 1772121354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-133"
     },
     "audit": {
-      "createdAt": 1772120314964,
-      "updatedAt": 1783049914964,
+      "createdAt": 1772121354865,
+      "updatedAt": 1783050954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-134",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区公园包容卫生间 134",
     "aliases": [
       "公园134号卫生间"
@@ -10794,21 +10794,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1772033914964
+        "createdAt": 1772034954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-134"
     },
     "audit": {
-      "createdAt": 1772033914964,
-      "updatedAt": 1783046314964,
+      "createdAt": 1772034954865,
+      "updatedAt": 1783047354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-135",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区图书馆包容卫生间 135",
     "aliases": [
       "图书馆135号卫生间"
@@ -10876,21 +10876,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771947514964
+        "createdAt": 1771948554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-135"
     },
     "audit": {
-      "createdAt": 1771947514964,
-      "updatedAt": 1783042714964,
+      "createdAt": 1771948554865,
+      "updatedAt": 1783043754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-136",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区办公楼包容卫生间 136",
     "aliases": [
       "办公楼136号卫生间"
@@ -10960,21 +10960,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771861114964
+        "createdAt": 1771862154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-136"
     },
     "audit": {
-      "createdAt": 1771861114964,
-      "updatedAt": 1783039114964,
+      "createdAt": 1771862154865,
+      "updatedAt": 1783040154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-137",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区图书馆包容卫生间 137",
     "aliases": [
       "图书馆137号卫生间"
@@ -11043,21 +11043,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771774714964
+        "createdAt": 1771775754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-137"
     },
     "audit": {
-      "createdAt": 1771774714964,
-      "updatedAt": 1783035514964,
+      "createdAt": 1771775754865,
+      "updatedAt": 1783036554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-138",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区商场包容卫生间 138",
     "aliases": [
       "商场138号卫生间"
@@ -11125,21 +11125,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771688314964
+        "createdAt": 1771689354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-138"
     },
     "audit": {
-      "createdAt": 1771688314964,
-      "updatedAt": 1783031914964,
+      "createdAt": 1771689354865,
+      "updatedAt": 1783032954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-139",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区商场包容卫生间 139",
     "aliases": [
       "商场139号卫生间"
@@ -11209,21 +11209,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771601914964
+        "createdAt": 1771602954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-139"
     },
     "audit": {
-      "createdAt": 1771601914964,
-      "updatedAt": 1783028314964,
+      "createdAt": 1771602954865,
+      "updatedAt": 1783029354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-140",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区办公楼包容卫生间 140",
     "aliases": [
       "办公楼140号卫生间"
@@ -11291,21 +11291,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771515514964
+        "createdAt": 1771516554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-140"
     },
     "audit": {
-      "createdAt": 1771515514964,
-      "updatedAt": 1783024714964,
+      "createdAt": 1771516554865,
+      "updatedAt": 1783025754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-141",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区公园包容卫生间 141",
     "aliases": [
       "公园141号卫生间"
@@ -11358,21 +11358,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771429114964
+        "createdAt": 1771430154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-141"
     },
     "audit": {
-      "createdAt": 1771429114964,
-      "updatedAt": 1783021114964,
+      "createdAt": 1771430154865,
+      "updatedAt": 1783022154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-142",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区文化馆包容卫生间 142",
     "aliases": [
       "文化馆142号卫生间"
@@ -11442,21 +11442,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771342714964
+        "createdAt": 1771343754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-142"
     },
     "audit": {
-      "createdAt": 1771342714964,
-      "updatedAt": 1783017514964,
+      "createdAt": 1771343754865,
+      "updatedAt": 1783018554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-143",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区文化馆包容卫生间 143",
     "aliases": [
       "文化馆143号卫生间"
@@ -11524,21 +11524,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771256314964
+        "createdAt": 1771257354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-143"
     },
     "audit": {
-      "createdAt": 1771256314964,
-      "updatedAt": 1783013914964,
+      "createdAt": 1771257354865,
+      "updatedAt": 1783014954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-144",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区大学包容卫生间 144",
     "aliases": [
       "大学144号卫生间"
@@ -11606,21 +11606,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771169914964
+        "createdAt": 1771170954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-144"
     },
     "audit": {
-      "createdAt": 1771169914964,
-      "updatedAt": 1783010314964,
+      "createdAt": 1771170954865,
+      "updatedAt": 1783011354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-145",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区社区中心包容卫生间 145",
     "aliases": [
       "社区中心145号卫生间"
@@ -11692,21 +11692,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1771083514964
+        "createdAt": 1771084554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-145"
     },
     "audit": {
-      "createdAt": 1771083514964,
-      "updatedAt": 1783006714964,
+      "createdAt": 1771084554865,
+      "updatedAt": 1783007754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-146",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区游客中心包容卫生间 146",
     "aliases": [
       "游客中心146号卫生间"
@@ -11774,21 +11774,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770997114964
+        "createdAt": 1770998154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-146"
     },
     "audit": {
-      "createdAt": 1770997114964,
-      "updatedAt": 1783003114964,
+      "createdAt": 1770998154865,
+      "updatedAt": 1783004154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-147",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区游客中心包容卫生间 147",
     "aliases": [
       "游客中心147号卫生间"
@@ -11856,21 +11856,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770910714964
+        "createdAt": 1770911754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-147"
     },
     "audit": {
-      "createdAt": 1770910714964,
-      "updatedAt": 1782999514964,
+      "createdAt": 1770911754865,
+      "updatedAt": 1783000554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-148",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区地铁站包容卫生间 148",
     "aliases": [
       "地铁站148号卫生间"
@@ -11925,21 +11925,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770824314964
+        "createdAt": 1770825354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-148"
     },
     "audit": {
-      "createdAt": 1770824314964,
-      "updatedAt": 1782995914964,
+      "createdAt": 1770825354865,
+      "updatedAt": 1782996954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-149",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区医院包容卫生间 149",
     "aliases": [
       "医院149号卫生间"
@@ -12007,21 +12007,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770737914964
+        "createdAt": 1770738954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-149"
     },
     "audit": {
-      "createdAt": 1770737914964,
-      "updatedAt": 1782992314964,
+      "createdAt": 1770738954865,
+      "updatedAt": 1782993354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-150",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区地铁站包容卫生间 150",
     "aliases": [
       "地铁站150号卫生间"
@@ -12089,21 +12089,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770651514964
+        "createdAt": 1770652554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-150"
     },
     "audit": {
-      "createdAt": 1770651514964,
-      "updatedAt": 1782988714964,
+      "createdAt": 1770652554865,
+      "updatedAt": 1782989754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-151",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区游客中心包容卫生间 151",
     "aliases": [
       "游客中心151号卫生间"
@@ -12173,21 +12173,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770565114964
+        "createdAt": 1770566154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-151"
     },
     "audit": {
-      "createdAt": 1770565114964,
-      "updatedAt": 1782985114964,
+      "createdAt": 1770566154865,
+      "updatedAt": 1782986154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-152",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区公园包容卫生间 152",
     "aliases": [
       "公园152号卫生间"
@@ -12255,21 +12255,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770478714964
+        "createdAt": 1770479754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-152"
     },
     "audit": {
-      "createdAt": 1770478714964,
-      "updatedAt": 1782981514964,
+      "createdAt": 1770479754865,
+      "updatedAt": 1782982554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-153",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区地铁站包容卫生间 153",
     "aliases": [
       "地铁站153号卫生间"
@@ -12338,21 +12338,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770392314964
+        "createdAt": 1770393354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-153"
     },
     "audit": {
-      "createdAt": 1770392314964,
-      "updatedAt": 1782977914964,
+      "createdAt": 1770393354865,
+      "updatedAt": 1782978954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-154",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区医院包容卫生间 154",
     "aliases": [
       "医院154号卫生间"
@@ -12422,21 +12422,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770305914964
+        "createdAt": 1770306954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-154"
     },
     "audit": {
-      "createdAt": 1770305914964,
-      "updatedAt": 1782974314964,
+      "createdAt": 1770306954865,
+      "updatedAt": 1782975354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-155",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区地铁站包容卫生间 155",
     "aliases": [
       "地铁站155号卫生间"
@@ -12489,21 +12489,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770219514964
+        "createdAt": 1770220554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-155"
     },
     "audit": {
-      "createdAt": 1770219514964,
-      "updatedAt": 1782970714964,
+      "createdAt": 1770220554865,
+      "updatedAt": 1782971754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-156",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区图书馆包容卫生间 156",
     "aliases": [
       "图书馆156号卫生间"
@@ -12571,21 +12571,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770133114964
+        "createdAt": 1770134154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-156"
     },
     "audit": {
-      "createdAt": 1770133114964,
-      "updatedAt": 1782967114964,
+      "createdAt": 1770134154865,
+      "updatedAt": 1782968154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-157",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区社区中心包容卫生间 157",
     "aliases": [
       "社区中心157号卫生间"
@@ -12656,21 +12656,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1770046714964
+        "createdAt": 1770047754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-157"
     },
     "audit": {
-      "createdAt": 1770046714964,
-      "updatedAt": 1782963514964,
+      "createdAt": 1770047754865,
+      "updatedAt": 1782964554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-158",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区商场包容卫生间 158",
     "aliases": [
       "商场158号卫生间"
@@ -12738,21 +12738,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769960314964
+        "createdAt": 1769961354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-158"
     },
     "audit": {
-      "createdAt": 1769960314964,
-      "updatedAt": 1782959914964,
+      "createdAt": 1769961354865,
+      "updatedAt": 1782960954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-159",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区文化馆包容卫生间 159",
     "aliases": [
       "文化馆159号卫生间"
@@ -12820,21 +12820,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769873914964
+        "createdAt": 1769874954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-159"
     },
     "audit": {
-      "createdAt": 1769873914964,
-      "updatedAt": 1782956314964,
+      "createdAt": 1769874954865,
+      "updatedAt": 1782957354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-160",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区办公楼包容卫生间 160",
     "aliases": [
       "办公楼160号卫生间"
@@ -12904,21 +12904,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769787514964
+        "createdAt": 1769788554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-160"
     },
     "audit": {
-      "createdAt": 1769787514964,
-      "updatedAt": 1782952714964,
+      "createdAt": 1769788554865,
+      "updatedAt": 1782953754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-161",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区大学包容卫生间 161",
     "aliases": [
       "大学161号卫生间"
@@ -12987,21 +12987,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769701114964
+        "createdAt": 1769702154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-161"
     },
     "audit": {
-      "createdAt": 1769701114964,
-      "updatedAt": 1782949114964,
+      "createdAt": 1769702154865,
+      "updatedAt": 1782950154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-162",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区医院包容卫生间 162",
     "aliases": [
       "医院162号卫生间"
@@ -13054,21 +13054,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769614714964
+        "createdAt": 1769615754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-162"
     },
     "audit": {
-      "createdAt": 1769614714964,
-      "updatedAt": 1782945514964,
+      "createdAt": 1769615754865,
+      "updatedAt": 1782946554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-163",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区大学包容卫生间 163",
     "aliases": [
       "大学163号卫生间"
@@ -13138,21 +13138,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769528314964
+        "createdAt": 1769529354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-163"
     },
     "audit": {
-      "createdAt": 1769528314964,
-      "updatedAt": 1782941914964,
+      "createdAt": 1769529354865,
+      "updatedAt": 1782942954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-164",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区图书馆包容卫生间 164",
     "aliases": [
       "图书馆164号卫生间"
@@ -13220,21 +13220,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769441914964
+        "createdAt": 1769442954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-164"
     },
     "audit": {
-      "createdAt": 1769441914964,
-      "updatedAt": 1782938314964,
+      "createdAt": 1769442954865,
+      "updatedAt": 1782939354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-165",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区公园包容卫生间 165",
     "aliases": [
       "公园165号卫生间"
@@ -13302,21 +13302,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769355514964
+        "createdAt": 1769356554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-165"
     },
     "audit": {
-      "createdAt": 1769355514964,
-      "updatedAt": 1782934714964,
+      "createdAt": 1769356554865,
+      "updatedAt": 1782935754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-166",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区公园包容卫生间 166",
     "aliases": [
       "公园166号卫生间"
@@ -13386,21 +13386,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769269114964
+        "createdAt": 1769270154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-166"
     },
     "audit": {
-      "createdAt": 1769269114964,
-      "updatedAt": 1782931114964,
+      "createdAt": 1769270154865,
+      "updatedAt": 1782932154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-167",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区地铁站包容卫生间 167",
     "aliases": [
       "地铁站167号卫生间"
@@ -13468,21 +13468,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769182714964
+        "createdAt": 1769183754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-167"
     },
     "audit": {
-      "createdAt": 1769182714964,
-      "updatedAt": 1782927514964,
+      "createdAt": 1769183754865,
+      "updatedAt": 1782928554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-168",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区图书馆包容卫生间 168",
     "aliases": [
       "图书馆168号卫生间"
@@ -13550,21 +13550,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769096314964
+        "createdAt": 1769097354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-168"
     },
     "audit": {
-      "createdAt": 1769096314964,
-      "updatedAt": 1782923914964,
+      "createdAt": 1769097354865,
+      "updatedAt": 1782924954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-169",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区大学包容卫生间 169",
     "aliases": [
       "大学169号卫生间"
@@ -13621,21 +13621,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1769009914964
+        "createdAt": 1769010954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-169"
     },
     "audit": {
-      "createdAt": 1769009914964,
-      "updatedAt": 1782920314964,
+      "createdAt": 1769010954865,
+      "updatedAt": 1782921354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-170",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区游客中心包容卫生间 170",
     "aliases": [
       "游客中心170号卫生间"
@@ -13703,21 +13703,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768923514964
+        "createdAt": 1768924554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-170"
     },
     "audit": {
-      "createdAt": 1768923514964,
-      "updatedAt": 1782916714964,
+      "createdAt": 1768924554865,
+      "updatedAt": 1782917754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-171",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区公园包容卫生间 171",
     "aliases": [
       "公园171号卫生间"
@@ -13785,21 +13785,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768837114964
+        "createdAt": 1768838154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-171"
     },
     "audit": {
-      "createdAt": 1768837114964,
-      "updatedAt": 1782913114964,
+      "createdAt": 1768838154865,
+      "updatedAt": 1782914154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-172",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区文化馆包容卫生间 172",
     "aliases": [
       "文化馆172号卫生间"
@@ -13869,21 +13869,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768750714964
+        "createdAt": 1768751754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-172"
     },
     "audit": {
-      "createdAt": 1768750714964,
-      "updatedAt": 1782909514964,
+      "createdAt": 1768751754865,
+      "updatedAt": 1782910554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-173",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区大学包容卫生间 173",
     "aliases": [
       "大学173号卫生间"
@@ -13951,21 +13951,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768664314964
+        "createdAt": 1768665354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-173"
     },
     "audit": {
-      "createdAt": 1768664314964,
-      "updatedAt": 1782905914964,
+      "createdAt": 1768665354865,
+      "updatedAt": 1782906954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-174",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区办公楼包容卫生间 174",
     "aliases": [
       "办公楼174号卫生间"
@@ -14033,21 +14033,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768577914964
+        "createdAt": 1768578954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-174"
     },
     "audit": {
-      "createdAt": 1768577914964,
-      "updatedAt": 1782902314964,
+      "createdAt": 1768578954865,
+      "updatedAt": 1782903354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-175",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区办公楼包容卫生间 175",
     "aliases": [
       "办公楼175号卫生间"
@@ -14117,21 +14117,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768491514964
+        "createdAt": 1768492554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-175"
     },
     "audit": {
-      "createdAt": 1768491514964,
-      "updatedAt": 1782898714964,
+      "createdAt": 1768492554865,
+      "updatedAt": 1782899754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-176",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区文化馆包容卫生间 176",
     "aliases": [
       "文化馆176号卫生间"
@@ -14184,21 +14184,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768405114964
+        "createdAt": 1768406154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-176"
     },
     "audit": {
-      "createdAt": 1768405114964,
-      "updatedAt": 1782895114964,
+      "createdAt": 1768406154865,
+      "updatedAt": 1782896154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-177",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区图书馆包容卫生间 177",
     "aliases": [
       "图书馆177号卫生间"
@@ -14267,21 +14267,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768318714964
+        "createdAt": 1768319754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-177"
     },
     "audit": {
-      "createdAt": 1768318714964,
-      "updatedAt": 1782891514964,
+      "createdAt": 1768319754865,
+      "updatedAt": 1782892554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-178",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区文化馆包容卫生间 178",
     "aliases": [
       "文化馆178号卫生间"
@@ -14351,21 +14351,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768232314964
+        "createdAt": 1768233354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-178"
     },
     "audit": {
-      "createdAt": 1768232314964,
-      "updatedAt": 1782887914964,
+      "createdAt": 1768233354865,
+      "updatedAt": 1782888954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-179",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区大学包容卫生间 179",
     "aliases": [
       "大学179号卫生间"
@@ -14433,21 +14433,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768145914964
+        "createdAt": 1768146954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-179"
     },
     "audit": {
-      "createdAt": 1768145914964,
-      "updatedAt": 1782884314964,
+      "createdAt": 1768146954865,
+      "updatedAt": 1782885354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-180",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区游客中心包容卫生间 180",
     "aliases": [
       "游客中心180号卫生间"
@@ -14515,21 +14515,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1768059514964
+        "createdAt": 1768060554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-180"
     },
     "audit": {
-      "createdAt": 1768059514964,
-      "updatedAt": 1782880714964,
+      "createdAt": 1768060554865,
+      "updatedAt": 1782881754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-181",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区公园包容卫生间 181",
     "aliases": [
       "公园181号卫生间"
@@ -14600,21 +14600,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767973114964
+        "createdAt": 1767974154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-181"
     },
     "audit": {
-      "createdAt": 1767973114964,
-      "updatedAt": 1782877114964,
+      "createdAt": 1767974154865,
+      "updatedAt": 1782878154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-182",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区大学包容卫生间 182",
     "aliases": [
       "大学182号卫生间"
@@ -14682,21 +14682,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767886714964
+        "createdAt": 1767887754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-182"
     },
     "audit": {
-      "createdAt": 1767886714964,
-      "updatedAt": 1782873514964,
+      "createdAt": 1767887754865,
+      "updatedAt": 1782874554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-183",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区地铁站包容卫生间 183",
     "aliases": [
       "地铁站183号卫生间"
@@ -14749,21 +14749,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767800314964
+        "createdAt": 1767801354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-183"
     },
     "audit": {
-      "createdAt": 1767800314964,
-      "updatedAt": 1782869914964,
+      "createdAt": 1767801354865,
+      "updatedAt": 1782870954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-184",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区社区中心包容卫生间 184",
     "aliases": [
       "社区中心184号卫生间"
@@ -14833,21 +14833,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767713914964
+        "createdAt": 1767714954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-184"
     },
     "audit": {
-      "createdAt": 1767713914964,
-      "updatedAt": 1782866314964,
+      "createdAt": 1767714954865,
+      "updatedAt": 1782867354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-185",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区文化馆包容卫生间 185",
     "aliases": [
       "文化馆185号卫生间"
@@ -14916,21 +14916,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767627514964
+        "createdAt": 1767628554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-185"
     },
     "audit": {
-      "createdAt": 1767627514964,
-      "updatedAt": 1782862714964,
+      "createdAt": 1767628554865,
+      "updatedAt": 1782863754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-186",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区游客中心包容卫生间 186",
     "aliases": [
       "游客中心186号卫生间"
@@ -14998,21 +14998,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767541114964
+        "createdAt": 1767542154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-186"
     },
     "audit": {
-      "createdAt": 1767541114964,
-      "updatedAt": 1782859114964,
+      "createdAt": 1767542154865,
+      "updatedAt": 1782860154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-187",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区办公楼包容卫生间 187",
     "aliases": [
       "办公楼187号卫生间"
@@ -15082,21 +15082,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767454714964
+        "createdAt": 1767455754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-187"
     },
     "audit": {
-      "createdAt": 1767454714964,
-      "updatedAt": 1782855514964,
+      "createdAt": 1767455754865,
+      "updatedAt": 1782856554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-188",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区社区中心包容卫生间 188",
     "aliases": [
       "社区中心188号卫生间"
@@ -15164,21 +15164,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767368314964
+        "createdAt": 1767369354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-188"
     },
     "audit": {
-      "createdAt": 1767368314964,
-      "updatedAt": 1782851914964,
+      "createdAt": 1767369354865,
+      "updatedAt": 1782852954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-189",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区办公楼包容卫生间 189",
     "aliases": [
       "办公楼189号卫生间"
@@ -15246,21 +15246,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767281914964
+        "createdAt": 1767282954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-189"
     },
     "audit": {
-      "createdAt": 1767281914964,
-      "updatedAt": 1782848314964,
+      "createdAt": 1767282954865,
+      "updatedAt": 1782849354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-190",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区游客中心包容卫生间 190",
     "aliases": [
       "游客中心190号卫生间"
@@ -15315,21 +15315,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767195514964
+        "createdAt": 1767196554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-190"
     },
     "audit": {
-      "createdAt": 1767195514964,
-      "updatedAt": 1782844714964,
+      "createdAt": 1767196554865,
+      "updatedAt": 1782845754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-191",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区公园包容卫生间 191",
     "aliases": [
       "公园191号卫生间"
@@ -15397,21 +15397,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767109114964
+        "createdAt": 1767110154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-191"
     },
     "audit": {
-      "createdAt": 1767109114964,
-      "updatedAt": 1782841114964,
+      "createdAt": 1767110154865,
+      "updatedAt": 1782842154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-192",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区社区中心包容卫生间 192",
     "aliases": [
       "社区中心192号卫生间"
@@ -15479,21 +15479,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1767022714964
+        "createdAt": 1767023754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-192"
     },
     "audit": {
-      "createdAt": 1767022714964,
-      "updatedAt": 1782837514964,
+      "createdAt": 1767023754865,
+      "updatedAt": 1782838554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-193",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "黄浦区地铁站包容卫生间 193",
     "aliases": [
       "地铁站193号卫生间"
@@ -15565,21 +15565,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766936314964
+        "createdAt": 1766937354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-193"
     },
     "audit": {
-      "createdAt": 1766936314964,
-      "updatedAt": 1782833914964,
+      "createdAt": 1766937354865,
+      "updatedAt": 1782834954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-194",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "徐汇区公园包容卫生间 194",
     "aliases": [
       "公园194号卫生间"
@@ -15647,21 +15647,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766849914964
+        "createdAt": 1766850954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-194"
     },
     "audit": {
-      "createdAt": 1766849914964,
-      "updatedAt": 1782830314964,
+      "createdAt": 1766850954865,
+      "updatedAt": 1782831354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-195",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "静安区医院包容卫生间 195",
     "aliases": [
       "医院195号卫生间"
@@ -15729,21 +15729,21 @@
         "author": "mock-generator",
         "rating": 3,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766763514964
+        "createdAt": 1766764554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-195"
     },
     "audit": {
-      "createdAt": 1766763514964,
-      "updatedAt": 1782826714964,
+      "createdAt": 1766764554865,
+      "updatedAt": 1782827754865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-196",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "长宁区办公楼包容卫生间 196",
     "aliases": [
       "办公楼196号卫生间"
@@ -15813,21 +15813,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766677114964
+        "createdAt": 1766678154865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-196"
     },
     "audit": {
-      "createdAt": 1766677114964,
-      "updatedAt": 1782823114964,
+      "createdAt": 1766678154865,
+      "updatedAt": 1782824154865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-197",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "浦东新区大学包容卫生间 197",
     "aliases": [
       "大学197号卫生间"
@@ -15880,21 +15880,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766590714964
+        "createdAt": 1766591754865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-197"
     },
     "audit": {
-      "createdAt": 1766590714964,
-      "updatedAt": 1782819514964,
+      "createdAt": 1766591754865,
+      "updatedAt": 1782820554865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-198",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "虹口区文化馆包容卫生间 198",
     "aliases": [
       "文化馆198号卫生间"
@@ -15962,21 +15962,21 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766504314964
+        "createdAt": 1766505354865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-198"
     },
     "audit": {
-      "createdAt": 1766504314964,
-      "updatedAt": 1782815914964,
+      "createdAt": 1766505354865,
+      "updatedAt": 1782816954865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-199",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "杨浦区医院包容卫生间 199",
     "aliases": [
       "医院199号卫生间"
@@ -16046,21 +16046,21 @@
         "author": "mock-generator",
         "rating": 5,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766417914964
+        "createdAt": 1766418954865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-199"
     },
     "audit": {
-      "createdAt": 1766417914964,
-      "updatedAt": 1782812314964,
+      "createdAt": 1766418954865,
+      "updatedAt": 1782813354865,
       "source": "mock-generator"
     }
   },
   {
     "id": "mock-shanghai-200",
-    "version": "20260708",
+    "version": "v0.6.0.20260708",
     "name": "普陀区商场包容卫生间 200",
     "aliases": [
       "商场200号卫生间"
@@ -16128,15 +16128,15 @@
         "author": "mock-generator",
         "rating": 4,
         "text": "模拟评价，用于测试列表展示与后续编辑流程。",
-        "createdAt": 1766331514964
+        "createdAt": 1766332554865
       }
     ],
     "externalIds": {
       "mock": "mock-shanghai-200"
     },
     "audit": {
-      "createdAt": 1766331514964,
-      "updatedAt": 1782808714964,
+      "createdAt": 1766332554865,
+      "updatedAt": 1782809754865,
       "source": "mock-generator"
     }
   }

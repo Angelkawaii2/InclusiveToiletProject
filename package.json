@@ -1,6 +1,6 @@
 {
   "name": "inclusive_toilet_project",
-  "version": "v0.5.3.20250507",
+  "version": "v0.6.0.20260708",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.7.0",

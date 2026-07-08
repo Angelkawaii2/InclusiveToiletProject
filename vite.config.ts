@@ -3,7 +3,7 @@ import {fileURLToPath, URL} from 'node:url'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import {VitePWA} from 'vite-plugin-pwa'
-import {version} from './package.json'
+import projectVersions from './project-versions.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -44,8 +44,8 @@ export default defineConfig({
     },
     base: './',
     define: {
-        VITE_APP_VERSION: JSON.stringify(version),
+        VITE_APP_VERSION: JSON.stringify(projectVersions.appVersion),
         VITE_BUILD_TIME: JSON.stringify(new Date().toLocaleString()),
-        VITE_DATA_VERSION: JSON.stringify("20241121"),
+        VITE_DATA_VERSION: JSON.stringify(projectVersions.dataVersion),
     }
 })

@@ -6,6 +6,7 @@ import {Bathroom} from "@/types/ToiletData-V5";
 import {ToiletDatasetManifest, ToiletPlace} from "@/types/ToiletData-V6";
 import {Aim, Edit, Location, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
+import {DATA_VERSION} from "@/constants/projectVersions";
 
 const files = ref([])
 const workspace = useWorkspaceStore()
@@ -77,7 +78,7 @@ function normalizeKinds(kinds: string[] = []): ToiletPlace["kinds"] {
 function convertV5ToPreview(item: Bathroom): ToiletPlace {
   return {
     id: `v5-preview-${item.name || crypto.randomUUID()}`,
-    version: "20260708",
+    version: DATA_VERSION,
     name: item.name || "未命名卫生间",
     isActive: item.isDisabled !== true,
     location: {

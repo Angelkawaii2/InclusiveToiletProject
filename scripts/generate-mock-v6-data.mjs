@@ -1,8 +1,9 @@
-import {mkdirSync, writeFileSync} from "node:fs";
+import {mkdirSync, readFileSync, writeFileSync} from "node:fs";
 import {dirname, resolve} from "node:path";
 
 const outputPath = resolve("public/data/regions/mock-shanghai.json");
 const manifestPath = resolve("public/data/manifest.json");
+const projectVersions = JSON.parse(readFileSync(resolve("project-versions.json"), "utf8"));
 const now = Date.now();
 
 const districts = [
@@ -27,7 +28,7 @@ function random(seed) {
     };
 }
 
-const rng = random(20260708);
+const rng = random(projectVersions.mockSeed);
 
 function pick(items) {
     return items[Math.floor(rng() * items.length)];
@@ -57,7 +58,7 @@ const records = Array.from({length: 200}, (_, index) => {
 
     return {
         id,
-        version: "20260708",
+        version: projectVersions.dataVersion,
         name: `${district.name}${placeType}包容卫生间 ${index + 1}`,
         aliases: [`${placeType}${index + 1}号卫生间`],
         isActive: index % 37 !== 0,
@@ -127,7 +128,7 @@ const records = Array.from({length: 200}, (_, index) => {
 });
 
 const manifest = {
-    version: "20260708",
+    version: projectVersions.dataVersion,
     generatedAt: now,
     regions: [
         {

@@ -14,6 +14,7 @@
       "vite/client"
     ],
     "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
