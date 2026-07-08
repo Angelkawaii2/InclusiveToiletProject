@@ -1,10 +1,17 @@
 <script lang="ts" setup>
-import {ref} from "vue";
+import {computed} from "vue";
 import {CirclePlus, Edit, Files} from "@element-plus/icons-vue";
 import AddPage from "@/Views/AddPage.vue";
 import EditPage from "@/Views/EditPage.vue";
+import {useWorkspaceStore} from "@/stores/workspaceStore";
 
-const mode = ref("create");
+const workspace = useWorkspaceStore();
+const mode = computed({
+  get: () => workspace.maintenanceMode,
+  set: (value) => {
+    workspace.maintenanceMode = value;
+  }
+});
 </script>
 
 <template>

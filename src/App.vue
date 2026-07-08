@@ -7,9 +7,11 @@ import LookupPage from "@/Views/LookupPage.vue";
 import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
 import {Moon, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/UseSettingStore";
+import {useWorkspaceStore} from "@/stores/workspaceStore";
 
 const {t} = useI18n()
 const settings = useSettingStore()
+const workspace = useWorkspaceStore()
 
 const v = VITE_APP_VERSION
 const b = VITE_BUILD_TIME
@@ -26,7 +28,12 @@ const watermark = () => {
     return [v]
   }
 }
-const tab = ref('search')
+const tab = computed({
+  get: () => workspace.activeTab,
+  set: (value) => {
+    workspace.activeTab = value
+  }
+})
 
 const isDarkTheme = computed(() => settings.theme === 'dark')
 

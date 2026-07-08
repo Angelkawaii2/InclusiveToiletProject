@@ -4,17 +4,23 @@ import MapComponent from "@/components/edit/v5/MapComponent.vue";
 import {computed, nextTick, onMounted, ref} from "vue";
 import {Bathroom} from "@/types/ToiletData-V5";
 import {ToiletDatasetManifest, ToiletPlace} from "@/types/ToiletData-V6";
-import {Search, UploadFilled} from "@element-plus/icons-vue";
+import {Aim, Edit, Location, Search, View, UploadFilled} from "@element-plus/icons-vue";
+import {useWorkspaceStore} from "@/stores/workspaceStore";
+import {ElMessage} from "element-plus";
 
 const files = ref([])
+const workspace = useWorkspaceStore()
 
 const bathroomList = ref([] as ToiletPlace[])
 const keyword = ref("")
 const dataSourceName = ref("尚未加载")
 const isLoading = ref(false)
 const loadError = ref("")
+const selectedId = ref("")
+const sortByNearest = ref(false)
+const userLocation = ref<{ lat: number; lon: number } | null>(null)
 
-const mapComponent = ref(null)
+const mapComponent = ref<InstanceType<typeof MapComponent> | null>(null)
 
 function handleFiles(event) {
   const selectFiles = event.target.files;
@@ -128,10 +134,62 @@ function renderPoints() {
   mapComponent.value?.setPoints(points);
 }
 
+function distanceInMeters(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
+  const radius = 6371000;
+  const toRad = (value: number) => value * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * radius * Math.asin(Math.sqrt(h));
+}
+
+function formatDistance(item: ToiletPlace) {
+  if (!userLocation.value) return "";
+  const meters = distanceInMeters(userLocation.value, item.location);
+  return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
+}
+
+function sortNearest() {
+  loadError.value = "";
+  if (!navigator.geolocation) {
+    loadError.value = "当前浏览器不支持定位，无法按最近排序。";
+    return;
+  }
+  navigator.geolocation.getCurrentPosition((position) => {
+    userLocation.value = {
+      lat: position.coords.latitude,
+      lon: position.coords.longitude
+    };
+    sortByNearest.value = true;
+  }, () => {
+    loadError.value = "定位失败，请检查浏览器定位权限后重试。";
+  }, {
+    timeout: 8000,
+    enableHighAccuracy: true
+  });
+}
+
+function selectToilet(item: ToiletPlace) {
+  selectedId.value = item.id;
+  workspace.selectToilet(item);
+  mapComponent.value?.focusPoint(item.location.lon, item.location.lat);
+}
+
+function viewDetails(item: ToiletPlace) {
+  selectToilet(item);
+  ElMessage.info("详情面板还没做，已先在地图上定位该卫生间。");
+}
+
+function editToilet(item: ToiletPlace) {
+  selectToilet(item);
+  workspace.editToilet(item);
+}
+
 const filteredBathrooms = computed(() => {
   const q = keyword.value.trim().toLowerCase()
-  if (!q) return bathroomList.value
-  return bathroomList.value.filter((item) => {
+  const filtered = !q ? bathroomList.value : bathroomList.value.filter((item) => {
     return [
       item.name,
       item.address?.district,
@@ -143,6 +201,10 @@ const filteredBathrooms = computed(() => {
       ...(item.tags || [])
     ].some((value) => value?.toLowerCase().includes(q))
   })
+  if (!sortByNearest.value || !userLocation.value) return filtered;
+  return [...filtered].sort((a, b) => {
+    return distanceInMeters(userLocation.value!, a.location) - distanceInMeters(userLocation.value!, b.location);
+  });
 })
 
 onMounted(() => {
@@ -177,6 +239,15 @@ onMounted(() => {
               <el-icon><Search /></el-icon>
             </template>
           </el-input>
+          <div class="toolbar-actions">
+            <el-button :type="sortByNearest ? 'primary' : 'default'" @click="sortNearest">
+              <el-icon><Location /></el-icon>
+              按最近排序
+            </el-button>
+            <el-button v-if="sortByNearest" @click="sortByNearest = false">
+              恢复默认排序
+            </el-button>
+          </div>
           <div class="result-meta">
             <span>{{ dataSourceName }}</span>
             <span>{{ filteredBathrooms.length }} / {{ bathroomList.length }} 条</span>
@@ -191,14 +262,31 @@ onMounted(() => {
         </div>
 
         <div v-else class="result-list">
-          <article v-for="(item,idx) in filteredBathrooms" :key="`${item.name}-${idx}`" class="result-item">
+          <article v-for="(item,idx) in filteredBathrooms"
+                   :key="`${item.name}-${idx}`"
+                   :class="['result-item', { active: selectedId === item.id }]"
+                   @click="selectToilet(item)">
             <div>
               <h3>{{ item.name || "未命名卫生间" }}</h3>
               <p>{{ item.kinds?.join(" / ") || "未标记类型" }}</p>
             </div>
             <p class="address">{{ item.address?.district }} {{ item.address?.detail }}</p>
-            <div class="coord">
-              {{ item.location?.lat?.toFixed?.(5) ?? "?" }}, {{ item.location?.lon?.toFixed?.(5) ?? "?" }}
+            <div class="result-footer">
+              <div class="coord">
+                <el-icon><Aim /></el-icon>
+                {{ item.location?.lat?.toFixed?.(5) ?? "?" }}, {{ item.location?.lon?.toFixed?.(5) ?? "?" }}
+              </div>
+              <span v-if="userLocation" class="distance">{{ formatDistance(item) }}</span>
+            </div>
+            <div class="item-actions">
+              <el-button size="small" @click.stop="viewDetails(item)">
+                <el-icon><View /></el-icon>
+                查看详情
+              </el-button>
+              <el-button size="small" type="primary" @click.stop="editToilet(item)">
+                <el-icon><Edit /></el-icon>
+                编辑
+              </el-button>
             </div>
           </article>
         </div>
@@ -256,6 +344,12 @@ onMounted(() => {
   gap: 10px;
 }
 
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .result-meta {
   display: flex;
   justify-content: space-between;
@@ -297,6 +391,18 @@ onMounted(() => {
   border-color: var(--itp-border);
   border-radius: 8px;
   background: var(--itp-surface-strong);
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.result-item:hover,
+.result-item.active {
+  border-color: var(--itp-primary);
+  box-shadow: 0 8px 24px rgba(51, 110, 190, 0.14);
+}
+
+.result-item.active {
+  transform: translateY(-1px);
 }
 
 .result-item h3 {
@@ -305,10 +411,32 @@ onMounted(() => {
 }
 
 .result-item p,
-.coord {
+.coord,
+.distance {
   margin: 0;
   color: var(--itp-text-muted);
   font-size: 13px;
+}
+
+.result-footer,
+.coord,
+.item-actions {
+  display: flex;
+  align-items: center;
+}
+
+.result-footer {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.coord {
+  gap: 4px;
+}
+
+.item-actions {
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .address {

@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import {Edit, UploadFilled} from "@element-plus/icons-vue";
+import {useWorkspaceStore} from "@/stores/workspaceStore";
 
 defineProps<{
   embedded?: boolean
 }>()
+
+const workspace = useWorkspaceStore();
 </script>
 
 <template>
@@ -20,7 +23,16 @@ defineProps<{
       </el-button>
     </div>
 
-    <div class="edit-empty-state">
+    <div v-if="workspace.selectedToilet" class="edit-selected-state">
+      <el-icon><Edit /></el-icon>
+      <div>
+        <h3>{{ workspace.selectedToilet.name }}</h3>
+        <p>{{ workspace.selectedToilet.address?.district }} {{ workspace.selectedToilet.address?.detail }}</p>
+        <p>{{ workspace.selectedToilet.location.lat.toFixed(5) }}, {{ workspace.selectedToilet.location.lon.toFixed(5) }}</p>
+      </div>
+    </div>
+
+    <div v-else class="edit-empty-state">
       <el-icon><Edit /></el-icon>
       <div>
         <h3>尚未选择记录</h3>
@@ -36,7 +48,8 @@ defineProps<{
   background: var(--itp-edit-hero);
 }
 
-.edit-empty-state {
+.edit-empty-state,
+.edit-selected-state {
   display: flex;
   gap: 16px;
   align-items: center;
@@ -47,18 +60,21 @@ defineProps<{
   background: var(--itp-surface-soft);
 }
 
-.edit-empty-state .el-icon {
+.edit-empty-state .el-icon,
+.edit-selected-state .el-icon {
   width: 40px;
   height: 40px;
   color: var(--itp-primary);
 }
 
-.edit-empty-state h3 {
+.edit-empty-state h3,
+.edit-selected-state h3 {
   margin: 0 0 6px;
   font-size: 18px;
 }
 
-.edit-empty-state p {
+.edit-empty-state p,
+.edit-selected-state p {
   margin: 0;
   color: var(--itp-text-muted);
 }

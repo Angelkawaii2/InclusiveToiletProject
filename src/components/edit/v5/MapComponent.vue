@@ -82,9 +82,19 @@ function setPoints(points: Array<{ lon: number; lat: number }>) {
   });
 }
 
+function focusPoint(lon: number, lat: number) {
+  if (!map) return;
+  map.getView().animate({
+    center: fromLonLat([lon, lat]),
+    zoom: 17,
+    duration: 260
+  });
+}
+
 defineExpose({
   addPointToMap,
-  setPoints
+  setPoints,
+  focusPoint
 })
 
 </script>
