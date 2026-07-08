@@ -2,10 +2,9 @@
 
 import {useI18n} from "vue-i18n";
 import {computed, ref, watchEffect} from "vue";
-import AddPage from "@/Views/AddPage.vue";
 import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
-import EditPage from "@/Views/EditPage.vue";
+import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
 import {Moon, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/UseSettingStore";
 
@@ -70,12 +69,8 @@ watchEffect(() => {
           <lookup-page/>
         </el-tab-pane>
 
-        <el-tab-pane label="新增采集" name="create">
-          <add-page></add-page>
-        </el-tab-pane>
-
-        <el-tab-pane label="修改维护" name="edit">
-          <edit-page/>
+        <el-tab-pane label="数据维护" name="maintenance">
+          <data-maintenance-page/>
         </el-tab-pane>
 
         <el-tab-pane label="设置" name="settings">

@@ -17,6 +17,10 @@ import AccessibleMetadataComponent from "@/components/edit/v5/AccessibleMetadata
 import {useI18n} from "vue-i18n";
 import {Download, RefreshLeft} from "@element-plus/icons-vue";
 
+defineProps<{
+  embedded?: boolean
+}>()
+
 const data = useCurrentData()
 const settings = useSettingStore();
 const {t} = useI18n()
@@ -50,11 +54,27 @@ const comp = computed(() => {
 <template>
 
   <section class="workspace-page">
-    <div class="workspace-hero create-hero">
+    <div v-if="!embedded" class="workspace-hero create-hero">
       <div>
         <p class="workspace-eyebrow">新增采集</p>
         <h2>记录一个新的卫生间点位</h2>
         <p>适合现场采集或事后补录。填写位置、类型、设施、开放时间和照片后导出单条 JSON 数据。</p>
+      </div>
+      <div class="hero-actions">
+        <el-button type="danger" @click="resetData()">
+          <el-icon><RefreshLeft /></el-icon>
+          {{ t("ui.general.resetAll") }}
+        </el-button>
+        <download-btn-component>
+          <el-icon><Download /></el-icon>
+        </download-btn-component>
+      </div>
+    </div>
+
+    <div v-else class="embedded-toolbar">
+      <div>
+        <h3>新增点位</h3>
+        <p>填写位置、类型、设施、开放时间和照片后导出单条 JSON 数据。</p>
       </div>
       <div class="hero-actions">
         <el-button type="danger" @click="resetData()">
@@ -88,6 +108,27 @@ const comp = computed(() => {
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-end;
+}
+
+.embedded-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface-soft);
+}
+
+.embedded-toolbar h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.embedded-toolbar p {
+  margin: 6px 0 0;
+  color: var(--itp-text-muted);
 }
 
 .map-panel {

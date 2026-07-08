@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import {Edit, UploadFilled} from "@element-plus/icons-vue";
+
+defineProps<{
+  embedded?: boolean
+}>()
 </script>
 
 <template>
   <section class="workspace-page">
-    <div class="workspace-hero edit-hero">
+    <div v-if="!embedded" class="workspace-hero edit-hero">
       <div>
         <p class="workspace-eyebrow">修改维护</p>
         <h2>编辑已导入的卫生间资料</h2>
