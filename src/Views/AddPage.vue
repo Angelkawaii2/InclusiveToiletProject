@@ -1,98 +1,344 @@
 <script lang="ts" setup>
-
-import DownloadBtnComponent from "@/components/edit/v5/DownloadBtnComponent.vue";
-import GpsLocationComponent from "@/components/edit/v5/GpsLocationComponent.vue";
-import DebugJsonComponent from "@/components/debug/DebugJsonComponent.vue";
-import {useCurrentData} from "@/stores/currentData";
-import MapComponent from "@/components/edit/v4/MapComponent.vue";
-import {useSettingStore} from "@/stores/UseSettingStore";
-import {computed, provide} from "vue";
-import BasicInfoComponent from "@/components/edit/v5/BasicInfoComponent.vue";
-import ToiletTypeSelectorComponent from "@/components/edit/v5/ToiletTypeSelectorComponent.vue";
-import ToiletMetadata from "@/components/edit/v5/ToiletProperties.vue";
-import CommentComponent from "@/components/edit/v5/CommentComponent.vue";
-import ImageUploadComponent from "@/components/edit/v5/ImageUploadComponent.vue";
-import TimeSelectorComponent from "@/components/edit/v5/TimeSelectorComponent.vue";
-import AccessibleMetadataComponent from "@/components/edit/v5/AccessibleMetadataComponent.vue";
-import {useI18n} from "vue-i18n";
-import {Download, RefreshLeft} from "@element-plus/icons-vue";
+import {computed, reactive} from "vue";
+import {Download, Location, RefreshLeft} from "@element-plus/icons-vue";
+import {ElMessage} from "element-plus";
+import {AccessRestriction, ToiletKind, ToiletPlace} from "@/types/ToiletData-V6";
+import {useWorkspaceStore} from "@/stores/workspaceStore";
 
 defineProps<{
   embedded?: boolean
 }>()
 
-const data = useCurrentData()
-const settings = useSettingStore();
-const {t} = useI18n()
+const workspace = useWorkspaceStore();
 
-provide("currentData", data)
+const kindOptions: Array<{ label: string; value: ToiletKind }> = [
+  {label: "无性别/包容", value: "allGender"},
+  {label: "男厕", value: "male"},
+  {label: "女厕", value: "female"},
+  {label: "家庭卫生间", value: "family"},
+  {label: "无障碍", value: "accessible"},
+  {label: "其他", value: "other"},
+];
 
-const isAccessibleSelected = (): boolean => {
-  return data.types.includes('accessible')
+const restrictionOptions: Array<{ label: string; value: AccessRestriction }> = [
+  {label: "公共开放", value: "public"},
+  {label: "仅顾客", value: "customersOnly"},
+  {label: "票区内", value: "ticketedArea"},
+  {label: "仅员工", value: "staffOnly"},
+  {label: "私人区域", value: "private"},
+  {label: "未知", value: "unknown"},
+];
+
+const draft = reactive({
+  name: "",
+  isActive: true,
+  lat: 31.2304,
+  lon: 121.4737,
+  accuracy: null as number | null,
+  country: "中国",
+  province: "上海市",
+  city: "上海市",
+  description: "",
+  kinds: ["allGender"] as ToiletKind[],
+  restriction: "public" as AccessRestriction,
+  accessNotes: "",
+  hasAccessibleToilet: null as boolean | null,
+  isSeparateStall: null as boolean | null,
+  isLocked: null as boolean | null,
+  unlockMethod: "",
+  accessibilityNotes: "",
+  isAlwaysOpen: null as boolean | null,
+  openingText: "",
+});
+
+const previewRecord = computed(() => buildRecord());
+
+function resetDraft() {
+  draft.name = "";
+  draft.isActive = true;
+  draft.lat = 31.2304;
+  draft.lon = 121.4737;
+  draft.accuracy = null;
+  draft.country = "中国";
+  draft.province = "上海市";
+  draft.city = "上海市";
+  draft.description = "";
+  draft.kinds = ["allGender"];
+  draft.restriction = "public";
+  draft.accessNotes = "";
+  draft.hasAccessibleToilet = null;
+  draft.isSeparateStall = null;
+  draft.isLocked = null;
+  draft.unlockMethod = "";
+  draft.accessibilityNotes = "";
+  draft.isAlwaysOpen = null;
+  draft.openingText = "";
 }
 
-const resetData = () => {
-  data.reset()
+function fillCurrentLocation() {
+  if (!navigator.geolocation) {
+    ElMessage.error("当前浏览器不支持定位");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition((position) => {
+    draft.lat = Number(position.coords.latitude.toFixed(6));
+    draft.lon = Number(position.coords.longitude.toFixed(6));
+    draft.accuracy = Math.round(position.coords.accuracy);
+    ElMessage.success("已填入当前位置");
+  }, () => {
+    ElMessage.error("定位失败，请检查浏览器定位权限");
+  }, {
+    timeout: 8000,
+    enableHighAccuracy: true
+  });
 }
 
-const comp = computed(() => {
-  return [
-    {comp: GpsLocationComponent, cond: true}, // 已有格式
-    {comp: BasicInfoComponent, cond: true}, // 修改后的格式
-    {comp: ToiletTypeSelectorComponent, cond: true},
-    {comp: AccessibleMetadataComponent, cond: isAccessibleSelected()},
-    {comp: ToiletMetadata, cond: true},
-    {comp: TimeSelectorComponent, cond: true},
-    {comp: ImageUploadComponent, cond: true},
-    {comp: CommentComponent, cond: true},
-    {comp: DebugJsonComponent, cond: settings.isDebug}
-  ];
-})
+function buildRecord(): ToiletPlace {
+  const now = Date.now();
+  const id = `local-${now}-${Math.random().toString(36).slice(2, 8)}`;
+  return {
+    id,
+    version: "20260708",
+    name: draft.name.trim() || "未命名卫生间",
+    isActive: draft.isActive,
+    location: {
+      lat: Number(draft.lat),
+      lon: Number(draft.lon),
+      alt: null,
+      accuracy: draft.accuracy,
+      coordinateSystem: "wgs84"
+    },
+    address: {
+      country: draft.country.trim() || undefined,
+      province: draft.province.trim() || undefined,
+      city: draft.city.trim() || undefined,
+      description: draft.description.trim() || undefined,
+    },
+    kinds: [...draft.kinds],
+    access: {
+      restriction: draft.restriction,
+      notes: draft.accessNotes.trim() || undefined,
+    },
+    facilities: {},
+    accessibility: {
+      hasAccessibleToilet: draft.hasAccessibleToilet,
+      isSeparateStall: draft.isSeparateStall,
+      isLocked: draft.isLocked,
+      unlockMethod: draft.unlockMethod.trim() || undefined,
+      notes: draft.accessibilityNotes.trim() || undefined,
+    },
+    openingHours: {
+      isAlwaysOpen: draft.isAlwaysOpen,
+      text: draft.openingText.trim() || undefined,
+    },
+    media: [],
+    observations: [],
+    externalIds: {},
+    audit: {
+      createdAt: now,
+      updatedAt: now,
+      source: "local-create-form"
+    }
+  };
+}
 
+function downloadRecord() {
+  const record = buildRecord();
+  const blob = new Blob([JSON.stringify(record, null, 2)], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${record.id}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function useAsEditingRecord() {
+  const record = buildRecord();
+  workspace.editToilet(record);
+  ElMessage.success("已创建草稿并切换到编辑模式");
+}
 </script>
 
 <template>
-
   <section class="workspace-page">
     <div v-if="!embedded" class="workspace-hero create-hero">
       <div>
         <p class="workspace-eyebrow">新增采集</p>
-        <h2>记录一个新的卫生间点位</h2>
-        <p>适合现场采集或事后补录。填写位置、类型、设施、开放时间和照片后导出单条 JSON 数据。</p>
+        <h2>记录一个新的 v6 卫生间点位</h2>
+        <p>按 v6 数据结构填写位置、类型、通行、无障碍和开放时间，可导出单条 JSON 或转入编辑模式继续调整。</p>
       </div>
       <div class="hero-actions">
-        <el-button type="danger" @click="resetData()">
+        <el-button type="danger" @click="resetDraft">
           <el-icon><RefreshLeft /></el-icon>
-          {{ t("ui.general.resetAll") }}
+          重置
         </el-button>
-        <download-btn-component>
+        <el-button type="primary" @click="downloadRecord">
           <el-icon><Download /></el-icon>
-        </download-btn-component>
+          导出 v6 JSON
+        </el-button>
       </div>
     </div>
 
     <div v-else class="embedded-toolbar">
       <div>
         <h3>新增点位</h3>
-        <p>填写位置、类型、设施、开放时间和照片后导出单条 JSON 数据。</p>
+        <p>按 v6 数据结构创建一条卫生间记录。</p>
       </div>
       <div class="hero-actions">
-        <el-button type="danger" @click="resetData()">
+        <el-button type="danger" @click="resetDraft">
           <el-icon><RefreshLeft /></el-icon>
-          {{ t("ui.general.resetAll") }}
+          重置
         </el-button>
-        <download-btn-component>
+        <el-button type="primary" @click="downloadRecord">
           <el-icon><Download /></el-icon>
-        </download-btn-component>
+          导出 v6 JSON
+        </el-button>
       </div>
     </div>
 
-    <MapComponent class="map-panel"/>
+    <div class="create-layout">
+      <el-form class="create-form" label-position="top">
+        <section class="form-section">
+          <h3>基础信息</h3>
+          <div class="form-grid">
+            <el-form-item label="名称">
+              <el-input v-model="draft.name" placeholder="例如：静安寺站无障碍卫生间"/>
+            </el-form-item>
+            <el-form-item label="状态">
+              <el-switch v-model="draft.isActive" active-text="启用" inactive-text="停用"/>
+            </el-form-item>
+            <el-form-item label="纬度">
+              <el-input-number v-model="draft.lat" :precision="6" :step="0.0001" controls-position="right"/>
+            </el-form-item>
+            <el-form-item label="经度">
+              <el-input-number v-model="draft.lon" :precision="6" :step="0.0001" controls-position="right"/>
+            </el-form-item>
+          </div>
+          <el-button @click="fillCurrentLocation">
+            <el-icon><Location /></el-icon>
+            使用当前位置
+          </el-button>
+        </section>
 
-    <div class="form-masonry">
-      <div v-for="item in comp" class="form-panel">
-        <component :is="item.comp" v-show="item.cond"/>
-      </div>
+        <section class="form-section">
+          <h3>地址与位置描述</h3>
+          <div class="form-grid">
+            <el-form-item label="国家">
+              <el-input v-model="draft.country" placeholder="例如：中国"/>
+            </el-form-item>
+            <el-form-item label="省份">
+              <el-input v-model="draft.province" placeholder="例如：上海市"/>
+            </el-form-item>
+            <el-form-item label="城市">
+              <el-input v-model="draft.city" placeholder="例如：上海市"/>
+            </el-form-item>
+            <el-form-item label="描述">
+              <el-input v-model="draft.description" placeholder="例如：静安寺站 B1 客服中心右侧"/>
+            </el-form-item>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3>类型与通行</h3>
+          <el-form-item label="卫生间类型">
+            <el-select v-model="draft.kinds" multiple clearable>
+              <el-option v-for="item in kindOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+          <div class="form-grid">
+            <el-form-item label="进入限制">
+              <el-select v-model="draft.restriction">
+                <el-option v-for="item in restrictionOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="24 小时开放">
+              <el-select v-model="draft.isAlwaysOpen">
+                <el-option label="未知" :value="null"/>
+                <el-option label="是" :value="true"/>
+                <el-option label="否" :value="false"/>
+              </el-select>
+            </el-form-item>
+          </div>
+          <el-form-item label="开放时间说明">
+            <el-input v-model="draft.openingText" placeholder="例如：每日 08:00-22:00"/>
+          </el-form-item>
+          <el-form-item label="通行备注">
+            <el-input v-model="draft.accessNotes" type="textarea" :rows="2"/>
+          </el-form-item>
+        </section>
+
+        <section class="form-section">
+          <h3>无障碍信息</h3>
+          <div class="form-grid">
+            <el-form-item label="是否有无障碍卫生间">
+              <el-select v-model="draft.hasAccessibleToilet">
+                <el-option label="未知" :value="null"/>
+                <el-option label="有" :value="true"/>
+                <el-option label="无" :value="false"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否单独隔间">
+              <el-select v-model="draft.isSeparateStall">
+                <el-option label="未知" :value="null"/>
+                <el-option label="是" :value="true"/>
+                <el-option label="否" :value="false"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否上锁">
+              <el-select v-model="draft.isLocked">
+                <el-option label="未知" :value="null"/>
+                <el-option label="是" :value="true"/>
+                <el-option label="否" :value="false"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="解锁方式">
+              <el-input v-model="draft.unlockMethod" placeholder="例如：联系服务台"/>
+            </el-form-item>
+          </div>
+          <el-form-item label="无障碍备注">
+            <el-input v-model="draft.accessibilityNotes" type="textarea" :rows="2"/>
+          </el-form-item>
+        </section>
+
+        <section class="form-section">
+          <h3>输出</h3>
+          <div class="form-actions">
+            <el-button @click="useAsEditingRecord">创建为编辑草稿</el-button>
+            <el-button type="primary" @click="downloadRecord">
+              <el-icon><Download /></el-icon>
+              导出 v6 JSON
+            </el-button>
+          </div>
+        </section>
+      </el-form>
+
+      <aside class="preview-panel">
+        <h3>v6 预览</h3>
+        <dl>
+          <div>
+            <dt>名称</dt>
+            <dd>{{ previewRecord.name }}</dd>
+          </div>
+          <div>
+            <dt>坐标</dt>
+            <dd>{{ previewRecord.location.lat.toFixed(6) }}, {{ previewRecord.location.lon.toFixed(6) }}</dd>
+          </div>
+          <div>
+            <dt>类型</dt>
+            <dd>{{ previewRecord.kinds.join(" / ") || "未标记" }}</dd>
+          </div>
+          <div>
+            <dt>进入限制</dt>
+            <dd>{{ previewRecord.access.restriction }}</dd>
+          </div>
+          <div>
+            <dt>无障碍</dt>
+            <dd>{{ previewRecord.accessibility.hasAccessibleToilet === null ? "未知" : previewRecord.accessibility.hasAccessibleToilet ? "有" : "无" }}</dd>
+          </div>
+        </dl>
+        <pre>{{ JSON.stringify(previewRecord, null, 2) }}</pre>
+      </aside>
     </div>
   </section>
 </template>
@@ -131,31 +377,101 @@ const comp = computed(() => {
   color: var(--itp-text-muted);
 }
 
-.map-panel {
-  display: block;
+.create-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 16px;
   margin-top: 16px;
 }
 
-.form-masonry {
-  columns: 1;
-  column-gap: 14px;
-  padding-top: 14px;
+.create-form,
+.preview-panel {
+  min-width: 0;
 }
 
-.form-panel {
-  break-inside: avoid;
+.form-section,
+.preview-panel {
   margin-bottom: 14px;
+  padding: 18px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface);
 }
 
-@media (min-width: 760px) {
-  .form-masonry {
-    columns: 2;
+.form-section h3,
+.preview-panel h3 {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.preview-panel {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+}
+
+.preview-panel dl {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.preview-panel dl div {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.preview-panel dt {
+  color: var(--itp-text-muted);
+}
+
+.preview-panel dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.preview-panel pre {
+  max-height: 420px;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--itp-text);
+  font-size: 12px;
+}
+
+@media (max-width: 980px) {
+  .create-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-panel {
+    position: static;
   }
 }
 
-@media (min-width: 1120px) {
-  .form-masonry {
-    columns: 3;
+@media (max-width: 760px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .embedded-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 </style>

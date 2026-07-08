@@ -9,6 +9,7 @@ import {useWorkspaceStore} from "@/stores/workspaceStore";
 
 const files = ref([])
 const workspace = useWorkspaceStore()
+const v6KindSet = new Set<ToiletPlace["kinds"][number]>(["allGender", "male", "female", "family", "accessible", "other"]);
 
 const bathroomList = ref([] as ToiletPlace[])
 const keyword = ref("")
@@ -68,6 +69,11 @@ function isV6ToiletPlace(item: unknown): item is ToiletPlace {
   return typeof item === "object" && item !== null && "location" in item && "kinds" in item;
 }
 
+function normalizeKinds(kinds: string[] = []): ToiletPlace["kinds"] {
+  const normalized = kinds.filter((kind): kind is ToiletPlace["kinds"][number] => v6KindSet.has(kind as ToiletPlace["kinds"][number]));
+  return normalized.length > 0 ? normalized : ["other"];
+}
+
 function convertV5ToPreview(item: Bathroom): ToiletPlace {
   return {
     id: `v5-preview-${item.name || crypto.randomUUID()}`,
@@ -81,16 +87,15 @@ function convertV5ToPreview(item: Bathroom): ToiletPlace {
       accuracy: item.loc.accuracy ?? null,
       coordinateSystem: "wgs84"
     },
-    kinds: item.types as ToiletPlace["kinds"],
+    kinds: normalizeKinds(item.types),
     access: {
       restriction: item.properties?.inPrivateArea ? "private" : "public",
-      isFree: item.properties?.isFree ?? null,
-      requiresKey: item.accessible?.isLocked ?? null
+      notes: item.properties?.isFree === false ? "旧数据标记为收费" : undefined
     },
     facilities: item.properties?.facilities || {},
     accessibility: {
       hasAccessibleToilet: item.types?.includes("accessible") ?? null,
-      isIndependentRoom: null,
+      isSeparateStall: null,
       isLocked: item.accessible?.isLocked ?? null,
       notes: item.accessible?.comments
     },
@@ -195,18 +200,29 @@ function formatBoolean(value: boolean | null | undefined, yes = "是", no = "否
   return value ? yes : no;
 }
 
+function formatAddress(item: ToiletPlace | null) {
+  if (!item?.address) return "地址未知";
+  return [
+    item.address.country,
+    item.address.province,
+    item.address.city,
+    item.address.description
+  ].filter(Boolean).join(" ") || "地址未知";
+}
+
 const filteredBathrooms = computed(() => {
   const q = keyword.value.trim().toLowerCase()
   const filtered = !q ? bathroomList.value : bathroomList.value.filter((item) => {
     return [
       item.name,
-      item.address?.district,
-      item.address?.detail,
+      item.address?.country,
+      item.address?.province,
+      item.address?.city,
+      item.address?.description,
       item.location?.lat?.toString(),
       item.location?.lon?.toString(),
       item.access.restriction,
-      ...(item.kinds || []),
-      ...(item.tags || [])
+      ...(item.kinds || [])
     ].some((value) => value?.toLowerCase().includes(q))
   })
   if (!sortByNearest.value || !userLocation.value) return filtered;
@@ -278,7 +294,7 @@ onMounted(() => {
               <h3>{{ item.name || "未命名卫生间" }}</h3>
               <p>{{ item.kinds?.join(" / ") || "未标记类型" }}</p>
             </div>
-            <p class="address">{{ item.address?.district }} {{ item.address?.detail }}</p>
+            <p class="address">{{ formatAddress(item) }}</p>
             <div class="result-footer">
               <div class="coord">
                 <el-icon><Aim /></el-icon>
@@ -305,7 +321,7 @@ onMounted(() => {
       <template #header>
         <div>
           <h3 class="drawer-title">{{ detailToilet?.name || "卫生间详情" }}</h3>
-          <p class="drawer-subtitle">{{ detailToilet?.address?.district }} {{ detailToilet?.address?.detail }}</p>
+          <p class="drawer-subtitle">{{ formatAddress(detailToilet) }}</p>
         </div>
       </template>
 
@@ -318,8 +334,20 @@ onMounted(() => {
               <dd>{{ detailToilet.location.lat.toFixed(6) }}, {{ detailToilet.location.lon.toFixed(6) }}</dd>
             </div>
             <div>
-              <dt>楼层</dt>
-              <dd>{{ detailToilet.address?.floor || "未知" }}</dd>
+              <dt>国家</dt>
+              <dd>{{ detailToilet.address?.country || "未知" }}</dd>
+            </div>
+            <div>
+              <dt>省份</dt>
+              <dd>{{ detailToilet.address?.province || "未知" }}</dd>
+            </div>
+            <div>
+              <dt>城市</dt>
+              <dd>{{ detailToilet.address?.city || "未知" }}</dd>
+            </div>
+            <div>
+              <dt>描述</dt>
+              <dd>{{ detailToilet.address?.description || "暂无" }}</dd>
             </div>
             <div>
               <dt>定位精度</dt>
@@ -339,14 +367,6 @@ onMounted(() => {
               <dt>进入限制</dt>
               <dd>{{ detailToilet.access.restriction }}</dd>
             </div>
-            <div>
-              <dt>免费</dt>
-              <dd>{{ formatBoolean(detailToilet.access.isFree) }}</dd>
-            </div>
-            <div>
-              <dt>需要钥匙</dt>
-              <dd>{{ formatBoolean(detailToilet.access.requiresKey) }}</dd>
-            </div>
           </dl>
         </section>
 
@@ -356,6 +376,10 @@ onMounted(() => {
             <div>
               <dt>无障碍卫生间</dt>
               <dd>{{ formatBoolean(detailToilet.accessibility.hasAccessibleToilet, "有", "无") }}</dd>
+            </div>
+            <div>
+              <dt>单独隔间</dt>
+              <dd>{{ formatBoolean(detailToilet.accessibility.isSeparateStall) }}</dd>
             </div>
             <div>
               <dt>是否上锁</dt>
@@ -369,15 +393,11 @@ onMounted(() => {
         </section>
 
         <section>
-          <h4>开放与标签</h4>
+          <h4>开放与维护</h4>
           <dl>
             <div>
               <dt>开放时间</dt>
               <dd>{{ detailToilet.openingHours?.text || "未知" }}</dd>
-            </div>
-            <div>
-              <dt>标签</dt>
-              <dd>{{ detailToilet.tags?.join(" / ") || "无" }}</dd>
             </div>
             <div>
               <dt>最近更新</dt>

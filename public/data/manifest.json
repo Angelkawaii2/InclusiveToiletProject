@@ -1,6 +1,6 @@
 {
   "version": "20260708",
-  "generatedAt": 1783502320322,
+  "generatedAt": 1783525114964,
   "regions": [
     {
       "id": "mock-shanghai",
@@ -11,7 +11,7 @@
         121.6,
         31.31
       ],
-      "updatedAt": 1783502320322,
+      "updatedAt": 1783525114964,
       "recordCount": 200,
       "dataUrl": "./regions/mock-shanghai.json"
     }

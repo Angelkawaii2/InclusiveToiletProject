@@ -17,9 +17,6 @@ const kindOptions: Array<{ label: string; value: ToiletKind }> = [
   {label: "女厕", value: "female"},
   {label: "家庭卫生间", value: "family"},
   {label: "无障碍", value: "accessible"},
-  {label: "小便池", value: "urinal"},
-  {label: "蹲厕", value: "squat"},
-  {label: "坐厕", value: "seated"},
   {label: "其他", value: "other"},
 ];
 
@@ -37,19 +34,18 @@ const draft = reactive({
   isActive: true,
   lat: 0,
   lon: 0,
-  district: "",
-  detail: "",
-  floor: "",
+  country: "",
+  province: "",
+  city: "",
+  description: "",
   kinds: [] as ToiletKind[],
   restriction: "public" as AccessRestriction,
-  isFree: null as boolean | null,
-  requiresKey: null as boolean | null,
   accessNotes: "",
   hasAccessibleToilet: null as boolean | null,
+  isSeparateStall: null as boolean | null,
   isLocked: null as boolean | null,
   accessibilityNotes: "",
   openingText: "",
-  tagsText: "",
 });
 
 const hasSelection = computed(() => Boolean(workspace.selectedToilet));
@@ -61,19 +57,18 @@ function loadDraft() {
   draft.isActive = item.isActive;
   draft.lat = item.location.lat;
   draft.lon = item.location.lon;
-  draft.district = item.address?.district || "";
-  draft.detail = item.address?.detail || "";
-  draft.floor = item.address?.floor || "";
+  draft.country = item.address?.country || "";
+  draft.province = item.address?.province || "";
+  draft.city = item.address?.city || "";
+  draft.description = item.address?.description || "";
   draft.kinds = [...item.kinds];
   draft.restriction = item.access.restriction;
-  draft.isFree = item.access.isFree;
-  draft.requiresKey = item.access.requiresKey;
   draft.accessNotes = item.access.notes || "";
   draft.hasAccessibleToilet = item.accessibility.hasAccessibleToilet;
+  draft.isSeparateStall = item.accessibility.isSeparateStall;
   draft.isLocked = item.accessibility.isLocked;
   draft.accessibilityNotes = item.accessibility.notes || "";
   draft.openingText = item.openingHours?.text || "";
-  draft.tagsText = item.tags?.join(", ") || "";
 }
 
 function saveDraft() {
@@ -85,21 +80,21 @@ function saveDraft() {
   item.location.lon = Number(draft.lon);
   item.address = {
     ...(item.address || {}),
-    district: draft.district.trim() || undefined,
-    detail: draft.detail.trim() || undefined,
-    floor: draft.floor.trim() || undefined,
+    country: draft.country.trim() || undefined,
+    province: draft.province.trim() || undefined,
+    city: draft.city.trim() || undefined,
+    description: draft.description.trim() || undefined,
   };
   item.kinds = [...draft.kinds];
   item.access = {
     ...item.access,
     restriction: draft.restriction,
-    isFree: draft.isFree,
-    requiresKey: draft.requiresKey,
     notes: draft.accessNotes.trim() || undefined,
   };
   item.accessibility = {
     ...item.accessibility,
     hasAccessibleToilet: draft.hasAccessibleToilet,
+    isSeparateStall: draft.isSeparateStall,
     isLocked: draft.isLocked,
     notes: draft.accessibilityNotes.trim() || undefined,
   };
@@ -107,10 +102,6 @@ function saveDraft() {
     ...(item.openingHours || {isAlwaysOpen: null}),
     text: draft.openingText.trim() || undefined,
   };
-  item.tags = draft.tagsText
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
   item.audit.updatedAt = Date.now();
   workspace.selectToilet(item);
   ElMessage.success("记录已更新到当前会话数据中");
@@ -138,7 +129,7 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
         <el-icon><Edit /></el-icon>
         <div>
           <h3>{{ workspace.selectedToilet.name }}</h3>
-          <p>{{ workspace.selectedToilet.address?.district }} {{ workspace.selectedToilet.address?.detail }}</p>
+          <p>{{ workspace.selectedToilet.address?.province }} {{ workspace.selectedToilet.address?.city }} {{ workspace.selectedToilet.address?.description }}</p>
           <p>{{ workspace.selectedToilet.location.lat.toFixed(5) }}, {{ workspace.selectedToilet.location.lon.toFixed(5) }}</p>
         </div>
       </div>
@@ -157,16 +148,19 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
           <el-form-item label="经度">
             <el-input-number v-model="draft.lon" :precision="6" :step="0.0001" controls-position="right"/>
           </el-form-item>
-          <el-form-item label="区域">
-            <el-input v-model="draft.district"/>
+          <el-form-item label="国家">
+            <el-input v-model="draft.country"/>
           </el-form-item>
-          <el-form-item label="楼层">
-            <el-input v-model="draft.floor"/>
+          <el-form-item label="省份">
+            <el-input v-model="draft.province"/>
+          </el-form-item>
+          <el-form-item label="城市">
+            <el-input v-model="draft.city"/>
           </el-form-item>
         </div>
 
-        <el-form-item label="位置描述">
-          <el-input v-model="draft.detail"/>
+        <el-form-item label="描述">
+          <el-input v-model="draft.description"/>
         </el-form-item>
 
         <el-form-item label="卫生间类型">
@@ -181,25 +175,18 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
               <el-option v-for="item in restrictionOptions" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="是否免费">
-            <el-select v-model="draft.isFree">
-              <el-option label="未知" :value="null"/>
-              <el-option label="是" :value="true"/>
-              <el-option label="否" :value="false"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否需要钥匙">
-            <el-select v-model="draft.requiresKey">
-              <el-option label="未知" :value="null"/>
-              <el-option label="是" :value="true"/>
-              <el-option label="否" :value="false"/>
-            </el-select>
-          </el-form-item>
           <el-form-item label="无障碍卫生间">
             <el-select v-model="draft.hasAccessibleToilet">
               <el-option label="未知" :value="null"/>
               <el-option label="有" :value="true"/>
               <el-option label="无" :value="false"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否单独隔间">
+            <el-select v-model="draft.isSeparateStall">
+              <el-option label="未知" :value="null"/>
+              <el-option label="是" :value="true"/>
+              <el-option label="否" :value="false"/>
             </el-select>
           </el-form-item>
         </div>
@@ -213,10 +200,6 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
         <el-form-item label="无障碍备注">
           <el-input v-model="draft.accessibilityNotes" type="textarea" :rows="2"/>
         </el-form-item>
-        <el-form-item label="标签，以英文逗号分隔">
-          <el-input v-model="draft.tagsText"/>
-        </el-form-item>
-
         <div class="form-actions">
           <el-button @click="loadDraft">重置草稿</el-button>
           <el-button type="primary" @click="saveDraft">

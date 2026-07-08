@@ -10,9 +10,6 @@ export type ToiletKind =
     | "female"
     | "family"
     | "accessible"
-    | "urinal"
-    | "squat"
-    | "seated"
     | "other";
 
 export type AccessRestriction =
@@ -52,14 +49,10 @@ export interface GeoPoint {
 }
 
 export interface PlaceAddress {
-    countryCode?: string;
-    region?: string;
+    country?: string;
+    province?: string;
     city?: string;
-    district?: string;
-    street?: string;
-    detail?: string;
-    floor?: string;
-    room?: string;
+    description?: string;
 }
 
 export interface OpeningHours {
@@ -76,7 +69,7 @@ export interface OpeningPeriod {
 
 export interface AccessibilityInfo {
     hasAccessibleToilet: Unknownable<boolean>;
-    isIndependentRoom: Unknownable<boolean>;
+    isSeparateStall: Unknownable<boolean>;
     isLocked: Unknownable<boolean>;
     unlockMethod?: string;
     notes?: string;
@@ -113,8 +106,6 @@ export interface ToiletPlace {
     kinds: ToiletKind[];
     access: {
         restriction: AccessRestriction;
-        isFree: Unknownable<boolean>;
-        requiresKey: Unknownable<boolean>;
         notes?: string;
     };
     facilities: Partial<Record<FacilityKey, Unknownable<boolean>>>;
@@ -122,7 +113,6 @@ export interface ToiletPlace {
     openingHours?: OpeningHours;
     media?: MediaAsset[];
     observations?: UserObservation[];
-    tags?: string[];
     externalIds?: Record<string, string>;
     audit: AuditMetadata;
 }

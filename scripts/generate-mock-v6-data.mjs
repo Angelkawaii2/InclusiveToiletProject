@@ -18,7 +18,6 @@ const districts = [
 
 const placeWords = ["地铁站", "商场", "公园", "图书馆", "社区中心", "游客中心", "医院", "大学", "文化馆", "办公楼"];
 const detailWords = ["一层东侧", "二层中庭", "B1 出入口旁", "服务台后方", "无障碍通道旁", "北门附近"];
-const kindPool = ["allGender", "accessible", "family", "male", "female", "squat", "seated", "urinal"];
 
 function random(seed) {
     let value = seed % 2147483647;
@@ -40,10 +39,9 @@ function maybe(value, chance = 0.75) {
 
 function buildKinds(index) {
     const kinds = new Set();
-    kinds.add(index % 5 === 0 ? "allGender" : pick(["male", "female", "seated", "squat"]));
+    kinds.add(index % 5 === 0 ? "allGender" : pick(["male", "female"]));
     if (index % 3 === 0) kinds.add("accessible");
     if (index % 8 === 0) kinds.add("family");
-    if (index % 9 === 0) kinds.add("urinal");
     return [...kinds];
 }
 
@@ -71,20 +69,15 @@ const records = Array.from({length: 200}, (_, index) => {
             coordinateSystem: "wgs84"
         },
         address: {
-            countryCode: "CN",
-            region: "上海市",
+            country: "中国",
+            province: "上海市",
             city: "上海市",
-            district: district.name,
-            street: `${100 + index}号示例路`,
-            detail: pick(detailWords),
-            floor: pick(["B1", "1F", "2F", "3F"])
+            description: `${district.name}${100 + index}号示例路，${pick(detailWords)}`
         },
         kinds,
         access: {
             restriction: pick(["public", "customersOnly", "ticketedArea", "unknown"]),
-            isFree: maybe(index % 11 !== 0, 0.9),
-            requiresKey: isAccessible ? maybe(index % 4 === 0, 0.85) : false,
-            notes: isAccessible && index % 4 === 0 ? "可能需要向服务台领取钥匙" : undefined
+            notes: isAccessible && index % 4 === 0 ? "建议向服务台确认开放状态" : undefined
         },
         facilities: {
             hook: maybe(index % 2 === 0),
@@ -100,9 +93,9 @@ const records = Array.from({length: 200}, (_, index) => {
         },
         accessibility: {
             hasAccessibleToilet: isAccessible,
-            isIndependentRoom: isAccessible ? maybe(index % 6 !== 0, 0.85) : null,
+            isSeparateStall: isAccessible ? maybe(index % 6 !== 0, 0.85) : null,
             isLocked: isAccessible ? maybe(index % 4 === 0, 0.85) : null,
-            unlockMethod: isAccessible && index % 4 === 0 ? "联系服务台" : undefined,
+            unlockMethod: undefined,
             notes: isAccessible ? "模拟数据：入口宽度、扶手和回转空间待核验" : undefined
         },
         openingHours: index % 7 === 0
@@ -122,7 +115,6 @@ const records = Array.from({length: 200}, (_, index) => {
                 createdAt: now - index * 86400000
             }
         ],
-        tags: isAccessible ? ["无障碍", "模拟数据"] : ["模拟数据"],
         externalIds: {
             mock: id
         },
