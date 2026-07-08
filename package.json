@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "generate:mock-data": "node scripts/generate-mock-v6-data.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

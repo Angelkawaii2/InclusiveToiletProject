@@ -6,6 +6,7 @@ import App from './App.vue'
 import {createI18n} from 'vue-i18n'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import {createRouter, createWebHashHistory} from 'vue-router'
 
 import zh from '@/i18n/zh-cn.js'
@@ -55,4 +56,3 @@ const router = createRouter(
 app.component("switch-lang", SwitchLang)
     .use(router)
     .mount('#app')
-

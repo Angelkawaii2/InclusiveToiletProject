@@ -1,20 +1,24 @@
 <script setup>
 
 import {useI18n} from "vue-i18n";
-import {ref} from "vue";
+import {computed, ref, watchEffect} from "vue";
 import AddPage from "@/Views/AddPage.vue";
 import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
+import EditPage from "@/Views/EditPage.vue";
+import {Moon, Sunny} from "@element-plus/icons-vue";
+import {useSettingStore} from "@/stores/UseSettingStore";
 
 const {t} = useI18n()
+const settings = useSettingStore()
 
 const v = VITE_APP_VERSION
 const b = VITE_BUILD_TIME
 const isDevVersion = import.meta.env.VITE_IS_DEV_VERSION === "true"
 
-const font = ref({
-  color: 'rgba(0, 0, 0, .08)',
-})
+const font = computed(() => ({
+  color: settings.theme === 'dark' ? 'rgba(255, 255, 255, .08)' : 'rgba(0, 0, 0, .08)',
+}))
 
 const watermark = () => {
   if (isDevVersion) {
@@ -23,36 +27,55 @@ const watermark = () => {
     return [v]
   }
 }
-const tab = ref('create')
+const tab = ref('search')
+
+const isDarkTheme = computed(() => settings.theme === 'dark')
+
+watchEffect(() => {
+  const root = document.documentElement;
+  root.classList.toggle('dark', isDarkTheme.value);
+  root.dataset.theme = settings.theme;
+})
 </script>
 
 
 <template>
-  <div class="max-w-7xl mx-auto ">
+  <div class="app-shell">
     <el-watermark :content=watermark() :font="font">
-      <div class="title">
-        <div>
-          <h2 class="main-title-text">{{ t("ui.title") }}</h2>
-          <el-link href="https://github.com/Angelkawaii2/InclusiveToiletProject" target="_blank" type="primary">GitHub
-            Project | Version:
-            {{ v }} | Build: {{ b }}
-          </el-link>
+      <div class="app-header">
+        <div class="brand-block">
+          <h1>{{ t("ui.title") }}</h1>
+          <p>"{{ t('ui.slogan') }}"</p>
         </div>
-        <el-text class="no-warp-text italic">"{{ t('ui.slogan') }}"</el-text>
-        <el-text v-if="isDevVersion" type="danger">当前分支为 Dev 测试版本</el-text>
-        <hr>
+        <div class="build-card">
+          <el-button circle :title="isDarkTheme ? '切换到日间模式' : '切换到夜间模式'" @click="settings.toggleTheme()">
+            <el-icon>
+              <Moon v-if="!isDarkTheme"/>
+              <Sunny v-else/>
+            </el-icon>
+          </el-button>
+          <el-link href="https://github.com/Angelkawaii2/InclusiveToiletProject" target="_blank" type="primary">
+            GitHub Project
+          </el-link>
+          <span>Version: {{ v }}</span>
+          <span>Build: {{ b }}</span>
+          <el-text v-if="isDevVersion" type="danger">Dev 测试版本</el-text>
+        </div>
       </div>
 
       <el-backtop :bottom="100" :right="40"/>
 
+      <el-tabs v-model=tab class="workspace-tabs">
+        <el-tab-pane label="搜索浏览" name="search">
+          <lookup-page/>
+        </el-tab-pane>
 
-      <el-tabs v-model=tab type="card">
-        <el-tab-pane label="创建" name="create">
+        <el-tab-pane label="新增采集" name="create">
           <add-page></add-page>
         </el-tab-pane>
 
-        <el-tab-pane label="查询" name="search">
-          <lookup-page/>
+        <el-tab-pane label="修改维护" name="edit">
+          <edit-page/>
         </el-tab-pane>
 
         <el-tab-pane label="设置" name="settings">
@@ -68,43 +91,62 @@ const tab = ref('create')
 
 <style scoped>
 
-.title {
+.app-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+  padding: 22px 24px;
+  border: 1px solid rgba(111, 139, 153, 0.22);
+  border-color: var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface);
+  box-shadow: var(--itp-shadow);
+}
+
+.brand-block h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.brand-block p {
+  margin: 8px 0 0;
+  color: var(--itp-text-muted);
+}
+
+.build-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  margin-right: auto;
-  margin-left: auto;
-  margin-bottom: 10px;
+  align-items: flex-end;
+  gap: 4px;
+  color: var(--itp-text-muted);
+  font-size: 13px;
 }
 
-.main-title-text {
-  font-size: calc(16px + 2vw);
-  white-space: nowrap;
+.workspace-tabs {
+  border: 1px solid rgba(111, 139, 153, 0.22);
+  border-color: var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface);
+  padding: 14px 16px 18px;
 }
 
-.no-warp-text {
-  width: 100%;
-  font-size: 3vw; /* 根据视口宽度动态调整字体大小 */
-}
-
-
-@media (min-width: 350px) {
-  .no-warp-text {
-    font-size: 12px;
+@media (max-width: 720px) {
+  .app-header {
+    align-items: flex-start;
+    flex-direction: column;
   }
-}
 
-@media (min-width: 800px) {
-  .main-title-text {
-    font-size: calc(16px + 1vw);
-  }
-}
-
-@media (min-width: 1500px) {
-  .main-title-text {
-    font-size: calc(30px);
+  .build-card {
+    align-items: flex-start;
   }
 }
 

@@ -15,6 +15,7 @@ import ImageUploadComponent from "@/components/edit/v5/ImageUploadComponent.vue"
 import TimeSelectorComponent from "@/components/edit/v5/TimeSelectorComponent.vue";
 import AccessibleMetadataComponent from "@/components/edit/v5/AccessibleMetadataComponent.vue";
 import {useI18n} from "vue-i18n";
+import {Download, RefreshLeft} from "@element-plus/icons-vue";
 
 const data = useCurrentData()
 const settings = useSettingStore();
@@ -29,10 +30,6 @@ const isAccessibleSelected = (): boolean => {
 const resetData = () => {
   data.reset()
 }
-
-//const clazz = "grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2  p-3"
-
-const clz2 = "auto-rows-auto transition-transform  hover:scale-105 duration-300 hover:shadow-lg  h-auto min-h-0 "
 
 const comp = computed(() => {
   return [
@@ -52,36 +49,72 @@ const comp = computed(() => {
 
 <template>
 
-  <div>
-    <MapComponent class="card"/>
-
-    <div class="flex justify-evenly items-stretch">
-      <span class="">
-        <el-button type="danger" @click="resetData()">{{ t("ui.general.resetAll") }}</el-button>
-      </span>
-      <span>
-        <download-btn-component/>
-      </span>
+  <section class="workspace-page">
+    <div class="workspace-hero create-hero">
+      <div>
+        <p class="workspace-eyebrow">新增采集</p>
+        <h2>记录一个新的卫生间点位</h2>
+        <p>适合现场采集或事后补录。填写位置、类型、设施、开放时间和照片后导出单条 JSON 数据。</p>
+      </div>
+      <div class="hero-actions">
+        <el-button type="danger" @click="resetData()">
+          <el-icon><RefreshLeft /></el-icon>
+          {{ t("ui.general.resetAll") }}
+        </el-button>
+        <download-btn-component>
+          <el-icon><Download /></el-icon>
+        </download-btn-component>
+      </div>
     </div>
 
-    <div
-        class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 p-4">
+    <MapComponent class="map-panel"/>
 
-
-      <div v-for="item in comp"
-           class="row-auto mb-2 transition-transform  hover:scale-105 duration-300 hover:shadow-lg">
+    <div class="form-masonry">
+      <div v-for="item in comp" class="form-panel">
         <component :is="item.comp" v-show="item.cond"/>
       </div>
-
     </div>
-
-
-  </div>
+  </section>
 </template>
 
 <style scoped>
-.card {
-  height: auto;
-  min-height: 0; /* 防止强制拉伸 */
+.create-hero {
+  border-color: rgba(198, 80, 80, 0.2);
+  background: var(--itp-create-hero);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.map-panel {
+  display: block;
+  margin-top: 16px;
+}
+
+.form-masonry {
+  columns: 1;
+  column-gap: 14px;
+  padding-top: 14px;
+}
+
+.form-panel {
+  break-inside: avoid;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 760px) {
+  .form-masonry {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1120px) {
+  .form-masonry {
+    columns: 3;
+  }
 }
 </style>

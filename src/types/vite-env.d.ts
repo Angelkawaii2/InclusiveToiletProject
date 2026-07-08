@@ -8,3 +8,23 @@ interface ImportMetaEnv {
 interface ImportMeta {
     readonly env: ImportMetaEnv;
 }
+
+declare const VITE_APP_VERSION: string;
+declare const VITE_BUILD_TIME: string;
+declare const VITE_DATA_VERSION: string;
+
+declare module "*.vue" {
+    import type {DefineComponent} from "vue";
+    const component: DefineComponent<{}, {}, any>;
+    export default component;
+}
+
+declare module "virtual:pwa-register" {
+    export function registerSW(options?: {
+        immediate?: boolean;
+        onNeedRefresh?: () => void;
+        onOfflineReady?: () => void;
+        onRegistered?: (registration?: ServiceWorkerRegistration) => void;
+        onRegisterError?: (error: unknown) => void;
+    }): (reloadPage?: boolean) => Promise<void>;
+}

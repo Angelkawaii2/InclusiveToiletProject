@@ -1,0 +1,19 @@
+{
+  "version": "20260708",
+  "generatedAt": 1783502320322,
+  "regions": [
+    {
+      "id": "mock-shanghai",
+      "name": "上海模拟数据",
+      "bbox": [
+        121.35,
+        31.15,
+        121.6,
+        31.31
+      ],
+      "updatedAt": 1783502320322,
+      "recordCount": 200,
+      "dataUrl": "./regions/mock-shanghai.json"
+    }
+  ]
+}

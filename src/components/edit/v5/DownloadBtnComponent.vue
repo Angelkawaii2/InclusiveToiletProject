@@ -29,6 +29,7 @@ const isGPSDataAvailable = computed(() => {
 <template>
   <el-button :disabled="!isGPSDataAvailable" size="large" type="success"
              @click="downloadData">
+    <slot/>
     {{ t("ui.general.save") }}
   </el-button>
 </template>

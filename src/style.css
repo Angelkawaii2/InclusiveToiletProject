@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.workspace-page {
+    min-width: 0;
+}
+
+.workspace-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 20px 22px;
+    border: 1px solid var(--itp-border);
+    border-radius: 8px;
+}
+
+.workspace-hero h2 {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.25;
+    letter-spacing: 0;
+}
+
+.workspace-hero p {
+    max-width: 760px;
+    margin: 8px 0 0;
+    color: var(--itp-text-muted);
+}
+
+.workspace-eyebrow {
+    margin: 0 0 6px !important;
+    color: var(--itp-primary) !important;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+@media (max-width: 720px) {
+    .workspace-hero {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

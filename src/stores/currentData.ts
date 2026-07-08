@@ -108,7 +108,7 @@ function initExampleData(): Bathroom {
             'other'
         ],
         properties: {
-            isPrivateArea: false,
+            inPrivateArea: false,
             isFree: true,
             facilities: {
                 hasAccessibilityFeatures: true,

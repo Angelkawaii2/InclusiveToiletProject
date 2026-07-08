@@ -3,18 +3,23 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "target": "es2016",
+    "target": "es2022",
     "module": "es2020",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "types": [
-      "vite/client",
-      "node"
+      "vite/client"
     ],
-    "include": [
-      "./src/**/*",
-    ],
+    "allowImportingTsExtensions": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": false
-  }
+    "skipLibCheck": true
+  },
+  "include": [
+    "./src/**/*"
+  ]
 }

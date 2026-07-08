@@ -8,16 +8,32 @@ import {fromLonLat} from 'ol/proj';
 import VectorLayer from "ol/layer/Vector.js";
 import VectorSource from "ol/source/Vector.js";
 import {Feature} from "ol";
-import {Circle as CircleGeometry, Point} from 'ol/geom';
-import {Fill, Stroke, Style} from 'ol/style';
-import {StoreGeneric} from "pinia";
+import {Point} from 'ol/geom';
+import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
 import {useI18n} from "vue-i18n";
 
-const data = inject("currentData") as StoreGeneric;
+inject("currentData", null);
 const {t} = useI18n()
 
 // 使用 ref 创建一个 DOM 元素引用
 const mapElement = ref<HTMLElement | null>(null);
+
+const vectorSource = new VectorSource();
+const vectorLayer = new VectorLayer({
+  source: vectorSource,
+  style: new Style({
+    image: new CircleStyle({
+      radius: 6,
+      fill: new Fill({
+        color: 'rgb(255,145,0)',
+      }),
+      stroke: new Stroke({
+        color: '#1f5fbf',
+        width: 2
+      })
+    })
+  })
+});
 
 let map: Map = null;
 onMounted(() => {
@@ -29,51 +45,46 @@ onMounted(() => {
         new TileLayer({
           source: new OSM()
         }),
+        vectorLayer
 
       ],
       view: new View({
-        center: fromLonLat([116, 30]), // 地图中心点
-        zoom: 5 // 初始缩放级别
+        center: fromLonLat([121.47, 31.23]),
+        zoom: 11
       })
     });
   }
 });
 
-// Function to add a point to the map
 function addPointToMap(lon: number, lat: number) {
-  console.log(`draw point ${lat} ${lon}`)
   if (!map) return;
-
-  // Create a point feature with the provided coordinates
   const point = new Feature({
-    geometry: new Point(fromLonLat([lon, lat])), // Convert lon/lat to map projection
+    geometry: new Point(fromLonLat([lon, lat])),
   });
+  vectorSource.addFeature(point);
+}
 
-  // Create a vector source and add the point feature
-  const vectorSource = new VectorSource({
-    features: [point],
+function setPoints(points: Array<{ lon: number; lat: number }>) {
+  vectorSource.clear();
+  const features = points.map((item) => {
+    return new Feature({
+      geometry: new Point(fromLonLat([item.lon, item.lat])),
+    });
   });
+  vectorSource.addFeatures(features);
 
-  // Create a vector layer with a style that uses a blue circle and optional text
-  const vectorLayer = new VectorLayer({
-    source: vectorSource,
-    style: new Style({
-      geometry: new CircleGeometry(fromLonLat([lon, lat]), 20),
-      fill: new Fill({
-        color: 'rgb(255,145,0)',  // 半透明蓝色
-      }),
-      stroke: new Stroke({
-        color: 'blue',  // 精度圈边框颜色
-        width: 1
-      })
-    }),
+  if (!map || features.length === 0) return;
+  const extent = vectorSource.getExtent();
+  map.getView().fit(extent, {
+    padding: [36, 36, 36, 36],
+    maxZoom: 15,
+    duration: 220
   });
-  // Add the vector layer to the map
-  map.addLayer(vectorLayer);
 }
 
 defineExpose({
-  addPointToMap
+  addPointToMap,
+  setPoints
 })
 
 </script>

@@ -7,16 +7,16 @@ export interface Loc {
 }
 
 export interface Facilities {
-    hasAccessibilityFeatures: boolean;
-    hasHook: boolean;
-    hasDryer: boolean;
-    hasMirror: boolean;
-    hasShower: boolean;
+    hasAccessibilityFeatures?: boolean;
+    hasHook?: boolean;
+    hasDryer?: boolean;
+    hasMirror?: boolean;
+    hasShower?: boolean;
 }
 
 export interface Accessible {
-    isLocked: boolean;
-    comments: string;
+    isLocked?: boolean;
+    comments?: string;
 }
 
 export interface Time {
