@@ -1,24 +1,24 @@
 import {mkdirSync, readFileSync, writeFileSync} from "node:fs";
 import {dirname, resolve} from "node:path";
 
-const outputPath = resolve("public/data/regions/mock-shanghai.json");
+const outputPath = resolve("public/data/regions/mock-qingdao.json");
 const manifestPath = resolve("public/data/manifest.json");
 const projectVersions = JSON.parse(readFileSync(resolve("project-versions.json"), "utf8"));
 const now = Date.now();
 
 const districts = [
-    {name: "黄浦区", center: [121.490, 31.230]},
-    {name: "徐汇区", center: [121.436, 31.188]},
-    {name: "静安区", center: [121.459, 31.246]},
-    {name: "长宁区", center: [121.424, 31.220]},
-    {name: "浦东新区", center: [121.544, 31.221]},
-    {name: "虹口区", center: [121.505, 31.271]},
-    {name: "杨浦区", center: [121.526, 31.259]},
-    {name: "普陀区", center: [121.395, 31.249]},
+    {name: "市南区", center: [120.412, 36.075]},
+    {name: "市北区", center: [120.374, 36.100]},
+    {name: "李沧区", center: [120.432, 36.166]},
+    {name: "崂山区", center: [120.468, 36.107]},
+    {name: "城阳区", center: [120.396, 36.307]},
+    {name: "西海岸新区", center: [120.198, 35.966]},
+    {name: "即墨区", center: [120.447, 36.389]},
+    {name: "胶州市", center: [120.033, 36.264]},
 ];
 
-const placeWords = ["地铁站", "商场", "公园", "图书馆", "社区中心", "游客中心", "医院", "大学", "文化馆", "办公楼"];
-const detailWords = ["一层东侧", "二层中庭", "B1 出入口旁", "服务台后方", "无障碍通道旁", "北门附近"];
+const placeWords = ["地铁站", "商场", "海滨公园", "图书馆", "社区中心", "游客中心", "医院", "大学", "文化馆", "写字楼"];
+const detailWords = ["一层东侧", "二层中庭", "B1 出入口旁", "服务台后方", "无障碍通道旁", "海边步道入口附近"];
 
 function random(seed) {
     let value = seed % 2147483647;
@@ -54,7 +54,7 @@ const records = Array.from({length: 200}, (_, index) => {
     const kinds = buildKinds(index);
     const isAccessible = kinds.includes("accessible");
     const placeType = pick(placeWords);
-    const id = `mock-shanghai-${String(index + 1).padStart(3, "0")}`;
+    const id = `mock-qingdao-${String(index + 1).padStart(3, "0")}`;
 
     return {
         id,
@@ -71,8 +71,8 @@ const records = Array.from({length: 200}, (_, index) => {
         },
         address: {
             country: "中国",
-            province: "上海市",
-            city: "上海市",
+            province: "山东省",
+            city: "青岛市",
             description: `${district.name}${100 + index}号示例路，${pick(detailWords)}`
         },
         kinds,
@@ -132,12 +132,12 @@ const manifest = {
     generatedAt: now,
     regions: [
         {
-            id: "mock-shanghai",
-            name: "上海模拟数据",
-            bbox: [121.35, 31.15, 121.60, 31.31],
+            id: "mock-qingdao",
+            name: "青岛模拟数据",
+            bbox: [119.45, 35.55, 121.25, 37.15],
             updatedAt: now,
             recordCount: records.length,
-            dataUrl: "./regions/mock-shanghai.json"
+            dataUrl: "./regions/mock-qingdao.json"
         }
     ]
 };

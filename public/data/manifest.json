@@ -1,19 +1,19 @@
 {
   "version": "v0.6.0.20260708",
-  "generatedAt": 1783526154865,
+  "generatedAt": 1783530931880,
   "regions": [
     {
-      "id": "mock-shanghai",
-      "name": "上海模拟数据",
+      "id": "mock-qingdao",
+      "name": "青岛模拟数据",
       "bbox": [
-        121.35,
-        31.15,
-        121.6,
-        31.31
+        119.45,
+        35.55,
+        121.25,
+        37.15
       ],
-      "updatedAt": 1783526154865,
+      "updatedAt": 1783530931880,
       "recordCount": 200,
-      "dataUrl": "./regions/mock-shanghai.json"
+      "dataUrl": "./regions/mock-qingdao.json"
     }
   ]
 }
