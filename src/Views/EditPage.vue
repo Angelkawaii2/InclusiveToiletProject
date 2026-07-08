@@ -1,12 +1,122 @@
 <script lang="ts" setup>
-import {Edit, UploadFilled} from "@element-plus/icons-vue";
+import {computed, reactive, watch} from "vue";
+import {Check, Edit, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
+import {ElMessage} from "element-plus";
+import {AccessRestriction, ToiletKind} from "@/types/ToiletData-V6";
 
 defineProps<{
   embedded?: boolean
 }>()
 
 const workspace = useWorkspaceStore();
+
+const kindOptions: Array<{ label: string; value: ToiletKind }> = [
+  {label: "无性别/包容", value: "allGender"},
+  {label: "男厕", value: "male"},
+  {label: "女厕", value: "female"},
+  {label: "家庭卫生间", value: "family"},
+  {label: "无障碍", value: "accessible"},
+  {label: "小便池", value: "urinal"},
+  {label: "蹲厕", value: "squat"},
+  {label: "坐厕", value: "seated"},
+  {label: "其他", value: "other"},
+];
+
+const restrictionOptions: Array<{ label: string; value: AccessRestriction }> = [
+  {label: "公共开放", value: "public"},
+  {label: "仅顾客", value: "customersOnly"},
+  {label: "票区内", value: "ticketedArea"},
+  {label: "仅员工", value: "staffOnly"},
+  {label: "私人区域", value: "private"},
+  {label: "未知", value: "unknown"},
+];
+
+const draft = reactive({
+  name: "",
+  isActive: true,
+  lat: 0,
+  lon: 0,
+  district: "",
+  detail: "",
+  floor: "",
+  kinds: [] as ToiletKind[],
+  restriction: "public" as AccessRestriction,
+  isFree: null as boolean | null,
+  requiresKey: null as boolean | null,
+  accessNotes: "",
+  hasAccessibleToilet: null as boolean | null,
+  isLocked: null as boolean | null,
+  accessibilityNotes: "",
+  openingText: "",
+  tagsText: "",
+});
+
+const hasSelection = computed(() => Boolean(workspace.selectedToilet));
+
+function loadDraft() {
+  const item = workspace.selectedToilet;
+  if (!item) return;
+  draft.name = item.name;
+  draft.isActive = item.isActive;
+  draft.lat = item.location.lat;
+  draft.lon = item.location.lon;
+  draft.district = item.address?.district || "";
+  draft.detail = item.address?.detail || "";
+  draft.floor = item.address?.floor || "";
+  draft.kinds = [...item.kinds];
+  draft.restriction = item.access.restriction;
+  draft.isFree = item.access.isFree;
+  draft.requiresKey = item.access.requiresKey;
+  draft.accessNotes = item.access.notes || "";
+  draft.hasAccessibleToilet = item.accessibility.hasAccessibleToilet;
+  draft.isLocked = item.accessibility.isLocked;
+  draft.accessibilityNotes = item.accessibility.notes || "";
+  draft.openingText = item.openingHours?.text || "";
+  draft.tagsText = item.tags?.join(", ") || "";
+}
+
+function saveDraft() {
+  const item = workspace.selectedToilet;
+  if (!item) return;
+  item.name = draft.name.trim() || "未命名卫生间";
+  item.isActive = draft.isActive;
+  item.location.lat = Number(draft.lat);
+  item.location.lon = Number(draft.lon);
+  item.address = {
+    ...(item.address || {}),
+    district: draft.district.trim() || undefined,
+    detail: draft.detail.trim() || undefined,
+    floor: draft.floor.trim() || undefined,
+  };
+  item.kinds = [...draft.kinds];
+  item.access = {
+    ...item.access,
+    restriction: draft.restriction,
+    isFree: draft.isFree,
+    requiresKey: draft.requiresKey,
+    notes: draft.accessNotes.trim() || undefined,
+  };
+  item.accessibility = {
+    ...item.accessibility,
+    hasAccessibleToilet: draft.hasAccessibleToilet,
+    isLocked: draft.isLocked,
+    notes: draft.accessibilityNotes.trim() || undefined,
+  };
+  item.openingHours = {
+    ...(item.openingHours || {isAlwaysOpen: null}),
+    text: draft.openingText.trim() || undefined,
+  };
+  item.tags = draft.tagsText
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  item.audit.updatedAt = Date.now();
+  workspace.selectToilet(item);
+  ElMessage.success("记录已更新到当前会话数据中");
+}
+
+watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
 </script>
 
 <template>
@@ -23,13 +133,98 @@ const workspace = useWorkspaceStore();
       </el-button>
     </div>
 
-    <div v-if="workspace.selectedToilet" class="edit-selected-state">
-      <el-icon><Edit /></el-icon>
-      <div>
-        <h3>{{ workspace.selectedToilet.name }}</h3>
-        <p>{{ workspace.selectedToilet.address?.district }} {{ workspace.selectedToilet.address?.detail }}</p>
-        <p>{{ workspace.selectedToilet.location.lat.toFixed(5) }}, {{ workspace.selectedToilet.location.lon.toFixed(5) }}</p>
+    <div v-if="hasSelection" class="edit-form-shell">
+      <div class="edit-selected-state">
+        <el-icon><Edit /></el-icon>
+        <div>
+          <h3>{{ workspace.selectedToilet.name }}</h3>
+          <p>{{ workspace.selectedToilet.address?.district }} {{ workspace.selectedToilet.address?.detail }}</p>
+          <p>{{ workspace.selectedToilet.location.lat.toFixed(5) }}, {{ workspace.selectedToilet.location.lon.toFixed(5) }}</p>
+        </div>
       </div>
+
+      <el-form class="edit-form" label-position="top">
+        <div class="form-grid">
+          <el-form-item label="名称">
+            <el-input v-model="draft.name"/>
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-switch v-model="draft.isActive" active-text="启用" inactive-text="停用"/>
+          </el-form-item>
+          <el-form-item label="纬度">
+            <el-input-number v-model="draft.lat" :precision="6" :step="0.0001" controls-position="right"/>
+          </el-form-item>
+          <el-form-item label="经度">
+            <el-input-number v-model="draft.lon" :precision="6" :step="0.0001" controls-position="right"/>
+          </el-form-item>
+          <el-form-item label="区域">
+            <el-input v-model="draft.district"/>
+          </el-form-item>
+          <el-form-item label="楼层">
+            <el-input v-model="draft.floor"/>
+          </el-form-item>
+        </div>
+
+        <el-form-item label="位置描述">
+          <el-input v-model="draft.detail"/>
+        </el-form-item>
+
+        <el-form-item label="卫生间类型">
+          <el-select v-model="draft.kinds" multiple clearable>
+            <el-option v-for="item in kindOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+
+        <div class="form-grid">
+          <el-form-item label="进入限制">
+            <el-select v-model="draft.restriction">
+              <el-option v-for="item in restrictionOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否免费">
+            <el-select v-model="draft.isFree">
+              <el-option label="未知" :value="null"/>
+              <el-option label="是" :value="true"/>
+              <el-option label="否" :value="false"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否需要钥匙">
+            <el-select v-model="draft.requiresKey">
+              <el-option label="未知" :value="null"/>
+              <el-option label="是" :value="true"/>
+              <el-option label="否" :value="false"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="无障碍卫生间">
+            <el-select v-model="draft.hasAccessibleToilet">
+              <el-option label="未知" :value="null"/>
+              <el-option label="有" :value="true"/>
+              <el-option label="无" :value="false"/>
+            </el-select>
+          </el-form-item>
+        </div>
+
+        <el-form-item label="开放时间说明">
+          <el-input v-model="draft.openingText"/>
+        </el-form-item>
+        <el-form-item label="通行备注">
+          <el-input v-model="draft.accessNotes" type="textarea" :rows="2"/>
+        </el-form-item>
+        <el-form-item label="无障碍备注">
+          <el-input v-model="draft.accessibilityNotes" type="textarea" :rows="2"/>
+        </el-form-item>
+        <el-form-item label="标签，以英文逗号分隔">
+          <el-input v-model="draft.tagsText"/>
+        </el-form-item>
+
+        <div class="form-actions">
+          <el-button @click="loadDraft">重置草稿</el-button>
+          <el-button type="primary" @click="saveDraft">
+            <el-icon><Check /></el-icon>
+            保存修改
+          </el-button>
+        </div>
+      </el-form>
     </div>
 
     <div v-else class="edit-empty-state">
@@ -77,5 +272,35 @@ const workspace = useWorkspaceStore();
 .edit-selected-state p {
   margin: 0;
   color: var(--itp-text-muted);
+}
+
+.edit-form-shell {
+  display: grid;
+  gap: 14px;
+}
+
+.edit-form {
+  padding: 18px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 760px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

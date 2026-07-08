@@ -6,7 +6,6 @@ import {Bathroom} from "@/types/ToiletData-V5";
 import {ToiletDatasetManifest, ToiletPlace} from "@/types/ToiletData-V6";
 import {Aim, Edit, Location, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
-import {ElMessage} from "element-plus";
 
 const files = ref([])
 const workspace = useWorkspaceStore()
@@ -19,6 +18,8 @@ const loadError = ref("")
 const selectedId = ref("")
 const sortByNearest = ref(false)
 const userLocation = ref<{ lat: number; lon: number } | null>(null)
+const detailVisible = ref(false)
+const detailToilet = ref<ToiletPlace | null>(null)
 
 const mapComponent = ref<InstanceType<typeof MapComponent> | null>(null)
 
@@ -179,12 +180,19 @@ function selectToilet(item: ToiletPlace) {
 
 function viewDetails(item: ToiletPlace) {
   selectToilet(item);
-  ElMessage.info("详情面板还没做，已先在地图上定位该卫生间。");
+  detailToilet.value = item;
+  detailVisible.value = true;
 }
 
 function editToilet(item: ToiletPlace) {
   selectToilet(item);
+  detailVisible.value = false;
   workspace.editToilet(item);
+}
+
+function formatBoolean(value: boolean | null | undefined, yes = "是", no = "否") {
+  if (value === null || value === undefined) return "未知";
+  return value ? yes : no;
 }
 
 const filteredBathrooms = computed(() => {
@@ -292,6 +300,101 @@ onMounted(() => {
         </div>
       </aside>
     </div>
+
+    <el-drawer v-model="detailVisible" size="420px" direction="rtl">
+      <template #header>
+        <div>
+          <h3 class="drawer-title">{{ detailToilet?.name || "卫生间详情" }}</h3>
+          <p class="drawer-subtitle">{{ detailToilet?.address?.district }} {{ detailToilet?.address?.detail }}</p>
+        </div>
+      </template>
+
+      <div v-if="detailToilet" class="detail-panel">
+        <section>
+          <h4>位置</h4>
+          <dl>
+            <div>
+              <dt>坐标</dt>
+              <dd>{{ detailToilet.location.lat.toFixed(6) }}, {{ detailToilet.location.lon.toFixed(6) }}</dd>
+            </div>
+            <div>
+              <dt>楼层</dt>
+              <dd>{{ detailToilet.address?.floor || "未知" }}</dd>
+            </div>
+            <div>
+              <dt>定位精度</dt>
+              <dd>{{ detailToilet.location.accuracy ? `${detailToilet.location.accuracy} m` : "未知" }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section>
+          <h4>类型与通行</h4>
+          <dl>
+            <div>
+              <dt>类型</dt>
+              <dd>{{ detailToilet.kinds.join(" / ") || "未标记" }}</dd>
+            </div>
+            <div>
+              <dt>进入限制</dt>
+              <dd>{{ detailToilet.access.restriction }}</dd>
+            </div>
+            <div>
+              <dt>免费</dt>
+              <dd>{{ formatBoolean(detailToilet.access.isFree) }}</dd>
+            </div>
+            <div>
+              <dt>需要钥匙</dt>
+              <dd>{{ formatBoolean(detailToilet.access.requiresKey) }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section>
+          <h4>无障碍信息</h4>
+          <dl>
+            <div>
+              <dt>无障碍卫生间</dt>
+              <dd>{{ formatBoolean(detailToilet.accessibility.hasAccessibleToilet, "有", "无") }}</dd>
+            </div>
+            <div>
+              <dt>是否上锁</dt>
+              <dd>{{ formatBoolean(detailToilet.accessibility.isLocked) }}</dd>
+            </div>
+            <div>
+              <dt>备注</dt>
+              <dd>{{ detailToilet.accessibility.notes || "暂无" }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section>
+          <h4>开放与标签</h4>
+          <dl>
+            <div>
+              <dt>开放时间</dt>
+              <dd>{{ detailToilet.openingHours?.text || "未知" }}</dd>
+            </div>
+            <div>
+              <dt>标签</dt>
+              <dd>{{ detailToilet.tags?.join(" / ") || "无" }}</dd>
+            </div>
+            <div>
+              <dt>最近更新</dt>
+              <dd>{{ new Date(detailToilet.audit.updatedAt).toLocaleString() }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <div class="drawer-actions">
+          <el-button @click="detailVisible = false">关闭</el-button>
+          <el-button type="primary" @click="editToilet(detailToilet)">
+            <el-icon><Edit /></el-icon>
+            编辑
+          </el-button>
+        </div>
+      </div>
+    </el-drawer>
   </section>
 
 </template>
@@ -437,6 +540,62 @@ onMounted(() => {
 .item-actions {
   gap: 8px;
   justify-content: flex-end;
+}
+
+.drawer-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.drawer-subtitle {
+  margin: 6px 0 0;
+  color: var(--itp-text-muted);
+  font-size: 13px;
+}
+
+.detail-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.detail-panel section {
+  padding: 14px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface-soft);
+}
+
+.detail-panel h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.detail-panel dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.detail-panel dl div {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.detail-panel dt {
+  color: var(--itp-text-muted);
+}
+
+.detail-panel dd {
+  margin: 0;
+  color: var(--itp-text);
+  overflow-wrap: anywhere;
+}
+
+.drawer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .address {
