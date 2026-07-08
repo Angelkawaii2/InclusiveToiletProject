@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed} from "vue";
-import {SETTINGS_KEYS, useSettingStore} from "@/stores/UseSettingStore";
+import {useSettingStore} from "@/stores/settingsStore";
 import {notifySuccess} from "@/Utils/Notify";
 
 const setting = useSettingStore();
@@ -9,7 +9,7 @@ const isDebug = computed({
       get: () => setting.isDebug,
       set: (value: boolean) => {
         if (setting.isDebug == value) return;
-        setting.updateSettings(SETTINGS_KEYS.IS_DEBUG, value)
+        setting.updateDebugMode(value)
         notifySuccess(`已${value ? "启用" : "禁用"}Debug 模式`)
       }
     }
@@ -29,39 +29,10 @@ const isDebug = computed({
       <el-switch v-model="isDebug" size="large"></el-switch>
 
       <template v-if="isDebug">
-
-        <el-text class="label">速记模式</el-text>
-        <el-switch v-model="setting.test" disabled size="large"></el-switch>
-
-        <el-text class="label">自动刷新GPS</el-text>
-        <el-switch v-model="setting.test" disabled size="large"></el-switch>
-
-        <el-text class="label">自动更新 LastUpdateAt 字段</el-text>
-        <el-switch v-model="setting.test" disabled size="large"></el-switch>
-
-        <el-text class="label">⚠️允许修改内部数据</el-text>
-        <el-switch v-model="setting.test" disabled size="large"></el-switch>
-
-
-        <el-text class="label">启用评论签名</el-text>
-        <el-switch v-model="setting.test" disabled size="large"></el-switch>
-
-        <el-text class="label">用户名</el-text>
-        <el-input disabled size="large"></el-input>
-
-        <el-text class="label">UUID</el-text>
-        <div>
-          <el-input disabled size="large"></el-input>
-          <el-button>重新生成</el-button>
-        </div>
-
-        <el-text class="label">签名算法</el-text>
-        <el-select></el-select>
-
-        <el-text class="label">评论签名私钥</el-text>
-        <el-input disabled size="large"></el-input>
-
-
+        <el-text class="label">当前语言</el-text>
+        <el-text>{{ setting.language }}</el-text>
+        <el-text class="label">当前主题</el-text>
+        <el-text>{{ setting.theme === 'dark' ? '夜间模式' : '日间模式' }}</el-text>
       </template>
 
     </div>

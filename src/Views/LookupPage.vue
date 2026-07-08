@@ -1,20 +1,17 @@
 <script lang="ts" setup>
 
-import MapComponent from "@/components/edit/v5/MapComponent.vue";
+import ToiletMap from "@/components/map/ToiletMap.vue";
 import {computed, nextTick, onMounted, ref} from "vue";
-import {Bathroom} from "@/types/ToiletData-V5";
-import {ToiletDatasetManifest, ToiletPlace} from "@/types/ToiletData-V6";
-import {Aim, Edit, Location, Search, View, UploadFilled} from "@element-plus/icons-vue";
+import {normalizeImportedToilets, type ToiletDatasetManifest, type ToiletPlace} from "@/domain/toilet/v6";
+import {Aim, Download, Edit, Location, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
-import {DATA_VERSION} from "@/constants/projectVersions";
+import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 
-const files = ref([])
+const files = ref<File[]>([])
 const workspace = useWorkspaceStore()
-const v6KindSet = new Set<ToiletPlace["kinds"][number]>(["allGender", "male", "female", "family", "accessible", "other"]);
+const dataset = useToiletDatasetStore()
 
-const bathroomList = ref([] as ToiletPlace[])
 const keyword = ref("")
-const dataSourceName = ref("尚未加载")
 const isLoading = ref(false)
 const loadError = ref("")
 const selectedId = ref("")
@@ -23,15 +20,16 @@ const userLocation = ref<{ lat: number; lon: number } | null>(null)
 const detailVisible = ref(false)
 const detailToilet = ref<ToiletPlace | null>(null)
 
-const mapComponent = ref<InstanceType<typeof MapComponent> | null>(null)
+const mapComponent = ref<InstanceType<typeof ToiletMap> | null>(null)
 
-function handleFiles(event) {
-  const selectFiles = event.target.files;
+function handleFiles(event: Event) {
+  const selectFiles = (event.target as HTMLInputElement).files;
+  if (!selectFiles) return;
   files.value = Array.from(selectFiles);
   readFiles(files.value)
 }
 
-function readFiles(fs) {
+function readFiles(fs: File[]) {
   fs.forEach((file) => {
     const reader = new FileReader();
 
@@ -39,79 +37,26 @@ function readFiles(fs) {
       const fileContent = e.target.result;
       try {
         const jsonData = JSON.parse(fileContent as string);
-        const imported = normalizeImportedData(jsonData);
-        bathroomList.value = [...bathroomList.value, ...imported];
-        dataSourceName.value = `本地导入 ${bathroomList.value.length} 条`;
+        const imported = normalizeImportedToilets(jsonData);
+        dataset.appendToilets(
+            imported.toilets,
+            `本地导入 ${imported.toilets.length} 条，当前共 ${dataset.toilets.length + imported.toilets.length} 条`,
+            imported.errors
+        );
+        loadError.value = imported.errors.length > 0 ? imported.errors.join("；") : "";
         renderPoints();
       } catch (err) {
-        console.error('Error parsing JSON:', err);
         loadError.value = "导入失败：JSON 格式不正确或不是支持的数据结构。";
       }
     };
 
-    reader.onerror = (e) => {
-      console.error('Error reading file:', e.target.error);
+    reader.onerror = () => {
+      loadError.value = "读取文件失败，请重新选择 JSON 文件。";
     };
 
     reader.readAsText(file);
 
   })
-}
-
-function normalizeImportedData(input: unknown): ToiletPlace[] {
-  const items = Array.isArray(input) ? input : [input];
-  return items.map((item) => {
-    if (isV6ToiletPlace(item)) return item;
-    return convertV5ToPreview(item as Bathroom);
-  }).filter(Boolean);
-}
-
-function isV6ToiletPlace(item: unknown): item is ToiletPlace {
-  return typeof item === "object" && item !== null && "location" in item && "kinds" in item;
-}
-
-function normalizeKinds(kinds: string[] = []): ToiletPlace["kinds"] {
-  const normalized = kinds.filter((kind): kind is ToiletPlace["kinds"][number] => v6KindSet.has(kind as ToiletPlace["kinds"][number]));
-  return normalized.length > 0 ? normalized : ["other"];
-}
-
-function convertV5ToPreview(item: Bathroom): ToiletPlace {
-  return {
-    id: `v5-preview-${item.name || crypto.randomUUID()}`,
-    version: DATA_VERSION,
-    name: item.name || "未命名卫生间",
-    isActive: item.isDisabled !== true,
-    location: {
-      lat: item.loc.lat,
-      lon: item.loc.lon,
-      alt: item.loc.alt ?? null,
-      accuracy: item.loc.accuracy ?? null,
-      coordinateSystem: "wgs84"
-    },
-    kinds: normalizeKinds(item.types),
-    access: {
-      restriction: item.properties?.inPrivateArea ? "private" : "public",
-      notes: item.properties?.isFree === false ? "旧数据标记为收费" : undefined
-    },
-    facilities: item.properties?.facilities || {},
-    accessibility: {
-      hasAccessibleToilet: item.types?.includes("accessible") ?? null,
-      isSeparateStall: null,
-      isLocked: item.accessible?.isLocked ?? null,
-      notes: item.accessible?.comments
-    },
-    openingHours: item.time
-        ? {
-          isAlwaysOpen: item.time.allDay,
-          text: item.time.allDay ? "24 小时开放" : `${item.time.openAt}-${item.time.closeAt}`
-        }
-        : undefined,
-    audit: {
-      createdAt: item.lastUpdateAt || Date.now(),
-      updatedAt: item.lastUpdateAt || Date.now(),
-      source: "v5-import-preview"
-    }
-  };
 }
 
 async function loadStaticMockData() {
@@ -122,12 +67,11 @@ async function loadStaticMockData() {
     const manifest = await manifestResponse.json() as ToiletDatasetManifest;
     const region = manifest.regions[0];
     const regionResponse = await fetch(`./data/${region.dataUrl.replace("./", "")}`);
-    bathroomList.value = await regionResponse.json() as ToiletPlace[];
-    dataSourceName.value = `${region.name}：${bathroomList.value.length} 条`;
+    const toilets = await regionResponse.json() as ToiletPlace[];
+    dataset.replaceDataset(toilets, `${region.name}：${toilets.length} 条`);
     await nextTick();
     renderPoints();
   } catch (err) {
-    console.error(err);
     loadError.value = "静态模拟数据加载失败。";
   } finally {
     isLoading.value = false;
@@ -135,10 +79,20 @@ async function loadStaticMockData() {
 }
 
 function renderPoints() {
-  const points = bathroomList.value
+  const points = dataset.toilets
       .filter((item) => Number.isFinite(item.location?.lon) && Number.isFinite(item.location?.lat))
       .map((item) => ({lon: item.location.lon, lat: item.location.lat}));
   mapComponent.value?.setPoints(points);
+}
+
+function downloadCurrentDataset() {
+  const blob = new Blob([JSON.stringify(dataset.toilets, null, 2)], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "toilet-dataset-v6.json";
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 function distanceInMeters(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
@@ -213,7 +167,7 @@ function formatAddress(item: ToiletPlace | null) {
 
 const filteredBathrooms = computed(() => {
   const q = keyword.value.trim().toLowerCase()
-  const filtered = !q ? bathroomList.value : bathroomList.value.filter((item) => {
+  const filtered = !q ? dataset.toilets : dataset.toilets.filter((item) => {
     return [
       item.name,
       item.address?.country,
@@ -245,16 +199,22 @@ onMounted(() => {
         <h2>查看本地或静态数据里的卫生间</h2>
         <p>默认加载 v6 静态模拟数据，也可以继续导入 JSON 文件叠加预览。</p>
       </div>
-      <label class="import-button">
-        <el-icon><UploadFilled /></el-icon>
-        导入 JSON
-        <input ref="fileInput" accept=".json" multiple type="file" @change="handleFiles"/>
-      </label>
+      <div class="hero-actions">
+        <label class="import-button">
+          <el-icon><UploadFilled /></el-icon>
+          导入 JSON
+          <input ref="fileInput" accept=".json" multiple type="file" @change="handleFiles"/>
+        </label>
+        <el-button :disabled="dataset.toilets.length === 0" type="primary" @click="downloadCurrentDataset">
+          <el-icon><Download /></el-icon>
+          导出当前数据集
+        </el-button>
+      </div>
     </div>
 
     <div class="search-layout">
       <div class="map-column">
-        <map-component ref="mapComponent"></map-component>
+        <toilet-map ref="mapComponent"/>
       </div>
 
       <aside class="result-column">
@@ -274,8 +234,8 @@ onMounted(() => {
             </el-button>
           </div>
           <div class="result-meta">
-            <span>{{ dataSourceName }}</span>
-            <span>{{ filteredBathrooms.length }} / {{ bathroomList.length }} 条</span>
+            <span>{{ dataset.dataSourceName }}</span>
+            <span>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</span>
           </div>
           <el-alert v-if="loadError" :title="loadError" show-icon type="error"/>
           <el-alert v-if="isLoading" title="正在加载静态模拟数据" show-icon type="info"/>
@@ -424,6 +384,13 @@ onMounted(() => {
 .search-hero {
   border-color: rgba(51, 110, 190, 0.2);
   background: var(--itp-search-hero);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .import-button {

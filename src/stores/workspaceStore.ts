@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {ToiletPlace} from "@/types/ToiletData-V6";
+import type {ToiletPlace} from "@/domain/toilet/v6";
 
 export type WorkspaceTab = "search" | "maintenance" | "settings";
 export type MaintenanceMode = "create" | "edit" | "batch";

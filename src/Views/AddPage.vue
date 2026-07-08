@@ -2,7 +2,13 @@
 import {computed, reactive} from "vue";
 import {Download, Location, RefreshLeft} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
-import {AccessRestriction, ToiletKind, ToiletPlace} from "@/types/ToiletData-V6";
+import {
+  ACCESS_RESTRICTION_OPTIONS,
+  TOILET_KIND_OPTIONS,
+  type AccessRestriction,
+  type ToiletKind,
+  type ToiletPlace
+} from "@/domain/toilet/v6";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {DATA_VERSION} from "@/constants/projectVersions";
 
@@ -11,24 +17,6 @@ defineProps<{
 }>()
 
 const workspace = useWorkspaceStore();
-
-const kindOptions: Array<{ label: string; value: ToiletKind }> = [
-  {label: "无性别/包容", value: "allGender"},
-  {label: "男厕", value: "male"},
-  {label: "女厕", value: "female"},
-  {label: "家庭卫生间", value: "family"},
-  {label: "无障碍", value: "accessible"},
-  {label: "其他", value: "other"},
-];
-
-const restrictionOptions: Array<{ label: string; value: AccessRestriction }> = [
-  {label: "公共开放", value: "public"},
-  {label: "仅顾客", value: "customersOnly"},
-  {label: "票区内", value: "ticketedArea"},
-  {label: "仅员工", value: "staffOnly"},
-  {label: "私人区域", value: "private"},
-  {label: "未知", value: "unknown"},
-];
 
 const draft = reactive({
   name: "",
@@ -244,13 +232,13 @@ function useAsEditingRecord() {
           <h3>类型与通行</h3>
           <el-form-item label="卫生间类型">
             <el-select v-model="draft.kinds" multiple clearable>
-              <el-option v-for="item in kindOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
           <div class="form-grid">
             <el-form-item label="进入限制">
               <el-select v-model="draft.restriction">
-                <el-option v-for="item in restrictionOptions" :key="item.value" :label="item.label" :value="item.value"/>
+                <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-form-item>
             <el-form-item label="24 小时开放">

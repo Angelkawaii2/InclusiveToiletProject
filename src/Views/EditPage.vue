@@ -3,31 +3,20 @@ import {computed, reactive, watch} from "vue";
 import {Check, Edit, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {ElMessage} from "element-plus";
-import {AccessRestriction, ToiletKind} from "@/types/ToiletData-V6";
+import {
+  ACCESS_RESTRICTION_OPTIONS,
+  TOILET_KIND_OPTIONS,
+  type AccessRestriction,
+  type ToiletKind
+} from "@/domain/toilet/v6";
+import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 
 defineProps<{
   embedded?: boolean
 }>()
 
 const workspace = useWorkspaceStore();
-
-const kindOptions: Array<{ label: string; value: ToiletKind }> = [
-  {label: "无性别/包容", value: "allGender"},
-  {label: "男厕", value: "male"},
-  {label: "女厕", value: "female"},
-  {label: "家庭卫生间", value: "family"},
-  {label: "无障碍", value: "accessible"},
-  {label: "其他", value: "other"},
-];
-
-const restrictionOptions: Array<{ label: string; value: AccessRestriction }> = [
-  {label: "公共开放", value: "public"},
-  {label: "仅顾客", value: "customersOnly"},
-  {label: "票区内", value: "ticketedArea"},
-  {label: "仅员工", value: "staffOnly"},
-  {label: "私人区域", value: "private"},
-  {label: "未知", value: "unknown"},
-];
+const dataset = useToiletDatasetStore();
 
 const draft = reactive({
   name: "",
@@ -103,6 +92,7 @@ function saveDraft() {
     text: draft.openingText.trim() || undefined,
   };
   item.audit.updatedAt = Date.now();
+  dataset.updateToilet(item);
   workspace.selectToilet(item);
   ElMessage.success("记录已更新到当前会话数据中");
 }
@@ -165,14 +155,14 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
 
         <el-form-item label="卫生间类型">
           <el-select v-model="draft.kinds" multiple clearable>
-            <el-option v-for="item in kindOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
 
         <div class="form-grid">
           <el-form-item label="进入限制">
             <el-select v-model="draft.restriction">
-              <el-option v-for="item in restrictionOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
           <el-form-item label="无障碍卫生间">

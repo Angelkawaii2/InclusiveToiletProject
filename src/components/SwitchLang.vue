@@ -1,7 +1,7 @@
 <script setup>
 import {useI18n} from 'vue-i18n';
 import {watch} from "vue";
-import {useSettingStore} from "@/stores/UseSettingStore.ts";
+import {useSettingStore} from "@/stores/settingsStore";
 import {notifySuccess} from "@/Utils/Notify.ts";
 
 const {locale} = useI18n();
@@ -21,7 +21,6 @@ const availableLang = {
 watch(locale, (newLocale) => {
   setting.updateLanguage(newLocale);
   notifySuccess(`语言已更改为 ${newLocale}`)
-  console.log(`change language to ${newLocale}`);
 })
 </script>
 

@@ -16,8 +16,7 @@
     "ol": "^9.1.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.26",
-    "vue-i18n": "^11.4.6",
-    "vue-router": "^4.3.2"
+    "vue-i18n": "^11.4.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.7",

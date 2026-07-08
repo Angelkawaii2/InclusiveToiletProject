@@ -6,7 +6,7 @@ import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
 import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
 import {Moon, Sunny} from "@element-plus/icons-vue";
-import {useSettingStore} from "@/stores/UseSettingStore";
+import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 
 const {t} = useI18n()
