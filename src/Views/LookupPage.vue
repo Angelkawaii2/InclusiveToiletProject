@@ -31,7 +31,8 @@ const detailVisible = ref(false)
 const detailToilet = ref<ToiletPlace | null>(null)
 const selectedKinds = ref<ToiletKind[]>([])
 const selectedRestrictions = ref<AccessRestriction[]>([])
-const activeFilter = ref<"all" | "active" | "inactive">("all")
+const activeFilter = ref<"all" | "active" | "inactive">("active")
+const basemapStyle = ref<"standard" | "mono" | "light" | "dark">("mono")
 const accessibleFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const separateStallFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const lockedFilter = ref<"all" | "yes" | "no" | "unknown">("all")
@@ -240,7 +241,7 @@ function resetFilters() {
   keyword.value = "";
   selectedKinds.value = [];
   selectedRestrictions.value = [];
-  activeFilter.value = "all";
+  activeFilter.value = "active";
   accessibleFilter.value = "all";
   separateStallFilter.value = "all";
   lockedFilter.value = "all";
@@ -314,7 +315,7 @@ onMounted(() => {
 
     <div class="search-layout">
       <div class="map-column">
-        <toilet-map ref="mapComponent"/>
+        <toilet-map ref="mapComponent" :basemap-style="basemapStyle"/>
       </div>
 
       <aside class="result-column">
@@ -353,7 +354,7 @@ onMounted(() => {
                     <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="记录状态">
+                <el-form-item label="是否启用">
                   <el-select v-model="activeFilter">
                     <el-option label="全部" value="all"/>
                     <el-option label="启用" value="active"/>
@@ -390,6 +391,15 @@ onMounted(() => {
           <div class="result-meta">
             <span>{{ dataset.dataSourceName }}</span>
             <span>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</span>
+          </div>
+          <div class="basemap-switcher">
+            <span>底图</span>
+            <el-segmented v-model="basemapStyle" :options="[
+              {label: '标准', value: 'standard'},
+              {label: '单色', value: 'mono'},
+              {label: '浅色', value: 'light'},
+              {label: '深色', value: 'dark'}
+            ]"/>
           </div>
           <div v-if="userLocation" class="location-meta">
             当前位置：{{ userLocation.lat.toFixed(5) }}, {{ userLocation.lon.toFixed(5) }}
@@ -540,6 +550,10 @@ onMounted(() => {
               <dt>最近更新</dt>
               <dd>{{ new Date(detailToilet.audit.updatedAt).toLocaleString() }}</dd>
             </div>
+            <div>
+              <dt>人工 Review</dt>
+              <dd>{{ detailToilet.audit.reviewed ? "已确认" : "未确认" }}</dd>
+            </div>
           </dl>
         </section>
 
@@ -650,6 +664,15 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  color: var(--itp-text-muted);
+  font-size: 13px;
+}
+
+.basemap-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   color: var(--itp-text-muted);
   font-size: 13px;
 }

@@ -36,6 +36,7 @@ export type FacilityKey =
 export interface AuditMetadata {
     createdAt: number;
     updatedAt: number;
+    reviewed: boolean;
     createdBy?: string;
     updatedBy?: string;
     source?: string;

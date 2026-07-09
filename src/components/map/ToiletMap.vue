@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
@@ -19,7 +19,16 @@ export interface ToiletMapPoint {
   kinds: ToiletKind[];
 }
 
+export type BasemapStyle = "standard" | "mono" | "light" | "dark";
+
+const props = withDefaults(defineProps<{
+  basemapStyle?: BasemapStyle;
+}>(), {
+  basemapStyle: "mono",
+});
+
 const mapElement = ref<HTMLElement | null>(null);
+const mapClasses = computed(() => ["map-container", `basemap-${props.basemapStyle}`]);
 
 const markerStyles = {
   male: new Style({
@@ -87,7 +96,7 @@ onMounted(() => {
     target: mapElement.value,
     layers: [
       new TileLayer({
-        className: "ol-layer mono-osm-layer",
+        className: "ol-layer osm-basemap-layer",
         source: new OSM(),
       }),
       vectorLayer,
@@ -164,7 +173,7 @@ defineExpose({
 </script>
 
 <template>
-  <div ref="mapElement" class="map-container"></div>
+  <div ref="mapElement" :class="mapClasses"></div>
 </template>
 
 <style scoped>
@@ -174,7 +183,15 @@ defineExpose({
   height: 100%;
 }
 
-.map-container :deep(.mono-osm-layer canvas) {
+.map-container.basemap-mono :deep(.osm-basemap-layer canvas) {
   filter: grayscale(1) saturate(0) contrast(0.95) brightness(1.05);
+}
+
+.map-container.basemap-light :deep(.osm-basemap-layer canvas) {
+  filter: saturate(0.55) contrast(0.82) brightness(1.14);
+}
+
+.map-container.basemap-dark :deep(.osm-basemap-layer canvas) {
+  filter: invert(0.92) hue-rotate(180deg) saturate(0.48) contrast(0.88) brightness(0.9);
 }
 </style>

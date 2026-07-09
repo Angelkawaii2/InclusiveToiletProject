@@ -74,6 +74,7 @@ function convertLegacyBathroomToV6(item: LegacyBathroom): ToiletPlace | null {
         audit: {
             createdAt: updatedAt,
             updatedAt,
+            reviewed: false,
             source: "legacy-import-preview",
         },
     };
@@ -86,7 +87,13 @@ export function normalizeImportedToilets(input: unknown): ImportResult {
 
     items.forEach((item, index) => {
         if (isV6ToiletPlace(item)) {
-            toilets.push(item);
+            toilets.push({
+                ...item,
+                audit: {
+                    ...item.audit,
+                    reviewed: item.audit.reviewed ?? false,
+                },
+            });
             return;
         }
         if (isLegacyBathroom(item)) {

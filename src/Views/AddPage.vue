@@ -151,6 +151,7 @@ function buildRecord(): ToiletPlace {
     audit: {
       createdAt: now,
       updatedAt: now,
+      reviewed: true,
       source: "local-create-form"
     }
   };

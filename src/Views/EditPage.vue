@@ -21,6 +21,7 @@ const dataset = useToiletDatasetStore();
 const draft = reactive({
   name: "",
   isActive: true,
+  reviewed: true,
   lat: 0,
   lon: 0,
   country: "",
@@ -45,6 +46,7 @@ function loadDraft() {
   if (!item) return;
   draft.name = item.name;
   draft.isActive = item.isActive;
+  draft.reviewed = item.audit.reviewed ?? false;
   draft.lat = item.location.lat;
   draft.lon = item.location.lon;
   draft.country = item.address?.country || "";
@@ -98,6 +100,7 @@ function saveDraft() {
     text: draft.openingText.trim() || undefined,
   };
   item.audit.updatedAt = Date.now();
+  item.audit.reviewed = draft.reviewed;
   dataset.updateToilet(item);
   workspace.selectToilet(item);
   ElMessage.success("记录已更新到当前会话数据中");
@@ -137,6 +140,9 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
           </el-form-item>
           <el-form-item label="状态">
             <el-switch v-model="draft.isActive" active-text="启用" inactive-text="停用"/>
+          </el-form-item>
+          <el-form-item label="人工 Review">
+            <el-switch v-model="draft.reviewed" active-text="已确认" inactive-text="未确认"/>
           </el-form-item>
           <el-form-item label="纬度">
             <el-input-number v-model="draft.lat" :precision="6" :step="0.0001" controls-position="right"/>

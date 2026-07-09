@@ -123,6 +123,7 @@ const records = Array.from({length: 200}, (_, index) => {
         audit: {
             createdAt: now - index * 86400000,
             updatedAt: now - index * 3600000,
+            reviewed: false,
             source: "mock-generator"
         }
     };
