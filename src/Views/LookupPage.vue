@@ -11,7 +11,7 @@ import {
   type ToiletKind,
   type ToiletPlace
 } from "@/domain/toilet/v6";
-import {Aim, Download, Edit, Location, Search, View, UploadFilled} from "@element-plus/icons-vue";
+import {Aim, Download, Edit, Location, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 
@@ -97,7 +97,7 @@ async function loadStaticMockData() {
 function renderPoints() {
   const points = filteredBathrooms.value
       .filter((item) => Number.isFinite(item.location?.lon) && Number.isFinite(item.location?.lat))
-      .map((item) => ({lon: item.location.lon, lat: item.location.lat}));
+      .map((item) => ({lon: item.location.lon, lat: item.location.lat, kinds: item.kinds}));
   mapComponent.value?.setPoints(points);
 }
 
@@ -176,6 +176,21 @@ function editToilet(item: ToiletPlace) {
   selectToilet(item);
   detailVisible.value = false;
   workspace.editToilet(item);
+}
+
+function navigateToToilet(item: ToiletPlace) {
+  selectToilet(item);
+  const lat = item.location.lat;
+  const lon = item.location.lon;
+  const label = encodeURIComponent(item.name || "卫生间");
+  const geoUrl = `geo:${lat},${lon}?q=${lat},${lon}(${label})`;
+  const fallbackUrl = `https://maps.apple.com/?daddr=${lat},${lon}&q=${label}`;
+  const openedAt = Date.now();
+  window.location.href = geoUrl;
+  window.setTimeout(() => {
+    if (document.hidden || Date.now() - openedAt > 1600) return;
+    window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+  }, 700);
 }
 
 function formatBoolean(value: boolean | null | undefined, yes = "是", no = "否") {
@@ -354,6 +369,12 @@ onMounted(() => {
             当前位置：{{ userLocation.lat.toFixed(5) }}, {{ userLocation.lon.toFixed(5) }}
             <span v-if="userLocationAccuracy">精度约 {{ userLocationAccuracy }} m</span>
           </div>
+          <div class="map-legend">
+            <span><i class="legend-dot male"></i>男厕</span>
+            <span><i class="legend-dot female"></i>女厕</span>
+            <span><i class="legend-dot neutral"></i>中立/无性别</span>
+            <span><i class="legend-dot mixed"></i>混合/其他</span>
+          </div>
           <el-alert v-if="loadError" :title="loadError" show-icon type="error"/>
           <el-alert v-if="isLoading" title="正在加载静态模拟数据" show-icon type="info"/>
         </div>
@@ -384,6 +405,10 @@ onMounted(() => {
               <el-button size="small" @click.stop="viewDetails(item)">
                 <el-icon><View /></el-icon>
                 查看详情
+              </el-button>
+              <el-button size="small" type="success" @click.stop="navigateToToilet(item)">
+                <el-icon><Position /></el-icon>
+                前往
               </el-button>
               <el-button size="small" type="primary" @click.stop="editToilet(item)">
                 <el-icon><Edit /></el-icon>
@@ -490,6 +515,10 @@ onMounted(() => {
 
         <div class="drawer-actions">
           <el-button @click="detailVisible = false">关闭</el-button>
+          <el-button type="success" @click="navigateToToilet(detailToilet)">
+            <el-icon><Position /></el-icon>
+            前往
+          </el-button>
           <el-button type="primary" @click="editToilet(detailToilet)">
             <el-icon><Edit /></el-icon>
             编辑
@@ -593,6 +622,45 @@ onMounted(() => {
   gap: 8px;
   color: var(--itp-text-muted);
   font-size: 13px;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--itp-text-muted);
+  font-size: 12px;
+}
+
+.map-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14);
+}
+
+.legend-dot.male {
+  background: #2f80ed;
+}
+
+.legend-dot.female {
+  background: #f26ba7;
+}
+
+.legend-dot.neutral {
+  background: #29a36a;
+}
+
+.legend-dot.mixed {
+  background: #8b6bdc;
 }
 
 .empty-result {

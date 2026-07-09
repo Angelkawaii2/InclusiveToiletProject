@@ -10,19 +10,58 @@ import VectorSource from "ol/source/Vector";
 import {Feature} from "ol";
 import {Point} from "ol/geom";
 import {Circle as CircleStyle, Fill, Stroke, Style} from "ol/style";
+import type {ToiletKind} from "@/domain/toilet/v6";
+
+export interface ToiletMapPoint {
+  lon: number;
+  lat: number;
+  kinds: ToiletKind[];
+}
 
 const mapElement = ref<HTMLElement | null>(null);
+
+const markerStyles = {
+  male: new Style({
+    image: new CircleStyle({
+      radius: 7,
+      fill: new Fill({color: "#2f80ed"}),
+      stroke: new Stroke({color: "#ffffff", width: 2}),
+    }),
+  }),
+  female: new Style({
+    image: new CircleStyle({
+      radius: 7,
+      fill: new Fill({color: "#f26ba7"}),
+      stroke: new Stroke({color: "#ffffff", width: 2}),
+    }),
+  }),
+  neutral: new Style({
+    image: new CircleStyle({
+      radius: 7,
+      fill: new Fill({color: "#29a36a"}),
+      stroke: new Stroke({color: "#ffffff", width: 2}),
+    }),
+  }),
+  mixed: new Style({
+    image: new CircleStyle({
+      radius: 7,
+      fill: new Fill({color: "#8b6bdc"}),
+      stroke: new Stroke({color: "#ffffff", width: 2}),
+    }),
+  }),
+};
+
+function getMarkerStyle(kinds: ToiletKind[]) {
+  if (kinds.includes("allGender")) return markerStyles.neutral;
+  if (kinds.includes("male") && !kinds.includes("female")) return markerStyles.male;
+  if (kinds.includes("female") && !kinds.includes("male")) return markerStyles.female;
+  return markerStyles.mixed;
+}
 
 const vectorSource = new VectorSource();
 const vectorLayer = new VectorLayer({
   source: vectorSource,
-  style: new Style({
-    image: new CircleStyle({
-      radius: 6,
-      fill: new Fill({color: "rgb(255,145,0)"}),
-      stroke: new Stroke({color: "#1f5fbf", width: 2}),
-    }),
-  }),
+  style: (feature) => getMarkerStyle(feature.get("kinds") || []),
 });
 
 let map: Map | null = null;
@@ -42,10 +81,11 @@ onMounted(() => {
   });
 });
 
-function setPoints(points: Array<{ lon: number; lat: number }>) {
+function setPoints(points: ToiletMapPoint[]) {
   vectorSource.clear();
   const features = points.map((item) => new Feature({
     geometry: new Point(fromLonLat([item.lon, item.lat])),
+    kinds: item.kinds,
   }));
   vectorSource.addFeatures(features);
 
@@ -81,5 +121,9 @@ defineExpose({
   width: 100%;
   min-height: 460px;
   height: 100%;
+}
+
+.map-container :deep(.ol-layer canvas) {
+  filter: grayscale(1) saturate(0) contrast(0.95) brightness(1.05);
 }
 </style>
