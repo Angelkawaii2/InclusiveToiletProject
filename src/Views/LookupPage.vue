@@ -36,6 +36,7 @@ const basemapStyle = ref<"standard" | "mono" | "light" | "dark">("mono")
 const accessibleFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const separateStallFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const lockedFilter = ref<"all" | "yes" | "no" | "unknown">("all")
+const mobileFilterOpen = ref(false)
 
 const mapComponent = ref<InstanceType<typeof ToiletMap> | null>(null)
 
@@ -341,7 +342,7 @@ onMounted(() => {
               清空条件
             </el-button>
           </div>
-          <div class="filter-panel">
+          <div class="filter-panel desktop-filter-panel">
             <el-form label-position="top">
               <div class="filter-grid">
                 <el-form-item label="卫生间类型">
@@ -454,6 +455,72 @@ onMounted(() => {
           </article>
         </div>
       </aside>
+    </div>
+
+    <button class="mobile-filter-button" type="button" @click="mobileFilterOpen = true">
+      <el-icon><Search /></el-icon>
+      筛选
+    </button>
+
+    <div v-if="mobileFilterOpen" class="mobile-filter-overlay" @click.self="mobileFilterOpen = false">
+      <div class="mobile-filter-sheet">
+        <div class="mobile-filter-header">
+          <div>
+            <h3>筛选条件</h3>
+            <p>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</p>
+          </div>
+          <el-button text @click="mobileFilterOpen = false">完成</el-button>
+        </div>
+        <el-form label-position="top">
+          <div class="filter-grid mobile-filter-grid">
+            <el-form-item label="卫生间类型">
+              <el-select v-model="selectedKinds" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部类型">
+                <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="进入限制">
+              <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
+                <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否启用">
+              <el-select v-model="activeFilter">
+                <el-option label="全部" value="all"/>
+                <el-option label="启用" value="active"/>
+                <el-option label="停用" value="inactive"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="无障碍卫生间">
+              <el-select v-model="accessibleFilter">
+                <el-option label="全部" value="all"/>
+                <el-option label="有" value="yes"/>
+                <el-option label="无" value="no"/>
+                <el-option label="未知" value="unknown"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="单独隔间">
+              <el-select v-model="separateStallFilter">
+                <el-option label="全部" value="all"/>
+                <el-option label="是" value="yes"/>
+                <el-option label="否" value="no"/>
+                <el-option label="未知" value="unknown"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否上锁">
+              <el-select v-model="lockedFilter">
+                <el-option label="全部" value="all"/>
+                <el-option label="是" value="yes"/>
+                <el-option label="否" value="no"/>
+                <el-option label="未知" value="unknown"/>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-form>
+        <div class="mobile-filter-actions">
+          <el-button @click="resetFilters">清空条件</el-button>
+          <el-button type="primary" @click="mobileFilterOpen = false">应用</el-button>
+        </div>
+      </div>
     </div>
 
     <el-drawer v-model="detailVisible" size="420px" direction="rtl">
@@ -650,6 +717,11 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+}
+
+.mobile-filter-button,
+.mobile-filter-overlay {
+  display: none;
 }
 
 .result-meta {
@@ -869,14 +941,208 @@ onMounted(() => {
 }
 
 @media (max-width: 640px) {
+  .search-hero {
+    display: none;
+  }
+
+  .search-layout {
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .map-column {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    margin: -10px -10px 0;
+    border-bottom: 1px solid var(--itp-border);
+    background: var(--itp-surface);
+  }
+
+  .map-column :deep(.map-container) {
+    min-height: 220px;
+    height: 34vh;
+    max-height: 280px;
+  }
+
+  .result-column {
+    padding: 10px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .result-toolbar {
+    gap: 8px;
+  }
+
+  .toolbar-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toolbar-actions :deep(.el-button) {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .toolbar-actions :deep(.el-button:nth-child(n + 3)) {
+    display: none;
+  }
+
+  .desktop-filter-panel,
+  .result-meta,
+  .basemap-switcher,
+  .location-meta,
+  .map-legend {
+    display: none;
+  }
+
   .filter-grid {
     grid-template-columns: 1fr;
+  }
+
+  .mobile-filter-button {
+    position: fixed;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 30;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--itp-primary);
+    color: #fff;
+    box-shadow: 0 12px 28px rgba(51, 110, 190, 0.28);
+    font: inherit;
+  }
+
+  .mobile-filter-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.28);
+  }
+
+  .mobile-filter-sheet {
+    width: 100%;
+    max-height: min(76vh, 620px);
+    overflow: auto;
+    padding: 14px;
+    border: 1px solid var(--itp-border);
+    border-radius: 8px 8px 0 0;
+    background: var(--itp-surface);
+    box-shadow: 0 -18px 48px rgba(15, 23, 42, 0.22);
+  }
+
+  .mobile-filter-header,
+  .mobile-filter-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .mobile-filter-header {
+    margin-bottom: 12px;
+  }
+
+  .mobile-filter-header h3,
+  .mobile-filter-header p {
+    margin: 0;
+  }
+
+  .mobile-filter-header h3 {
+    font-size: 17px;
+  }
+
+  .mobile-filter-header p {
+    margin-top: 3px;
+    color: var(--itp-text-muted);
+    font-size: 12px;
+  }
+
+  .mobile-filter-grid {
+    gap: 10px;
+  }
+
+  .mobile-filter-grid :deep(.el-form-item) {
+    margin-bottom: 0;
+  }
+
+  .mobile-filter-actions {
+    position: sticky;
+    bottom: -14px;
+    margin: 14px -14px -14px;
+    padding: 12px 14px max(12px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--itp-border);
+    background: var(--itp-surface);
+  }
+
+  .result-list {
+    gap: 8px;
+    max-height: none;
+    margin-top: 10px;
+    padding-bottom: 74px;
+    overflow: visible;
+  }
+
+  .empty-result {
+    margin-top: 10px;
+  }
+
+  .result-item {
+    gap: 6px;
+    padding: 10px;
+  }
+
+  .result-item h3 {
+    font-size: 15px;
+  }
+
+  .result-item > div:first-child p,
+  .address,
+  .coord {
+    display: none;
   }
 
   .result-footer,
   .item-actions {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .result-footer {
+    gap: 0;
+  }
+
+  .item-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .item-actions :deep(.el-button) {
+    width: 100%;
+    margin-left: 0;
+    padding: 0 8px;
+  }
+
+  .drawer-actions {
+    flex-direction: column;
+  }
+
+  .drawer-actions :deep(.el-button) {
+    width: 100%;
+    margin-left: 0;
   }
 }
 
