@@ -71,7 +71,10 @@ onMounted(() => {
   map = new Map({
     target: mapElement.value,
     layers: [
-      new TileLayer({source: new OSM()}),
+      new TileLayer({
+        className: "ol-layer mono-osm-layer",
+        source: new OSM(),
+      }),
       vectorLayer,
     ],
     view: new View({
@@ -123,7 +126,7 @@ defineExpose({
   height: 100%;
 }
 
-.map-container :deep(.ol-layer canvas) {
+.map-container :deep(.mono-osm-layer canvas) {
   filter: grayscale(1) saturate(0) contrast(0.95) brightness(1.05);
 }
 </style>
