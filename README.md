@@ -72,6 +72,8 @@
 
 ## 更新路线 | RoadMap
 
+详细开发路线、架构改进方向和版本规划见：[开发路线与改进方向](./docs/development-roadmap.md)
+
 - [x] 数据采集功能
     - [x] 记录GPS坐标
     - [x] 记录照片
