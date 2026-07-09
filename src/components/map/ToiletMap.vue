@@ -63,6 +63,20 @@ const vectorLayer = new VectorLayer({
   source: vectorSource,
   style: (feature) => getMarkerStyle(feature.get("kinds") || []),
 });
+vectorLayer.setZIndex(10);
+
+const userLocationSource = new VectorSource();
+const userLocationLayer = new VectorLayer({
+  source: userLocationSource,
+  style: new Style({
+    image: new CircleStyle({
+      radius: 8,
+      fill: new Fill({color: "#1a73e8"}),
+      stroke: new Stroke({color: "rgba(147, 197, 253, 0.72)", width: 7}),
+    }),
+  }),
+});
+userLocationLayer.setZIndex(20);
 
 let map: Map | null = null;
 
@@ -76,6 +90,7 @@ onMounted(() => {
         source: new OSM(),
       }),
       vectorLayer,
+      userLocationLayer,
     ],
     view: new View({
       center: fromLonLat([121.47, 31.23]),
@@ -109,9 +124,18 @@ function focusPoint(lon: number, lat: number) {
   });
 }
 
+function setUserLocation(location: { lon: number; lat: number } | null) {
+  userLocationSource.clear();
+  if (!location) return;
+  userLocationSource.addFeature(new Feature({
+    geometry: new Point(fromLonLat([location.lon, location.lat])),
+  }));
+}
+
 defineExpose({
   setPoints,
   focusPoint,
+  setUserLocation,
 });
 </script>
 

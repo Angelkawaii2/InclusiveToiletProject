@@ -141,6 +141,10 @@ function updateCurrentLocation(sortAfterLocated = false) {
       lon: position.coords.longitude
     };
     userLocationAccuracy.value = Math.round(position.coords.accuracy);
+    mapComponent.value?.setUserLocation({
+      lat: userLocation.value.lat,
+      lon: userLocation.value.lon,
+    });
     if (sortAfterLocated) sortByNearest.value = true;
     isLocating.value = false;
   }, () => {
@@ -258,6 +262,10 @@ const filteredBathrooms = computed(() => {
 
 watch(filteredBathrooms, () => {
   renderPoints();
+}, {flush: "post"});
+
+watch(userLocation, (location) => {
+  mapComponent.value?.setUserLocation(location ? {lat: location.lat, lon: location.lon} : null);
 }, {flush: "post"});
 
 onMounted(() => {
