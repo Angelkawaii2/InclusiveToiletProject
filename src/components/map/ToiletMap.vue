@@ -71,9 +71,9 @@ const userLocationLayer = new VectorLayer({
   source: userLocationSource,
   style: new Style({
     image: new CircleStyle({
-      radius: 8,
+      radius: 12,
       fill: new Fill({color: "#1a73e8"}),
-      stroke: new Stroke({color: "rgba(147, 197, 253, 0.72)", width: 7}),
+      stroke: new Stroke({color: "rgba(147, 197, 253, 0.68)", width: 10}),
     }),
   }),
 });
