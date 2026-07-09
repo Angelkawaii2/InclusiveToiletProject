@@ -1,0 +1,19 @@
+{
+  "version": "v0.6.0.20260708",
+  "generatedAt": 1783590842039,
+  "regions": [
+    {
+      "id": "mock-qingdao",
+      "name": "青岛模拟数据",
+      "bbox": [
+        119.45,
+        35.55,
+        121.25,
+        37.15
+      ],
+      "updatedAt": 1783590842039,
+      "recordCount": 200,
+      "dataUrl": "./regions/mock-qingdao.json"
+    }
+  ]
+}
