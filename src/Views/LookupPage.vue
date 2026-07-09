@@ -40,6 +40,7 @@ const lockedFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const mobileFilterOpen = ref(false)
 
 const mapComponent = ref<InstanceType<typeof ToiletMap> | null>(null)
+const detailDrawerSize = computed(() => "420px");
 
 function handleFiles(event: Event) {
   const selectFiles = (event.target as HTMLInputElement).files;
@@ -223,6 +224,28 @@ function formatBoolean(value: boolean | null | undefined, yes = "是", no = "否
   return value ? yes : no;
 }
 
+function getKindLabel(kind: ToiletKind) {
+  return TOILET_KIND_OPTIONS.find((item) => item.value === kind)?.label || kind;
+}
+
+function getKindTagType(kind: ToiletKind) {
+  if (kind === "male") return "primary";
+  if (kind === "female") return "danger";
+  if (kind === "accessible") return "success";
+  if (kind === "family") return "warning";
+  if (kind === "allGender") return "success";
+  return "info";
+}
+
+function getRestrictionLabel(restriction: AccessRestriction) {
+  return ACCESS_RESTRICTION_OPTIONS.find((item) => item.value === restriction)?.label || restriction;
+}
+
+function getBooleanTagType(value: boolean | null | undefined, positiveType = "success") {
+  if (value === null || value === undefined) return "info";
+  return value ? positiveType : "warning";
+}
+
 function formatAddress(item: ToiletPlace | null) {
   if (!item?.address) return "地址未知";
   return [
@@ -310,6 +333,7 @@ watch(userLocation, (location) => {
 
 onMounted(() => {
   loadStaticMockData();
+  updateCurrentLocation(false);
 })
 </script>
 
@@ -448,7 +472,13 @@ onMounted(() => {
                    @click="selectToilet(item)">
             <div>
               <h3>{{ item.name || "未命名卫生间" }}</h3>
-              <p>{{ item.kinds?.join(" / ") || "未标记类型" }}</p>
+              <div class="tag-row">
+                <el-tag v-for="kind in item.kinds" :key="kind" :type="getKindTagType(kind)" size="small">
+                  {{ getKindLabel(kind) }}
+                </el-tag>
+                <el-tag v-if="item.accessibility.hasAccessibleToilet" size="small" type="success">无障碍</el-tag>
+                <el-tag v-if="item.facilities.parkingAllowed" size="small" type="info">可停车</el-tag>
+              </div>
             </div>
             <p class="address">{{ formatAddress(item) }}</p>
             <div class="result-footer">
@@ -545,7 +575,7 @@ onMounted(() => {
       </div>
     </Transition>
 
-    <el-drawer v-model="detailVisible" size="420px" direction="rtl">
+    <el-drawer v-model="detailVisible" class="detail-drawer" :size="detailDrawerSize" direction="rtl">
       <template #header>
         <div>
           <h3 class="drawer-title">{{ detailToilet?.name || "卫生间详情" }}</h3>
@@ -554,6 +584,26 @@ onMounted(() => {
       </template>
 
       <div v-if="detailToilet" class="detail-panel">
+        <section class="detail-summary">
+          <div class="tag-row detail-tags">
+            <el-tag v-for="kind in detailToilet.kinds" :key="kind" :type="getKindTagType(kind)">
+              {{ getKindLabel(kind) }}
+            </el-tag>
+            <el-tag :type="detailToilet.isActive ? 'success' : 'danger'">
+              {{ detailToilet.isActive ? "启用" : "停用" }}
+            </el-tag>
+            <el-tag :type="getBooleanTagType(detailToilet.accessibility.hasAccessibleToilet)">
+              无障碍：{{ formatBoolean(detailToilet.accessibility.hasAccessibleToilet, "有", "无") }}
+            </el-tag>
+            <el-tag :type="getBooleanTagType(detailToilet.facilities.parkingAllowed, 'info')">
+              停车：{{ formatBoolean(detailToilet.facilities.parkingAllowed, "允许", "不允许") }}
+            </el-tag>
+            <el-tag :type="detailToilet.audit.reviewed ? 'success' : 'warning'">
+              {{ detailToilet.audit.reviewed ? "已 Review" : "未 Review" }}
+            </el-tag>
+          </div>
+        </section>
+
         <section>
           <h4>位置</h4>
           <dl>
@@ -593,15 +643,25 @@ onMounted(() => {
           <dl>
             <div>
               <dt>类型</dt>
-              <dd>{{ detailToilet.kinds.join(" / ") || "未标记" }}</dd>
+              <dd>
+                <div class="tag-row">
+                  <el-tag v-for="kind in detailToilet.kinds" :key="kind" :type="getKindTagType(kind)" size="small">
+                    {{ getKindLabel(kind) }}
+                  </el-tag>
+                </div>
+              </dd>
             </div>
             <div>
               <dt>进入限制</dt>
-              <dd>{{ detailToilet.access.restriction }}</dd>
+              <dd><el-tag type="info">{{ getRestrictionLabel(detailToilet.access.restriction) }}</el-tag></dd>
             </div>
             <div>
               <dt>允许停车</dt>
-              <dd>{{ formatBoolean(detailToilet.facilities.parkingAllowed, "允许", "不允许") }}</dd>
+              <dd>
+                <el-tag :type="getBooleanTagType(detailToilet.facilities.parkingAllowed, 'info')">
+                  {{ formatBoolean(detailToilet.facilities.parkingAllowed, "允许", "不允许") }}
+                </el-tag>
+              </dd>
             </div>
           </dl>
         </section>
@@ -611,15 +671,27 @@ onMounted(() => {
           <dl>
             <div>
               <dt>无障碍卫生间</dt>
-              <dd>{{ formatBoolean(detailToilet.accessibility.hasAccessibleToilet, "有", "无") }}</dd>
+              <dd>
+                <el-tag :type="getBooleanTagType(detailToilet.accessibility.hasAccessibleToilet)">
+                  {{ formatBoolean(detailToilet.accessibility.hasAccessibleToilet, "有", "无") }}
+                </el-tag>
+              </dd>
             </div>
             <div>
               <dt>单独隔间</dt>
-              <dd>{{ formatBoolean(detailToilet.accessibility.isSeparateStall) }}</dd>
+              <dd>
+                <el-tag :type="getBooleanTagType(detailToilet.accessibility.isSeparateStall)">
+                  {{ formatBoolean(detailToilet.accessibility.isSeparateStall) }}
+                </el-tag>
+              </dd>
             </div>
             <div>
               <dt>是否上锁</dt>
-              <dd>{{ formatBoolean(detailToilet.accessibility.isLocked) }}</dd>
+              <dd>
+                <el-tag :type="getBooleanTagType(detailToilet.accessibility.isLocked, 'warning')">
+                  {{ formatBoolean(detailToilet.accessibility.isLocked) }}
+                </el-tag>
+              </dd>
             </div>
             <div>
               <dt>备注</dt>
@@ -641,7 +713,11 @@ onMounted(() => {
             </div>
             <div>
               <dt>人工 Review</dt>
-              <dd>{{ detailToilet.audit.reviewed ? "已确认" : "未确认" }}</dd>
+              <dd>
+                <el-tag :type="detailToilet.audit.reviewed ? 'success' : 'warning'">
+                  {{ detailToilet.audit.reviewed ? "已确认" : "未确认" }}
+                </el-tag>
+              </dd>
             </div>
           </dl>
         </section>
@@ -862,6 +938,12 @@ onMounted(() => {
   font-size: 16px;
 }
 
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .result-item p,
 .coord,
 .distance {
@@ -910,6 +992,15 @@ onMounted(() => {
 .detail-panel {
   display: grid;
   gap: 16px;
+}
+
+.detail-summary {
+  border-color: rgba(51, 110, 190, 0.22) !important;
+  background: color-mix(in srgb, var(--itp-primary) 8%, var(--itp-surface-soft)) !important;
+}
+
+.detail-tags {
+  gap: 8px;
 }
 
 .detail-panel section {
@@ -1188,6 +1279,43 @@ onMounted(() => {
   .drawer-actions :deep(.el-button) {
     width: 100%;
     margin-left: 0;
+  }
+
+  .detail-drawer :deep(.el-drawer) {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .detail-drawer :deep(.el-drawer__header) {
+    margin-bottom: 0;
+    padding: 14px 14px 10px;
+  }
+
+  .detail-drawer :deep(.el-drawer__body) {
+    max-height: calc(100dvh - 76px);
+    padding: 12px;
+    overflow: auto;
+  }
+
+  .drawer-title {
+    font-size: 17px;
+  }
+
+  .drawer-subtitle {
+    display: none;
+  }
+
+  .detail-panel {
+    gap: 10px;
+  }
+
+  .detail-panel section {
+    padding: 12px;
+  }
+
+  .detail-panel dl div {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 8px;
   }
 }
 
