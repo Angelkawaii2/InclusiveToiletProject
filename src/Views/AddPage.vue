@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, reactive, ref} from "vue";
-import {Download, Location, RefreshLeft} from "@element-plus/icons-vue";
+import {Delete, Download, Location, RefreshLeft} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import {
   ACCESS_RESTRICTION_OPTIONS,
@@ -12,12 +12,14 @@ import {
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {DATA_VERSION} from "@/constants/projectVersions";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
+import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 
 defineProps<{
   embedded?: boolean
 }>()
 
 const workspace = useWorkspaceStore();
+const localCache = useLocalToiletCacheStore();
 const isLocating = ref(false);
 
 const draft = reactive({
@@ -152,13 +154,36 @@ function buildRecord(): ToiletPlace {
 
 function downloadRecord() {
   const record = buildRecord();
-  const blob = new Blob([JSON.stringify(record, null, 2)], {type: "application/json"});
+  downloadJson(record, `${record.id}.json`);
+}
+
+function downloadJson(data: unknown, filename: string) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `${record.id}.json`;
+  link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+function saveRecordToBrowser() {
+  const record = buildRecord();
+  localCache.addToilet(record);
+  ElMessage.success(`已保存到浏览器缓存，当前 ${localCache.count} 条`);
+}
+
+function downloadCachedRecords() {
+  if (localCache.count === 0) {
+    ElMessage.warning("浏览器缓存中还没有记录");
+    return;
+  }
+  downloadJson(localCache.toilets, "toilet-local-cache-v6.json");
+}
+
+function clearCachedRecords() {
+  localCache.clear();
+  ElMessage.success("已清空浏览器缓存记录");
 }
 
 function useAsEditingRecord() {
@@ -191,7 +216,7 @@ function useAsEditingRecord() {
     <div v-else class="embedded-toolbar">
       <div>
         <h3>新增点位</h3>
-        <p>按 v6 数据结构创建一条卫生间记录。</p>
+        <p>按 v6 数据结构创建一条卫生间记录。浏览器缓存中已有 {{ localCache.count }} 条。</p>
       </div>
       <div class="hero-actions">
         <el-button type="danger" @click="resetDraft">
@@ -312,11 +337,24 @@ function useAsEditingRecord() {
 
         <section class="form-section">
           <h3>输出</h3>
+          <p class="field-hint">外出采集时建议先保存到浏览器缓存，回到电脑前再批量导出 JSON。缓存只保存在当前浏览器中。</p>
           <div class="form-actions">
             <el-button @click="useAsEditingRecord">创建为编辑草稿</el-button>
+            <el-button type="success" @click="saveRecordToBrowser">保存到浏览器缓存</el-button>
             <el-button type="primary" @click="downloadRecord">
               <el-icon><Download /></el-icon>
               导出 v6 JSON
+            </el-button>
+          </div>
+          <div class="cache-actions">
+            <span>缓存记录：{{ localCache.count }} 条</span>
+            <el-button :disabled="localCache.count === 0" @click="downloadCachedRecords">
+              <el-icon><Download /></el-icon>
+              批量导出缓存
+            </el-button>
+            <el-button :disabled="localCache.count === 0" type="danger" @click="clearCachedRecords">
+              <el-icon><Delete /></el-icon>
+              清空缓存
             </el-button>
           </div>
         </section>
@@ -421,8 +459,20 @@ function useAsEditingRecord() {
 
 .form-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.cache-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+  color: var(--itp-text-muted);
+  font-size: 13px;
 }
 
 .field-hint {
