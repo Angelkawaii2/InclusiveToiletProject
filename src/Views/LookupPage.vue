@@ -14,6 +14,7 @@ import {
 import {Aim, Download, Edit, Location, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
+import {ElNotification} from "element-plus";
 
 const files = ref<File[]>([])
 const workspace = useWorkspaceStore()
@@ -283,6 +284,25 @@ const filteredBathrooms = computed(() => {
 watch(filteredBathrooms, () => {
   renderPoints();
 }, {flush: "post"});
+
+watch([
+  selectedKinds,
+  selectedRestrictions,
+  activeFilter,
+  accessibleFilter,
+  separateStallFilter,
+  lockedFilter,
+  sortByNearest,
+], () => {
+  ElNotification.closeAll();
+  ElNotification({
+    title: "筛选已生效",
+    message: `当前显示 ${filteredBathrooms.value.length} 条记录`,
+    type: "success",
+    position: "top-right",
+    duration: 1600,
+  });
+}, {deep: true, flush: "post"});
 
 watch(userLocation, (location) => {
   mapComponent.value?.setUserLocation(location ? {lat: location.lat, lon: location.lon} : null);
@@ -1112,10 +1132,11 @@ onMounted(() => {
 
   .result-list {
     gap: 8px;
-    max-height: none;
+    max-height: max(260px, calc(100dvh - 430px));
     margin-top: 10px;
     padding-bottom: 74px;
-    overflow: visible;
+    overflow: auto;
+    overscroll-behavior: contain;
   }
 
   .empty-result {
