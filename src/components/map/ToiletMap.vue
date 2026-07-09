@@ -5,6 +5,7 @@ import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import {fromLonLat} from "ol/proj";
+import {boundingExtent} from "ol/extent";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import {Feature} from "ol";
@@ -132,10 +133,33 @@ function setUserLocation(location: { lon: number; lat: number } | null) {
   }));
 }
 
+function fitAroundLocation(location: { lon: number; lat: number }, points: Array<{ lon: number; lat: number }> = []) {
+  if (!map) return;
+  const coordinates = [
+    fromLonLat([location.lon, location.lat]),
+    ...points.map((point) => fromLonLat([point.lon, point.lat])),
+  ];
+  if (coordinates.length === 1) {
+    map.getView().animate({
+      center: coordinates[0],
+      zoom: 16,
+      duration: 260,
+    });
+    return;
+  }
+  map.getView().fit(boundingExtent(coordinates), {
+    padding: [96, 96, 96, 96],
+    minResolution: 1.2,
+    maxZoom: 16,
+    duration: 300,
+  });
+}
+
 defineExpose({
   setPoints,
   focusPoint,
   setUserLocation,
+  fitAroundLocation,
 });
 </script>
 

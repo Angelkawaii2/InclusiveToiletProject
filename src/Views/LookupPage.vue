@@ -101,6 +101,23 @@ function renderPoints() {
   mapComponent.value?.setPoints(points);
 }
 
+function getNearestMapPoints(location: { lat: number; lon: number }, limit = 5) {
+  return [...filteredBathrooms.value]
+      .filter((item) => Number.isFinite(item.location?.lon) && Number.isFinite(item.location?.lat))
+      .sort((a, b) => distanceInMeters(location, a.location) - distanceInMeters(location, b.location))
+      .slice(0, limit)
+      .map((item) => ({lon: item.location.lon, lat: item.location.lat}));
+}
+
+async function focusAroundUserLocation() {
+  if (!userLocation.value) return;
+  await nextTick();
+  mapComponent.value?.fitAroundLocation(
+      {lat: userLocation.value.lat, lon: userLocation.value.lon},
+      getNearestMapPoints(userLocation.value)
+  );
+}
+
 function downloadCurrentDataset() {
   const blob = new Blob([JSON.stringify(dataset.toilets, null, 2)], {type: "application/json"});
   const url = URL.createObjectURL(blob);
@@ -146,6 +163,7 @@ function updateCurrentLocation(sortAfterLocated = false) {
       lon: userLocation.value.lon,
     });
     if (sortAfterLocated) sortByNearest.value = true;
+    void focusAroundUserLocation();
     isLocating.value = false;
   }, () => {
     loadError.value = "定位失败，请检查浏览器定位权限后重试。";
