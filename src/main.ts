@@ -14,6 +14,7 @@ import SwitchLang from "@/components/SwitchLang.vue";
 import {registerSW} from "virtual:pwa-register";
 import {createPinia} from "pinia";
 import {useSettingStore} from "@/stores/settingsStore";
+import {notifyError, notifySuccess} from "@/Utils/Notify";
 
 
 const app = createApp(App)
@@ -24,7 +25,18 @@ const pinia = createPinia()
 app.use(pinia)
 
 
-registerSW({immediate: true})
+registerSW({
+    immediate: true,
+    onOfflineReady() {
+        notifySuccess("应用已可离线打开，静态数据会优先使用缓存");
+    },
+    onNeedRefresh() {
+        notifySuccess("发现新版本，刷新页面后生效");
+    },
+    onRegisterError() {
+        notifyError("PWA 离线缓存注册失败");
+    },
+})
 
 const settings = useSettingStore()
 
