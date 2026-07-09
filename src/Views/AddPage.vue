@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, reactive} from "vue";
+import {computed, reactive, ref} from "vue";
 import {Download, Location, RefreshLeft} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import {
@@ -11,12 +11,14 @@ import {
 } from "@/domain/toilet/v6";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {DATA_VERSION} from "@/constants/projectVersions";
+import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 
 defineProps<{
   embedded?: boolean
 }>()
 
 const workspace = useWorkspaceStore();
+const isLocating = ref(false);
 
 const draft = reactive({
   name: "",
@@ -69,13 +71,30 @@ function fillCurrentLocation() {
     ElMessage.error("当前浏览器不支持定位");
     return;
   }
-  navigator.geolocation.getCurrentPosition((position) => {
+  isLocating.value = true;
+  navigator.geolocation.getCurrentPosition(async (position) => {
     draft.lat = Number(position.coords.latitude.toFixed(6));
     draft.lon = Number(position.coords.longitude.toFixed(6));
     draft.accuracy = Math.round(position.coords.accuracy);
-    ElMessage.success("已填入当前位置");
+    try {
+      const address = await reverseGeocode(draft.lat, draft.lon);
+      if (address) {
+        draft.country = address.country || draft.country;
+        draft.province = address.province || draft.province;
+        draft.city = address.city || draft.city;
+        draft.description = address.description || draft.description;
+        ElMessage.success("已填入当前位置和地址信息");
+      } else {
+        ElMessage.success("已填入当前位置，地址信息未识别");
+      }
+    } catch {
+      ElMessage.success("已填入当前位置，地址反查失败");
+    } finally {
+      isLocating.value = false;
+    }
   }, () => {
     ElMessage.error("定位失败，请检查浏览器定位权限");
+    isLocating.value = false;
   }, {
     timeout: 8000,
     enableHighAccuracy: true
@@ -204,10 +223,11 @@ function useAsEditingRecord() {
               <el-input-number v-model="draft.lon" :precision="6" :step="0.0001" controls-position="right"/>
             </el-form-item>
           </div>
-          <el-button @click="fillCurrentLocation">
+          <el-button :loading="isLocating" @click="fillCurrentLocation">
             <el-icon><Location /></el-icon>
             使用当前位置
           </el-button>
+          <p class="field-hint">会先填入经纬度，并尝试联网反查国家、省份、城市和行政区描述。</p>
         </section>
 
         <section class="form-section">
@@ -403,6 +423,12 @@ function useAsEditingRecord() {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.field-hint {
+  margin: 8px 0 0;
+  color: var(--itp-text-muted);
+  font-size: 13px;
 }
 
 .preview-panel {
