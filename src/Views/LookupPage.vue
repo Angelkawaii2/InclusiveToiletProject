@@ -462,66 +462,68 @@ onMounted(() => {
       筛选
     </button>
 
-    <div v-if="mobileFilterOpen" class="mobile-filter-overlay" @click.self="mobileFilterOpen = false">
-      <div class="mobile-filter-sheet">
-        <div class="mobile-filter-header">
-          <div>
-            <h3>筛选条件</h3>
-            <p>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</p>
+    <Transition name="mobile-filter">
+      <div v-if="mobileFilterOpen" class="mobile-filter-overlay" @click.self="mobileFilterOpen = false">
+        <div class="mobile-filter-sheet">
+          <div class="mobile-filter-header">
+            <div>
+              <h3>筛选条件</h3>
+              <p>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</p>
+            </div>
+            <el-button text @click="mobileFilterOpen = false">完成</el-button>
           </div>
-          <el-button text @click="mobileFilterOpen = false">完成</el-button>
-        </div>
-        <el-form label-position="top">
-          <div class="filter-grid mobile-filter-grid">
-            <el-form-item label="卫生间类型">
-              <el-select v-model="selectedKinds" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部类型">
-                <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="进入限制">
-              <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
-                <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="是否启用">
-              <el-select v-model="activeFilter">
-                <el-option label="全部" value="all"/>
-                <el-option label="启用" value="active"/>
-                <el-option label="停用" value="inactive"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="无障碍卫生间">
-              <el-select v-model="accessibleFilter">
-                <el-option label="全部" value="all"/>
-                <el-option label="有" value="yes"/>
-                <el-option label="无" value="no"/>
-                <el-option label="未知" value="unknown"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="单独隔间">
-              <el-select v-model="separateStallFilter">
-                <el-option label="全部" value="all"/>
-                <el-option label="是" value="yes"/>
-                <el-option label="否" value="no"/>
-                <el-option label="未知" value="unknown"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="是否上锁">
-              <el-select v-model="lockedFilter">
-                <el-option label="全部" value="all"/>
-                <el-option label="是" value="yes"/>
-                <el-option label="否" value="no"/>
-                <el-option label="未知" value="unknown"/>
-              </el-select>
-            </el-form-item>
+          <el-form label-position="top">
+            <div class="filter-grid mobile-filter-grid">
+              <el-form-item label="卫生间类型">
+                <el-select v-model="selectedKinds" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部类型">
+                  <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="进入限制">
+                <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
+                  <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="是否启用">
+                <el-select v-model="activeFilter">
+                  <el-option label="全部" value="all"/>
+                  <el-option label="启用" value="active"/>
+                  <el-option label="停用" value="inactive"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="无障碍卫生间">
+                <el-select v-model="accessibleFilter">
+                  <el-option label="全部" value="all"/>
+                  <el-option label="有" value="yes"/>
+                  <el-option label="无" value="no"/>
+                  <el-option label="未知" value="unknown"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="单独隔间">
+                <el-select v-model="separateStallFilter">
+                  <el-option label="全部" value="all"/>
+                  <el-option label="是" value="yes"/>
+                  <el-option label="否" value="no"/>
+                  <el-option label="未知" value="unknown"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="是否上锁">
+                <el-select v-model="lockedFilter">
+                  <el-option label="全部" value="all"/>
+                  <el-option label="是" value="yes"/>
+                  <el-option label="否" value="no"/>
+                  <el-option label="未知" value="unknown"/>
+                </el-select>
+              </el-form-item>
+            </div>
+          </el-form>
+          <div class="mobile-filter-actions">
+            <el-button @click="resetFilters">清空条件</el-button>
+            <el-button type="primary" @click="mobileFilterOpen = false">应用</el-button>
           </div>
-        </el-form>
-        <div class="mobile-filter-actions">
-          <el-button @click="resetFilters">清空条件</el-button>
-          <el-button type="primary" @click="mobileFilterOpen = false">应用</el-button>
         </div>
       </div>
-    </div>
+    </Transition>
 
     <el-drawer v-model="detailVisible" size="420px" direction="rtl">
       <template #header>
@@ -1026,20 +1028,42 @@ onMounted(() => {
     inset: 0;
     z-index: 40;
     display: flex;
-    align-items: flex-end;
-    padding: 12px;
-    background: rgba(15, 23, 42, 0.28);
+    padding: 10px;
+    background: rgba(15, 23, 42, 0.68);
+    backdrop-filter: blur(2px);
   }
 
   .mobile-filter-sheet {
     width: 100%;
-    max-height: min(76vh, 620px);
+    height: 100%;
     overflow: auto;
-    padding: 14px;
+    padding: 16px;
     border: 1px solid var(--itp-border);
-    border-radius: 8px 8px 0 0;
+    border-radius: 8px;
     background: var(--itp-surface);
-    box-shadow: 0 -18px 48px rgba(15, 23, 42, 0.22);
+    box-shadow: 0 24px 72px rgba(15, 23, 42, 0.34);
+    transform-origin: bottom center;
+  }
+
+  .mobile-filter-enter-active,
+  .mobile-filter-leave-active {
+    transition: opacity 0.22s ease;
+  }
+
+  .mobile-filter-enter-active .mobile-filter-sheet,
+  .mobile-filter-leave-active .mobile-filter-sheet {
+    transition: transform 0.24s ease, opacity 0.22s ease;
+  }
+
+  .mobile-filter-enter-from,
+  .mobile-filter-leave-to {
+    opacity: 0;
+  }
+
+  .mobile-filter-enter-from .mobile-filter-sheet,
+  .mobile-filter-leave-to .mobile-filter-sheet {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
   }
 
   .mobile-filter-header,
@@ -1079,9 +1103,9 @@ onMounted(() => {
 
   .mobile-filter-actions {
     position: sticky;
-    bottom: -14px;
-    margin: 14px -14px -14px;
-    padding: 12px 14px max(12px, env(safe-area-inset-bottom));
+    bottom: -16px;
+    margin: 16px -16px -16px;
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom));
     border-top: 1px solid var(--itp-border);
     background: var(--itp-surface);
   }
