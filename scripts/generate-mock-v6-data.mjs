@@ -90,7 +90,8 @@ const records = Array.from({length: 200}, (_, index) => {
             changingTable: maybe(index % 10 === 0, 0.6),
             menstrualProducts: maybe(index % 13 === 0, 0.5),
             emergencyButton: isAccessible ? maybe(index % 5 !== 0, 0.8) : null,
-            adultChangingTable: isAccessible ? maybe(index % 19 === 0, 0.4) : null
+            adultChangingTable: isAccessible ? maybe(index % 19 === 0, 0.4) : null,
+            parkingAllowed: maybe(index % 4 !== 0, 0.7)
         },
         accessibility: {
             hasAccessibleToilet: isAccessible,

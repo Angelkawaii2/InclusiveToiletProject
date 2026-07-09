@@ -30,7 +30,8 @@ export type FacilityKey =
     | "changingTable"
     | "menstrualProducts"
     | "emergencyButton"
-    | "adultChangingTable";
+    | "adultChangingTable"
+    | "parkingAllowed";
 
 export interface AuditMetadata {
     createdAt: number;

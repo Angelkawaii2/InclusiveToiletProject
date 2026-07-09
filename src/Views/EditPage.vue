@@ -30,6 +30,7 @@ const draft = reactive({
   kinds: [] as ToiletKind[],
   restriction: "public" as AccessRestriction,
   accessNotes: "",
+  parkingAllowed: null as boolean | null,
   hasAccessibleToilet: null as boolean | null,
   isSeparateStall: null as boolean | null,
   isLocked: null as boolean | null,
@@ -53,6 +54,7 @@ function loadDraft() {
   draft.kinds = [...item.kinds];
   draft.restriction = item.access.restriction;
   draft.accessNotes = item.access.notes || "";
+  draft.parkingAllowed = item.facilities.parkingAllowed ?? null;
   draft.hasAccessibleToilet = item.accessibility.hasAccessibleToilet;
   draft.isSeparateStall = item.accessibility.isSeparateStall;
   draft.isLocked = item.accessibility.isLocked;
@@ -79,6 +81,10 @@ function saveDraft() {
     ...item.access,
     restriction: draft.restriction,
     notes: draft.accessNotes.trim() || undefined,
+  };
+  item.facilities = {
+    ...item.facilities,
+    parkingAllowed: draft.parkingAllowed,
   };
   item.accessibility = {
     ...item.accessibility,
@@ -170,6 +176,13 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
               <el-option label="未知" :value="null"/>
               <el-option label="有" :value="true"/>
               <el-option label="无" :value="false"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="允许停车">
+            <el-select v-model="draft.parkingAllowed">
+              <el-option label="未知" :value="null"/>
+              <el-option label="允许" :value="true"/>
+              <el-option label="不允许" :value="false"/>
             </el-select>
           </el-form-item>
           <el-form-item label="是否单独隔间">

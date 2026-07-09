@@ -35,6 +35,7 @@ const draft = reactive({
   kinds: ["allGender"] as ToiletKind[],
   restriction: "public" as AccessRestriction,
   accessNotes: "",
+  parkingAllowed: null as boolean | null,
   hasAccessibleToilet: null as boolean | null,
   isSeparateStall: null as boolean | null,
   isLocked: null as boolean | null,
@@ -59,6 +60,7 @@ function resetDraft() {
   draft.kinds = ["allGender"];
   draft.restriction = "public";
   draft.accessNotes = "";
+  draft.parkingAllowed = null;
   draft.hasAccessibleToilet = null;
   draft.isSeparateStall = null;
   draft.isLocked = null;
@@ -129,7 +131,9 @@ function buildRecord(): ToiletPlace {
       restriction: draft.restriction,
       notes: draft.accessNotes.trim() || undefined,
     },
-    facilities: {},
+    facilities: {
+      parkingAllowed: draft.parkingAllowed,
+    },
     accessibility: {
       hasAccessibleToilet: draft.hasAccessibleToilet,
       isSeparateStall: draft.isSeparateStall,
@@ -291,6 +295,13 @@ function useAsEditingRecord() {
                 <el-option label="未知" :value="null"/>
                 <el-option label="是" :value="true"/>
                 <el-option label="否" :value="false"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="允许停车">
+              <el-select v-model="draft.parkingAllowed">
+                <el-option label="未知" :value="null"/>
+                <el-option label="允许" :value="true"/>
+                <el-option label="不允许" :value="false"/>
               </el-select>
             </el-form-item>
           </div>

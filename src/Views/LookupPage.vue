@@ -474,6 +474,10 @@ onMounted(() => {
               <dt>进入限制</dt>
               <dd>{{ detailToilet.access.restriction }}</dd>
             </div>
+            <div>
+              <dt>允许停车</dt>
+              <dd>{{ formatBoolean(detailToilet.facilities.parkingAllowed, "允许", "不允许") }}</dd>
+            </div>
           </dl>
         </section>
 

@@ -1,6 +1,6 @@
 {
   "version": "v0.6.0.20260708",
-  "generatedAt": 1783530931880,
+  "generatedAt": 1783589316151,
   "regions": [
     {
       "id": "mock-qingdao",
@@ -11,7 +11,7 @@
         121.25,
         37.15
       ],
-      "updatedAt": 1783530931880,
+      "updatedAt": 1783589316151,
       "recordCount": 200,
       "dataUrl": "./regions/mock-qingdao.json"
     }
