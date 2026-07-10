@@ -166,14 +166,36 @@ const userAccuracyStyle = new Style({
 });
 const userCenterStyle = new Style({
   image: new CircleStyle({
-    radius: 7,
+    radius: 9,
     fill: new Fill({color: "#1a73e8"}),
-    stroke: new Stroke({color: "#ffffff", width: 2}),
+    stroke: new Stroke({color: "#ffffff", width: 3}),
   }),
 });
+const minimumAccuracyRingPixels = 18;
+const userMinimumAccuracyRingStyle = new Style({
+  image: new CircleStyle({
+    radius: minimumAccuracyRingPixels,
+    fill: new Fill({color: "rgba(96, 165, 250, 0.12)"}),
+    stroke: new Stroke({color: "rgba(96, 165, 250, 0.86)", width: 2}),
+  }),
+});
+
+function getUserLocationStyle(feature: Feature, resolution: number) {
+  const type = feature.get("type");
+  if (type === "accuracy") return userAccuracyStyle;
+  if (type === "center") return userCenterStyle;
+  if (type === "minimum-accuracy-ring") {
+    const accuracy = feature.get("accuracy");
+    return typeof accuracy === "number" && accuracy / resolution < minimumAccuracyRingPixels
+      ? userMinimumAccuracyRingStyle
+      : null;
+  }
+  return null;
+}
+
 const userLocationLayer = new VectorLayer({
   source: userLocationSource,
-  style: (feature) => feature.get("type") === "accuracy" ? userAccuracyStyle : userCenterStyle,
+  style: getUserLocationStyle,
 });
 userLocationLayer.setZIndex(20);
 
@@ -296,6 +318,11 @@ function setUserLocation(location: { lon: number; lat: number; accuracy?: number
   userLocationSource.addFeature(new Feature({
     geometry: new CircleGeometry(center, accuracy),
     type: "accuracy",
+  }));
+  userLocationSource.addFeature(new Feature({
+    geometry: new Point(center),
+    type: "minimum-accuracy-ring",
+    accuracy,
   }));
   if (accuracy <= 40) {
     userLocationSource.addFeature(new Feature({
