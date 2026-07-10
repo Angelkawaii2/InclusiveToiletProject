@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {computed, ref} from "vue";
-import {Check, Delete, Download, Edit} from "@element-plus/icons-vue";
+import {computed, ref, watch} from "vue";
+import {Check, Delete, Download, Edit, Position} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {ToiletPlace} from "@/domain/toilet/v6";
 import {buildLocalExportBundle, createLocalExportFilename, TOILET_KIND_OPTIONS} from "@/domain/toilet/v6";
@@ -10,12 +10,16 @@ import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 
 type QueueFilter = "pending" | "reviewed" | "all";
+type QueueSort = "updated" | "nearest";
 
 const localCache = useLocalToiletCacheStore();
 const dataset = useToiletDatasetStore();
 const workspace = useWorkspaceStore();
 const queueFilter = ref<QueueFilter>("pending");
+const queueSort = ref<QueueSort>("updated");
 const selectedIds = ref<string[]>([]);
+const currentLocation = ref<{lat: number; lon: number} | null>(null);
+const isLocating = ref(false);
 
 const allRecords = computed(() => {
   const records = new Map<string, ToiletPlace>();
@@ -24,17 +28,88 @@ const allRecords = computed(() => {
   return [...records.values()].sort((a, b) => b.audit.updatedAt - a.audit.updatedAt);
 });
 
-const visibleRecords = computed(() => allRecords.value.filter((item) => {
+const filteredRecords = computed(() => allRecords.value.filter((item) => {
   if (queueFilter.value === "pending") return !item.audit.reviewed;
   if (queueFilter.value === "reviewed") return item.audit.reviewed;
   return true;
 }));
+
+const visibleRecords = computed(() => {
+  if (queueSort.value === "updated" || !currentLocation.value) return filteredRecords.value;
+  return [...filteredRecords.value].sort((a, b) => distanceInMeters(currentLocation.value!, a) - distanceInMeters(currentLocation.value!, b));
+});
 
 const pendingCount = computed(() => allRecords.value.filter((item) => !item.audit.reviewed).length);
 const selectedVisibleIds = computed(() => selectedIds.value.filter((id) => visibleRecords.value.some((item) => item.id === id)));
 const allVisibleSelected = computed(() => visibleRecords.value.length > 0 && selectedVisibleIds.value.length === visibleRecords.value.length);
 const selectedCachedRecords = computed(() => localCache.toilets.filter((item) => selectedIds.value.includes(item.id)));
 const kindLabels = new Map(TOILET_KIND_OPTIONS.map((item) => [item.value, item.label]));
+
+function distanceInMeters(origin: {lat: number; lon: number}, record: ToiletPlace) {
+  const radius = 6371000;
+  const toRadians = (value: number) => value * Math.PI / 180;
+  const dLat = toRadians(record.location.lat - origin.lat);
+  const dLon = toRadians(record.location.lon - origin.lon);
+  const originLat = toRadians(origin.lat);
+  const recordLat = toRadians(record.location.lat);
+  const value = Math.sin(dLat / 2) ** 2
+      + Math.cos(originLat) * Math.cos(recordLat) * Math.sin(dLon / 2) ** 2;
+  return 2 * radius * Math.asin(Math.sqrt(value));
+}
+
+function formatDistance(record: ToiletPlace) {
+  if (!currentLocation.value) return "";
+  const meters = distanceInMeters(currentLocation.value, record);
+  return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
+}
+
+function getCurrentLocation(): Promise<{lat: number; lon: number} | null> {
+  if (!navigator.geolocation) {
+    ElMessage.error("当前浏览器不支持定位，无法确定导航起点");
+    return Promise.resolve(null);
+  }
+  isLocating.value = true;
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const location = {
+        lat: Number(position.coords.latitude.toFixed(6)),
+        lon: Number(position.coords.longitude.toFixed(6)),
+      };
+      currentLocation.value = location;
+      isLocating.value = false;
+      resolve(location);
+    }, () => {
+      isLocating.value = false;
+      ElMessage.error("无法获取当前位置，导航需要明确的起点");
+      resolve(null);
+    }, {
+      timeout: 8000,
+      enableHighAccuracy: true,
+    });
+  });
+}
+
+function navigateToRecord(record: ToiletPlace) {
+  void getCurrentLocation().then((origin) => {
+    if (!origin) return;
+    const destination = `${record.location.lat},${record.location.lon}`;
+    const label = encodeURIComponent(record.name || "卫生间");
+    const geoUrl = `geo:${destination}?q=${destination}(${label})`;
+    const fallbackUrl = `https://maps.apple.com/?saddr=${origin.lat},${origin.lon}&daddr=${destination}&dirflg=d&q=${label}`;
+    const openedAt = Date.now();
+    window.location.href = geoUrl;
+    window.setTimeout(() => {
+      if (document.hidden || Date.now() - openedAt > 1600) return;
+      window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+    }, 700);
+  });
+}
+
+watch(queueSort, (sort) => {
+  if (sort === "nearest" && !currentLocation.value) {
+    void getCurrentLocation();
+  }
+});
 
 function toggleAllVisible(value: boolean) {
   const visibleIds = new Set(visibleRecords.value.map((item) => item.id));
@@ -119,6 +194,10 @@ function exportCachedRecords(records: ToiletPlace[]) {
         {label: '已确认', value: 'reviewed'},
         {label: '全部', value: 'all'}
       ]"/>
+      <el-segmented v-model="queueSort" :options="[
+        {label: '最后编辑时间', value: 'updated'},
+        {label: '最近距离', value: 'nearest'}
+      ]" :disabled="isLocating"/>
       <div class="review-bulk-actions">
         <el-checkbox :model-value="allVisibleSelected" @update:model-value="toggleAllVisible">
           全选当前列表
@@ -157,10 +236,12 @@ function exportCachedRecords(records: ToiletPlace[]) {
             <el-tag v-for="kind in record.kinds" :key="kind" size="small">{{ kindLabels.get(kind) || kind }}</el-tag>
             <el-tag v-if="record.accessibility.hasAccessibleToilet" size="small" type="success">无障碍</el-tag>
             <el-tag v-if="record.facilities.parkingAllowed" size="small" type="info">允许停车</el-tag>
+            <span v-if="currentLocation">{{ formatDistance(record) }}</span>
             <span>{{ record.location.lat.toFixed(5) }}, {{ record.location.lon.toFixed(5) }}</span>
           </div>
         </div>
         <div class="review-actions">
+          <el-button circle type="success" title="导航到卫生间" :loading="isLocating" @click="navigateToRecord(record)"><el-icon><Position /></el-icon></el-button>
           <el-button circle title="编辑记录" @click="editRecord(record)"><el-icon><Edit /></el-icon></el-button>
           <el-button v-if="!record.audit.reviewed" circle type="success" title="确认通过" @click="markReviewed(record)"><el-icon><Check /></el-icon></el-button>
           <el-button v-if="localCache.hasToilet(record.id)" circle type="danger" title="删除缓存草稿" @click="removeDraft(record)"><el-icon><Delete /></el-icon></el-button>
