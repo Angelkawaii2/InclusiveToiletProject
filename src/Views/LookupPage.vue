@@ -770,9 +770,10 @@ onMounted(() => {
 
 .search-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.85fr);
-  gap: 16px;
-  margin-top: 16px;
+  grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.9fr);
+  gap: 12px;
+  height: clamp(390px, calc(100vh - 250px), 540px);
+  margin-top: 12px;
 }
 
 .map-column,
@@ -781,7 +782,9 @@ onMounted(() => {
 }
 
 .result-column {
-  padding: 16px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: 12px;
   border: 1px solid rgba(111, 139, 153, 0.2);
   border-color: var(--itp-border);
   border-radius: 8px;
@@ -790,7 +793,7 @@ onMounted(() => {
 
 .result-toolbar {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .toolbar-actions {
@@ -800,7 +803,7 @@ onMounted(() => {
 }
 
 .filter-panel {
-  padding: 12px;
+  padding: 8px;
   border: 1px solid var(--itp-border);
   border-radius: 8px;
   background: var(--itp-surface-soft);
@@ -810,10 +813,17 @@ onMounted(() => {
   margin-bottom: 0;
 }
 
+.filter-panel :deep(.el-form-item__label) {
+  height: auto;
+  padding-bottom: 3px;
+  line-height: 1.2;
+  font-size: 12px;
+}
+
 .filter-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 7px;
 }
 
 .mobile-filter-button,
@@ -906,8 +916,14 @@ onMounted(() => {
   display: grid;
   gap: 10px;
   margin-top: 14px;
-  max-height: 520px;
+  min-height: 0;
+  max-height: none;
   overflow: auto;
+}
+
+.map-column :deep(.map-container) {
+  min-height: 0;
+  height: 100%;
 }
 
 .result-item {
@@ -1048,7 +1064,20 @@ onMounted(() => {
 
 @media (max-width: 920px) {
   .search-layout {
+    height: auto;
     grid-template-columns: 1fr;
+  }
+
+  .map-column :deep(.map-container) {
+    height: 460px;
+  }
+
+  .result-column {
+    display: block;
+  }
+
+  .result-list {
+    max-height: 520px;
   }
 }
 

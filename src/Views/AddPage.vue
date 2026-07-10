@@ -36,7 +36,7 @@ const draft = reactive({
   province: "上海市",
   city: "上海市",
   description: "",
-  kinds: ["allGender"] as ToiletKind[],
+  kinds: ["male", "female"] as ToiletKind[],
   restriction: "public" as AccessRestriction,
   accessNotes: "",
   parkingAllowed: null as boolean | null,
@@ -64,7 +64,7 @@ function resetDraft() {
   draft.province = "上海市";
   draft.city = "上海市";
   draft.description = "";
-  draft.kinds = ["allGender"];
+  draft.kinds = ["male", "female"];
   draft.restriction = "public";
   draft.accessNotes = "";
   draft.parkingAllowed = null;

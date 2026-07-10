@@ -1,6 +1,5 @@
 <script setup>
 
-import {useI18n} from "vue-i18n";
 import {computed, ref, watchEffect} from "vue";
 import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
@@ -10,7 +9,6 @@ import {Moon, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 
-const {t} = useI18n()
 const settings = useSettingStore()
 const workspace = useWorkspaceStore()
 
@@ -51,22 +49,15 @@ watchEffect(() => {
     <el-watermark :content=watermark() :font="font">
       <div class="app-header">
         <div class="brand-block">
-          <h1>{{ t("ui.title") }}</h1>
-          <p>"{{ t('ui.slogan') }}"</p>
+          <h1>卫生间数据采集工具</h1>
         </div>
-        <div class="build-card">
+        <div class="header-actions">
           <el-button circle :title="isDarkTheme ? '切换到日间模式' : '切换到夜间模式'" @click="settings.toggleTheme()">
             <el-icon>
               <Moon v-if="!isDarkTheme"/>
               <Sunny v-else/>
             </el-icon>
           </el-button>
-          <el-link href="https://github.com/Angelkawaii2/InclusiveToiletProject" target="_blank" type="primary">
-            GitHub Project
-          </el-link>
-          <span>Version: {{ v }}</span>
-          <span>Build: {{ b }}</span>
-          <el-text v-if="isDevVersion" type="danger">Dev 测试版本</el-text>
         </div>
       </div>
 
@@ -91,6 +82,13 @@ watchEffect(() => {
 
       </el-tabs>
 
+      <footer class="app-footer">
+        <el-link href="https://github.com/Angelkawaii2/InclusiveToiletProject" target="_blank" type="primary">GitHub Project</el-link>
+        <span>版本 {{ v }}</span>
+        <span>构建 {{ b }}</span>
+        <el-text v-if="isDevVersion" type="danger">Dev 测试版本</el-text>
+      </footer>
+
     </el-watermark>
   </div>
 
@@ -105,11 +103,11 @@ watchEffect(() => {
 
 .app-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 18px;
-  padding: 22px 24px;
+  gap: 16px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
   border: 1px solid rgba(111, 139, 153, 0.22);
   border-color: var(--itp-border);
   border-radius: 8px;
@@ -119,23 +117,24 @@ watchEffect(() => {
 
 .brand-block h1 {
   margin: 0;
-  font-size: 30px;
+  font-size: 20px;
   line-height: 1.2;
   letter-spacing: 0;
 }
 
-.brand-block p {
-  margin: 8px 0 0;
-  color: var(--itp-text-muted);
+.header-actions,
+.app-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.build-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+.app-footer {
+  justify-content: flex-end;
+  min-height: 34px;
+  padding: 10px 4px 0;
   color: var(--itp-text-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .workspace-tabs {
@@ -147,13 +146,9 @@ watchEffect(() => {
 }
 
 @media (max-width: 720px) {
-  .app-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .build-card {
-    align-items: flex-start;
+  .app-footer {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 
