@@ -90,6 +90,7 @@ function handleMapCoordinateChange(location: {lon: number; lat: number}) {
 function saveDraft() {
   const item = workspace.selectedToilet;
   if (!item) return;
+  const baseUpdatedAt = localCache.getMetadata(item.id)?.baseUpdatedAt ?? item.audit.updatedAt;
   item.name = draft.name.trim() || "未命名卫生间";
   item.isActive = draft.isActive;
   item.location.lat = Number(draft.lat);
@@ -124,7 +125,7 @@ function saveDraft() {
   };
   item.audit.updatedAt = Date.now();
   item.audit.reviewed = settings.autoReviewOnEdit || draft.reviewed;
-  if (!localCache.addToilet(item)) {
+  if (!localCache.saveEditedToilet(item, baseUpdatedAt)) {
     ElMessage.error(localCache.storageError || "保存到浏览器缓存失败，刷新后无法保留修改");
     return;
   }

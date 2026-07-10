@@ -9,7 +9,7 @@ import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 
-type QueueFilter = "pending" | "reviewed" | "all";
+type QueueFilter = "pending" | "reviewed" | "conflict" | "all";
 type QueueSort = "updated" | "nearest";
 
 const localCache = useLocalToiletCacheStore();
@@ -31,6 +31,7 @@ const allRecords = computed(() => {
 const filteredRecords = computed(() => allRecords.value.filter((item) => {
   if (queueFilter.value === "pending") return !item.audit.reviewed;
   if (queueFilter.value === "reviewed") return item.audit.reviewed;
+  if (queueFilter.value === "conflict") return localCache.hasConflict(item.id);
   return true;
 }));
 
@@ -43,6 +44,7 @@ const pendingCount = computed(() => allRecords.value.filter((item) => !item.audi
 const selectedVisibleIds = computed(() => selectedIds.value.filter((id) => visibleRecords.value.some((item) => item.id === id)));
 const allVisibleSelected = computed(() => visibleRecords.value.length > 0 && selectedVisibleIds.value.length === visibleRecords.value.length);
 const selectedCachedRecords = computed(() => localCache.toilets.filter((item) => selectedIds.value.includes(item.id)));
+const conflictCount = computed(() => localCache.conflictCount);
 const kindLabels = new Map(TOILET_KIND_OPTIONS.map((item) => [item.value, item.label]));
 
 function distanceInMeters(origin: {lat: number; lon: number}, record: ToiletPlace) {
@@ -118,6 +120,7 @@ function toggleAllVisible(value: boolean) {
 }
 
 function updateReviewState(record: ToiletPlace, reviewed: boolean) {
+  const baseUpdatedAt = localCache.getMetadata(record.id)?.baseUpdatedAt ?? record.audit.updatedAt;
   const updated: ToiletPlace = {
     ...record,
     audit: {
@@ -127,12 +130,38 @@ function updateReviewState(record: ToiletPlace, reviewed: boolean) {
       updatedBy: "local-review-workflow"
     }
   };
-  if (!localCache.addToilet(updated)) {
+  if (!localCache.saveEditedToilet(updated, baseUpdatedAt)) {
     ElMessage.error(localCache.storageError || "保存 Review 状态失败，刷新后无法保留修改");
     return false;
   }
   dataset.updateToilet(updated);
   return true;
+}
+
+function keepLocalConflict(record: ToiletPlace) {
+  if (!localCache.keepLocalConflict(record.id)) {
+    ElMessage.error(localCache.storageError || "保留本地修改失败");
+    return;
+  }
+  ElMessage.success("已保留本地修改，并以当前数据源版本作为比较基线");
+}
+
+async function acceptSourceConflict(record: ToiletPlace) {
+  const sourceRecord = localCache.getMetadata(record.id)?.conflict?.sourceRecord;
+  if (!sourceRecord) return;
+  await ElMessageBox.confirm("采用数据源会丢弃该记录的本地人工修改，且无法恢复。", "采用数据源更新", {
+    confirmButtonText: "采用数据源",
+    cancelButtonText: "取消",
+    type: "warning",
+  });
+  const acceptedRecord = localCache.acceptSourceConflict(record.id);
+  if (!acceptedRecord) {
+    ElMessage.error(localCache.storageError || "采用数据源失败");
+    return;
+  }
+  dataset.updateToilet(acceptedRecord);
+  workspace.selectToilet(acceptedRecord);
+  ElMessage.success("已采用数据源更新");
 }
 
 function markReviewed(record: ToiletPlace) {
@@ -192,10 +221,21 @@ function exportCachedRecords(records: ToiletPlace[]) {
       </div>
     </header>
 
+    <el-alert
+        v-if="conflictCount > 0"
+        class="conflict-alert"
+        :title="`${conflictCount} 条本地人工修改与更新后的数据源发生冲突`"
+        description="请在冲突筛选中选择保留本地修改，或采用数据源版本。"
+        type="warning"
+        show-icon
+        :closable="false"
+    />
+
     <div class="review-toolbar">
       <el-segmented v-model="queueFilter" :options="[
         {label: `待 Review (${pendingCount})`, value: 'pending'},
         {label: '已确认', value: 'reviewed'},
+        {label: `冲突 (${conflictCount})`, value: 'conflict'},
         {label: '全部', value: 'all'}
       ]"/>
       <el-segmented v-model="queueSort" :options="[
@@ -233,6 +273,8 @@ function exportCachedRecords(records: ToiletPlace[]) {
             <el-tag :type="record.audit.reviewed ? 'success' : 'warning'" effect="plain">
               {{ record.audit.reviewed ? "已确认" : "待 Review" }}
             </el-tag>
+            <el-tag v-if="localCache.getMetadata(record.id)?.locallyEdited" type="info" effect="plain">本地人工修改</el-tag>
+            <el-tag v-if="localCache.hasConflict(record.id)" type="danger" effect="plain">数据源更新冲突</el-tag>
             <el-tag v-if="localCache.hasToilet(record.id)" type="info" effect="plain">浏览器缓存</el-tag>
           </div>
           <p>{{ [record.address?.country, record.address?.province, record.address?.city, record.address?.description].filter(Boolean).join(" ") || "暂无地址描述" }}</p>
@@ -245,6 +287,8 @@ function exportCachedRecords(records: ToiletPlace[]) {
           </div>
         </div>
         <div class="review-actions">
+          <el-button v-if="localCache.hasConflict(record.id)" size="small" type="warning" @click="keepLocalConflict(record)">保留本地</el-button>
+          <el-button v-if="localCache.hasConflict(record.id)" size="small" type="danger" @click="acceptSourceConflict(record)">采用数据源</el-button>
           <el-button circle type="success" title="导航到卫生间" :loading="isLocating" @click="navigateToRecord(record)"><el-icon><Position /></el-icon></el-button>
           <el-button circle title="编辑记录" @click="editRecord(record)"><el-icon><Edit /></el-icon></el-button>
           <el-button v-if="!record.audit.reviewed" circle type="success" title="确认通过" @click="markReviewed(record)"><el-icon><Check /></el-icon></el-button>
@@ -278,6 +322,10 @@ function exportCachedRecords(records: ToiletPlace[]) {
 .review-toolbar {
   justify-content: space-between;
   gap: 18px;
+}
+
+.conflict-alert {
+  margin-top: 18px;
 }
 
 .review-header h3 {

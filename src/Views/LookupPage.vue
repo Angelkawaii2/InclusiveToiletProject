@@ -89,8 +89,17 @@ async function loadStaticMockData() {
     const region = manifest.regions[0];
     const regionResponse = await fetch(`./data/${region.dataUrl.replace("./", "")}`);
     const toilets = await regionResponse.json() as ToiletPlace[];
-    const mergedToilets = localCache.mergeWithDataset(toilets);
-    dataset.replaceDataset(mergedToilets, `${region.name}：${mergedToilets.length} 条`);
+    const mergedDataset = localCache.mergeWithDataset(toilets);
+    dataset.replaceDataset(mergedDataset.toilets, `${region.name}：${mergedDataset.toilets.length} 条`);
+    if (mergedDataset.newConflictCount > 0) {
+      ElNotification({
+        title: "发现数据更新冲突",
+        message: `${mergedDataset.newConflictCount} 条本地人工修改与数据源更新不一致，请到数据维护的待 Review 页面处理。`,
+        type: "warning",
+        position: "top-right",
+        duration: 5000,
+      });
+    }
     await nextTick();
     renderPoints();
   } catch (err) {
