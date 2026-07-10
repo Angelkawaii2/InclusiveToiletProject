@@ -11,7 +11,7 @@ import {
   type ToiletKind,
   type ToiletPlace
 } from "@/domain/toilet/v6";
-import {Aim, Download, Edit, Location, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
+import {Aim, Edit, Location, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
@@ -131,16 +131,6 @@ async function focusAroundUserLocation() {
       {lat: userLocation.value.lat, lon: userLocation.value.lon},
       getNearestMapPoints(userLocation.value)
   );
-}
-
-function downloadCurrentDataset() {
-  const blob = new Blob([JSON.stringify(dataset.toilets, null, 2)], {type: "application/json"});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "toilet-dataset-v6.json";
-  link.click();
-  URL.revokeObjectURL(url);
 }
 
 function distanceInMeters(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
@@ -365,10 +355,6 @@ onMounted(() => {
           导入 JSON
           <input ref="fileInput" accept=".json" multiple type="file" @change="handleFiles"/>
         </label>
-        <el-button :disabled="dataset.toilets.length === 0" type="primary" @click="downloadCurrentDataset">
-          <el-icon><Download /></el-icon>
-          导出当前数据集
-        </el-button>
       </div>
     </div>
 

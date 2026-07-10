@@ -1,4 +1,5 @@
 import {DATA_VERSION} from "@/constants/projectVersions";
+import {LOCAL_EXPORT_FORMAT} from "./exportBundle";
 import type {ToiletPlace} from "./types";
 import {isV6ToiletPlace, normalizeToiletKinds} from "./validation";
 
@@ -32,6 +33,15 @@ interface LegacyBathroom {
 export interface ImportResult {
     toilets: ToiletPlace[];
     errors: string[];
+}
+
+function isLocalExportBundle(value: unknown): value is {format: typeof LOCAL_EXPORT_FORMAT; records: unknown[]} {
+    return typeof value === "object"
+        && value !== null
+        && "format" in value
+        && "records" in value
+        && (value as {format?: unknown}).format === LOCAL_EXPORT_FORMAT
+        && Array.isArray((value as {records?: unknown}).records);
 }
 
 function isLegacyBathroom(value: unknown): value is LegacyBathroom {
@@ -81,7 +91,7 @@ function convertLegacyBathroomToV6(item: LegacyBathroom): ToiletPlace | null {
 }
 
 export function normalizeImportedToilets(input: unknown): ImportResult {
-    const items = Array.isArray(input) ? input : [input];
+    const items = isLocalExportBundle(input) ? input.records : Array.isArray(input) ? input : [input];
     const toilets: ToiletPlace[] = [];
     const errors: string[] = [];
 

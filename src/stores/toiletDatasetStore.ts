@@ -14,7 +14,9 @@ export const useToiletDatasetStore = defineStore("toilet.dataset", {
             this.importErrors = [];
         },
         appendToilets(toilets: ToiletPlace[], sourceName: string, errors: string[] = []) {
-            this.toilets = [...this.toilets, ...toilets];
+            const merged = new Map(this.toilets.map((toilet) => [toilet.id, toilet]));
+            toilets.forEach((toilet) => merged.set(toilet.id, toilet));
+            this.toilets = [...merged.values()];
             this.dataSourceName = sourceName;
             this.importErrors = errors;
         },

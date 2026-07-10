@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import type {ToiletPlace} from "@/domain/toilet/v6";
 
-export type WorkspaceTab = "search" | "maintenance" | "settings";
+export type WorkspaceTab = "search" | "maintenance" | "data-transfer" | "settings";
 export type MaintenanceMode = "create" | "edit" | "review";
 
 export const useWorkspaceStore = defineStore("workspace", {

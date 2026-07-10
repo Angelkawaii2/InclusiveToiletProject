@@ -5,6 +5,7 @@ import {computed, ref, watchEffect} from "vue";
 import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
 import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
+import DataTransferPage from "@/Views/DataTransferPage.vue";
 import {Moon, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
@@ -78,6 +79,10 @@ watchEffect(() => {
 
         <el-tab-pane label="数据维护" name="maintenance">
           <data-maintenance-page/>
+        </el-tab-pane>
+
+        <el-tab-pane label="数据导入导出" name="data-transfer">
+          <data-transfer-page/>
         </el-tab-pane>
 
         <el-tab-pane label="设置" name="settings">
