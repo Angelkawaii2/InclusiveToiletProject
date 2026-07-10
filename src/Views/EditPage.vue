@@ -80,6 +80,11 @@ async function renderEditMap() {
   editMap.value?.focusPoint(item.location.lon, item.location.lat);
 }
 
+function handleMapCoordinateChange(location: {lon: number; lat: number}) {
+  draft.lon = location.lon;
+  draft.lat = location.lat;
+}
+
 function saveDraft() {
   const item = workspace.selectedToilet;
   if (!item) return;
@@ -247,9 +252,14 @@ watch(() => workspace.selectedToilet?.id, () => {
             <el-tag type="info" effect="plain">{{ draft.lat.toFixed(6) }}, {{ draft.lon.toFixed(6) }}</el-tag>
           </div>
           <div class="edit-map-canvas">
-            <toilet-map ref="editMap" basemap-style="mono"/>
+            <toilet-map
+                ref="editMap"
+                basemap-style="mono"
+                editable-marker
+                @coordinate-change="handleMapCoordinateChange"
+            />
           </div>
-          <p class="field-hint">地图用于确认当前坐标，坐标仍可通过左侧经纬度输入框修改。</p>
+          <p class="field-hint">拖动红色大头钉可以直接选择坐标，也可以通过左侧经纬度输入框修改。</p>
         </aside>
       </div>
     </div>

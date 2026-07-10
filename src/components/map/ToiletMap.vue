@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
-import {fromLonLat} from "ol/proj";
+import {fromLonLat, toLonLat} from "ol/proj";
 import {boundingExtent} from "ol/extent";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import {Feature} from "ol";
 import {Point} from "ol/geom";
 import {Circle as CircleStyle, Fill, Stroke, Style} from "ol/style";
+import Icon from "ol/style/Icon";
+import Translate from "ol/interaction/Translate";
 import type {ToiletKind} from "@/domain/toilet/v6";
 
 export interface ToiletMapPoint {
@@ -23,9 +25,15 @@ export type BasemapStyle = "standard" | "mono" | "light" | "dark";
 
 const props = withDefaults(defineProps<{
   basemapStyle?: BasemapStyle;
+  editableMarker?: boolean;
 }>(), {
   basemapStyle: "mono",
+  editableMarker: false,
 });
+
+const emit = defineEmits<{
+  coordinateChange: [location: { lon: number; lat: number }];
+}>();
 
 const mapElement = ref<HTMLElement | null>(null);
 const mapClasses = computed(() => ["map-container", `basemap-${props.basemapStyle}`]);
@@ -61,6 +69,18 @@ const markerStyles = {
   }),
 };
 
+const editablePinStyle = new Style({
+  image: new Icon({
+    anchor: [0.5, 1],
+    src: `data:image/svg+xml,${encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="60" viewBox="0 0 48 60">
+        <path d="M24 58C21 48 7 38 7 22C7 12.6 14.6 5 24 5s17 7.6 17 17c0 16-14 26-17 36Z" fill="#e34d59" stroke="#ffffff" stroke-width="3"/>
+        <circle cx="24" cy="22" r="8" fill="#ffffff"/>
+      </svg>
+    `)}`,
+  }),
+});
+
 function getMarkerStyle(kinds: ToiletKind[]) {
   if (kinds.includes("allGender")) return markerStyles.neutral;
   if (kinds.includes("male") && !kinds.includes("female")) return markerStyles.male;
@@ -71,7 +91,7 @@ function getMarkerStyle(kinds: ToiletKind[]) {
 const vectorSource = new VectorSource();
 const vectorLayer = new VectorLayer({
   source: vectorSource,
-  style: (feature) => getMarkerStyle(feature.get("kinds") || []),
+  style: (feature) => feature.get("editable") ? editablePinStyle : getMarkerStyle(feature.get("kinds") || []),
 });
 vectorLayer.setZIndex(10);
 
@@ -89,6 +109,7 @@ const userLocationLayer = new VectorLayer({
 userLocationLayer.setZIndex(20);
 
 let map: Map | null = null;
+let translateInteraction: Translate | null = null;
 
 onMounted(() => {
   if (!mapElement.value) return;
@@ -107,6 +128,24 @@ onMounted(() => {
       zoom: 11,
     }),
   });
+
+  if (props.editableMarker) {
+    translateInteraction = new Translate({
+      layers: [vectorLayer],
+      hitTolerance: 12,
+    });
+    translateInteraction.on("translateend", (event) => {
+      const feature = event.features.item(0);
+      const geometry = feature?.getGeometry();
+      if (!(geometry instanceof Point)) return;
+      const [lon, lat] = toLonLat(geometry.getCoordinates());
+      emit("coordinateChange", {
+        lon: Number(lon.toFixed(6)),
+        lat: Number(lat.toFixed(6)),
+      });
+    });
+    map.addInteraction(translateInteraction);
+  }
 });
 
 function setPoints(points: ToiletMapPoint[]) {
@@ -114,6 +153,7 @@ function setPoints(points: ToiletMapPoint[]) {
   const features = points.map((item) => new Feature({
     geometry: new Point(fromLonLat([item.lon, item.lat])),
     kinds: item.kinds,
+    editable: props.editableMarker,
   }));
   vectorSource.addFeatures(features);
 
@@ -169,6 +209,12 @@ defineExpose({
   focusPoint,
   setUserLocation,
   fitAroundLocation,
+});
+
+onUnmounted(() => {
+  if (map && translateInteraction) map.removeInteraction(translateInteraction);
+  translateInteraction = null;
+  map = null;
 });
 </script>
 
