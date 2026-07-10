@@ -164,13 +164,20 @@ const userAccuracyStyle = new Style({
   fill: new Fill({color: "rgba(96, 165, 250, 0.18)"}),
   stroke: new Stroke({color: "rgba(96, 165, 250, 0.78)", width: 2}),
 });
-const userCenterStyle = new Style({
-  image: new CircleStyle({
-    radius: 9,
-    fill: new Fill({color: "#1a73e8"}),
-    stroke: new Stroke({color: "#ffffff", width: 3}),
+const userCenterStyles = [
+  new Style({
+    image: new CircleStyle({
+      radius: 10,
+      fill: new Fill({color: "#ffffff"}),
+    }),
   }),
-});
+  new Style({
+    image: new CircleStyle({
+      radius: 7,
+      fill: new Fill({color: "#1a73e8"}),
+    }),
+  }),
+];
 const minimumAccuracyRingPixels = 18;
 const userMinimumAccuracyRingStyle = new Style({
   image: new CircleStyle({
@@ -183,7 +190,7 @@ const userMinimumAccuracyRingStyle = new Style({
 function getUserLocationStyle(feature: Feature, resolution: number) {
   const type = feature.get("type");
   if (type === "accuracy") return userAccuracyStyle;
-  if (type === "center") return userCenterStyle;
+  if (type === "center") return userCenterStyles;
   if (type === "minimum-accuracy-ring") {
     const accuracy = feature.get("accuracy");
     return typeof accuracy === "number" && accuracy / resolution < minimumAccuracyRingPixels
