@@ -24,7 +24,6 @@ const keyword = ref("")
 const isLoading = ref(false)
 const loadError = ref("")
 const selectedId = ref("")
-const sortByNearest = ref(false)
 const userLocation = ref<{ lat: number; lon: number } | null>(null)
 const userLocationAccuracy = ref<number | null>(null)
 const isLocating = ref(false)
@@ -149,7 +148,7 @@ function formatDistance(item: ToiletPlace) {
   return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
 }
 
-function updateCurrentLocation(sortAfterLocated = false) {
+function updateCurrentLocation() {
   loadError.value = "";
   if (!navigator.geolocation) {
     loadError.value = "当前浏览器不支持定位，无法显示距离。";
@@ -166,7 +165,6 @@ function updateCurrentLocation(sortAfterLocated = false) {
       lat: userLocation.value.lat,
       lon: userLocation.value.lon,
     });
-    if (sortAfterLocated) sortByNearest.value = true;
     void focusAroundUserLocation();
     isLocating.value = false;
   }, () => {
@@ -176,14 +174,6 @@ function updateCurrentLocation(sortAfterLocated = false) {
     timeout: 8000,
     enableHighAccuracy: true
   });
-}
-
-function sortNearest() {
-  if (userLocation.value) {
-    sortByNearest.value = true;
-    return;
-  }
-  updateCurrentLocation(true);
 }
 
 function selectToilet(item: ToiletPlace) {
@@ -270,7 +260,6 @@ function resetFilters() {
   accessibleFilter.value = "all";
   separateStallFilter.value = "all";
   lockedFilter.value = "all";
-  sortByNearest.value = false;
 }
 
 const filteredBathrooms = computed(() => {
@@ -298,7 +287,7 @@ const filteredBathrooms = computed(() => {
         && matchesTriState(item.accessibility.isSeparateStall, separateStallFilter.value)
         && matchesTriState(item.accessibility.isLocked, lockedFilter.value);
   })
-  if (!sortByNearest.value || !userLocation.value) return filtered;
+  if (!userLocation.value) return filtered;
   return [...filtered].sort((a, b) => {
     return distanceInMeters(userLocation.value!, a.location) - distanceInMeters(userLocation.value!, b.location);
   });
@@ -315,7 +304,6 @@ watch([
   accessibleFilter,
   separateStallFilter,
   lockedFilter,
-  sortByNearest,
 ], () => {
   ElNotification.closeAll();
   ElNotification({
@@ -333,7 +321,7 @@ watch(userLocation, (location) => {
 
 onMounted(() => {
   loadStaticMockData();
-  updateCurrentLocation(false);
+  updateCurrentLocation();
 })
 </script>
 
@@ -371,16 +359,9 @@ onMounted(() => {
             </template>
           </el-input>
           <div class="toolbar-actions">
-            <el-button :loading="isLocating" @click="updateCurrentLocation(false)">
+            <el-button :loading="isLocating" @click="updateCurrentLocation">
               <el-icon><Location /></el-icon>
               获取当前位置
-            </el-button>
-            <el-button :type="sortByNearest ? 'primary' : 'default'" @click="sortNearest">
-              <el-icon><Location /></el-icon>
-              按最近排序
-            </el-button>
-            <el-button v-if="sortByNearest" @click="sortByNearest = false">
-              恢复默认排序
             </el-button>
             <el-button @click="resetFilters">
               清空条件
