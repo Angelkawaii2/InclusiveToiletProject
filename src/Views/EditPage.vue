@@ -10,6 +10,7 @@ import {
   type ToiletKind
 } from "@/domain/toilet/v6";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
+import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 
 defineProps<{
   embedded?: boolean
@@ -17,6 +18,7 @@ defineProps<{
 
 const workspace = useWorkspaceStore();
 const dataset = useToiletDatasetStore();
+const localCache = useLocalToiletCacheStore();
 
 const draft = reactive({
   name: "",
@@ -102,6 +104,7 @@ function saveDraft() {
   item.audit.updatedAt = Date.now();
   item.audit.reviewed = draft.reviewed;
   dataset.updateToilet(item);
+  localCache.updateToilet(item);
   workspace.selectToilet(item);
   ElMessage.success("记录已更新到当前会话数据中");
 }

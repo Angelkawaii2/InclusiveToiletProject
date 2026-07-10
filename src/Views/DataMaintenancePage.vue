@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {computed} from "vue";
-import {CirclePlus, Edit, Files} from "@element-plus/icons-vue";
 import AddPage from "@/Views/AddPage.vue";
 import EditPage from "@/Views/EditPage.vue";
+import ReviewQueue from "@/components/maintenance/ReviewQueue.vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 
 const workspace = useWorkspaceStore();
@@ -28,29 +28,13 @@ const mode = computed({
                   :options="[
                     { label: '新增点位', value: 'create' },
                     { label: '编辑记录', value: 'edit' },
-                    { label: '批量管理', value: 'batch' }
+                    { label: '待 Review', value: 'review' }
                   ]"/>
 
     <div class="maintenance-panel">
       <add-page v-if="mode === 'create'" embedded/>
       <edit-page v-else-if="mode === 'edit'" embedded/>
-      <div v-else class="batch-placeholder">
-        <el-icon><Files /></el-icon>
-        <div>
-          <h3>批量管理</h3>
-          <p>后续这里会放批量停用、重复点合并、区域数据导入导出和数据校验结果。</p>
-          <div class="batch-actions">
-            <el-button disabled>
-              <el-icon><CirclePlus /></el-icon>
-              导入数据包
-            </el-button>
-            <el-button disabled>
-              <el-icon><Edit /></el-icon>
-              批量编辑
-            </el-button>
-          </div>
-        </div>
-      </div>
+      <review-queue v-else/>
     </div>
   </section>
 </template>
@@ -68,36 +52,4 @@ const mode = computed({
   margin-top: 16px;
 }
 
-.batch-placeholder {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  padding: 24px;
-  border: 1px dashed var(--itp-border-strong);
-  border-radius: 8px;
-  background: var(--itp-surface-soft);
-}
-
-.batch-placeholder > .el-icon {
-  width: 40px;
-  height: 40px;
-  color: var(--itp-primary);
-}
-
-.batch-placeholder h3 {
-  margin: 0 0 6px;
-  font-size: 18px;
-}
-
-.batch-placeholder p {
-  margin: 0;
-  color: var(--itp-text-muted);
-}
-
-.batch-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 16px;
-}
 </style>
