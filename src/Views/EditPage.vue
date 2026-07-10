@@ -12,6 +12,7 @@ import {
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import ToiletMap from "@/components/map/ToiletMap.vue";
+import {useSettingStore} from "@/stores/settingsStore";
 
 defineProps<{
   embedded?: boolean
@@ -20,6 +21,7 @@ defineProps<{
 const workspace = useWorkspaceStore();
 const dataset = useToiletDatasetStore();
 const localCache = useLocalToiletCacheStore();
+const settings = useSettingStore();
 const editMap = ref<InstanceType<typeof ToiletMap> | null>(null);
 
 const draft = reactive({
@@ -50,7 +52,7 @@ function loadDraft() {
   if (!item) return;
   draft.name = item.name;
   draft.isActive = item.isActive;
-  draft.reviewed = item.audit.reviewed ?? false;
+  draft.reviewed = settings.autoReviewOnEdit || item.audit.reviewed;
   draft.lat = item.location.lat;
   draft.lon = item.location.lon;
   draft.country = item.address?.country || "";
@@ -121,7 +123,7 @@ function saveDraft() {
     text: draft.openingText.trim() || undefined,
   };
   item.audit.updatedAt = Date.now();
-  item.audit.reviewed = draft.reviewed;
+  item.audit.reviewed = settings.autoReviewOnEdit || draft.reviewed;
   if (!localCache.addToilet(item)) {
     ElMessage.error(localCache.storageError || "保存到浏览器缓存失败，刷新后无法保留修改");
     return;
