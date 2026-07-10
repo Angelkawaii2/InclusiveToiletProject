@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, reactive, watch} from "vue";
+import {computed, nextTick, reactive, ref, watch} from "vue";
 import {Check, Edit, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {ElMessage} from "element-plus";
@@ -11,6 +11,7 @@ import {
 } from "@/domain/toilet/v6";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
+import ToiletMap from "@/components/map/ToiletMap.vue";
 
 defineProps<{
   embedded?: boolean
@@ -19,6 +20,7 @@ defineProps<{
 const workspace = useWorkspaceStore();
 const dataset = useToiletDatasetStore();
 const localCache = useLocalToiletCacheStore();
+const editMap = ref<InstanceType<typeof ToiletMap> | null>(null);
 
 const draft = reactive({
   name: "",
@@ -66,6 +68,18 @@ function loadDraft() {
   draft.openingText = item.openingHours?.text || "";
 }
 
+async function renderEditMap() {
+  const item = workspace.selectedToilet;
+  if (!item) return;
+  await nextTick();
+  editMap.value?.setPoints([{
+    lon: item.location.lon,
+    lat: item.location.lat,
+    kinds: item.kinds,
+  }]);
+  editMap.value?.focusPoint(item.location.lon, item.location.lat);
+}
+
 function saveDraft() {
   const item = workspace.selectedToilet;
   if (!item) return;
@@ -109,7 +123,10 @@ function saveDraft() {
   ElMessage.success("记录已更新到当前会话数据中");
 }
 
-watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
+watch(() => workspace.selectedToilet?.id, () => {
+  loadDraft();
+  void renderEditMap();
+}, {immediate: true});
 </script>
 
 <template>
@@ -136,6 +153,7 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
         </div>
       </div>
 
+      <div class="edit-layout">
       <el-form class="edit-form" label-position="top">
         <div class="form-grid">
           <el-form-item label="名称">
@@ -220,6 +238,20 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
           </el-button>
         </div>
       </el-form>
+        <aside class="edit-map-panel">
+          <div class="edit-map-heading">
+            <div>
+              <p class="workspace-eyebrow">位置预览</p>
+              <h3>当前卫生间点位</h3>
+            </div>
+            <el-tag type="info" effect="plain">{{ draft.lat.toFixed(6) }}, {{ draft.lon.toFixed(6) }}</el-tag>
+          </div>
+          <div class="edit-map-canvas">
+            <toilet-map ref="editMap" basemap-style="mono"/>
+          </div>
+          <p class="field-hint">地图用于确认当前坐标，坐标仍可通过左侧经纬度输入框修改。</p>
+        </aside>
+      </div>
     </div>
 
     <div v-else class="edit-empty-state">
@@ -236,6 +268,51 @@ watch(() => workspace.selectedToilet?.id, loadDraft, {immediate: true});
 .edit-hero {
   border-color: rgba(20, 118, 100, 0.2);
   background: var(--itp-edit-hero);
+}
+
+.edit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.edit-map-panel {
+  align-self: start;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface);
+}
+
+.edit-map-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.edit-map-heading h3 {
+  margin: 4px 0 0;
+  font-size: 18px;
+}
+
+.edit-map-canvas {
+  height: 360px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.edit-map-canvas :deep(.map-container) {
+  min-height: 360px;
+}
+
+@media (max-width: 980px) {
+  .edit-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .edit-empty-state,
