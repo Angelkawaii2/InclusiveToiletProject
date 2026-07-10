@@ -16,6 +16,7 @@ import Translate from "ol/interaction/Translate";
 import type {ToiletKind} from "@/domain/toilet/v6";
 
 export interface ToiletMapPoint {
+  id?: string;
   lon: number;
   lat: number;
   kinds: ToiletKind[];
@@ -33,6 +34,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   coordinateChange: [location: { lon: number; lat: number }];
+  pointClick: [id: string];
 }>();
 
 const mapElement = ref<HTMLElement | null>(null);
@@ -146,12 +148,21 @@ onMounted(() => {
     });
     map.addInteraction(translateInteraction);
   }
+
+  map.on("singleclick", (event) => {
+    const recordId = map?.forEachFeatureAtPixel(event.pixel, (feature) => feature.get("id"), {
+      hitTolerance: 10,
+      layerFilter: (layer) => layer === vectorLayer,
+    });
+    if (typeof recordId === "string") emit("pointClick", recordId);
+  });
 });
 
 function setPoints(points: ToiletMapPoint[]) {
   vectorSource.clear();
   const features = points.map((item) => new Feature({
     geometry: new Point(fromLonLat([item.lon, item.lat])),
+    id: item.id,
     kinds: item.kinds,
     editable: props.editableMarker,
   }));

@@ -103,7 +103,7 @@ async function loadStaticMockData() {
 function renderPoints() {
   const points = filteredBathrooms.value
       .filter((item) => Number.isFinite(item.location?.lon) && Number.isFinite(item.location?.lat))
-      .map((item) => ({lon: item.location.lon, lat: item.location.lat, kinds: item.kinds}));
+      .map((item) => ({id: item.id, lon: item.location.lon, lat: item.location.lat, kinds: item.kinds}));
   mapComponent.value?.setPoints(points);
 }
 
@@ -183,6 +183,11 @@ function selectToilet(item: ToiletPlace) {
   selectedId.value = item.id;
   workspace.selectToilet(item);
   mapComponent.value?.focusPoint(item.location.lon, item.location.lat);
+}
+
+function selectMapPoint(id: string) {
+  const item = dataset.toilets.find((record) => record.id === id);
+  if (item) selectToilet(item);
 }
 
 function viewDetails(item: ToiletPlace) {
@@ -351,7 +356,7 @@ onMounted(() => {
 
     <div class="search-layout">
       <div class="map-column">
-        <toilet-map ref="mapComponent" :basemap-style="basemapStyle"/>
+        <toilet-map ref="mapComponent" :basemap-style="basemapStyle" @point-click="selectMapPoint"/>
       </div>
 
       <aside class="result-column">
