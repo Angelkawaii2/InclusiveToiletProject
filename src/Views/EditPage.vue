@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, nextTick, reactive, ref, watch} from "vue";
-import {Check, Edit, UploadFilled} from "@element-plus/icons-vue";
+import {Check, Edit, Location, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {ElMessage} from "element-plus";
 import {
@@ -23,6 +23,7 @@ const dataset = useToiletDatasetStore();
 const localCache = useLocalToiletCacheStore();
 const settings = useSettingStore();
 const editMap = ref<InstanceType<typeof ToiletMap> | null>(null);
+const isLocating = ref(false);
 
 const draft = reactive({
   name: "",
@@ -87,6 +88,39 @@ function handleMapCoordinateChange(location: {lon: number; lat: number}) {
   draft.lat = location.lat;
 }
 
+function updateEditLocation(useForCoordinates = false) {
+  if (!navigator.geolocation) {
+    ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
+    return;
+  }
+  ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
+  isLocating.value = true;
+  navigator.geolocation.getCurrentPosition((position) => {
+    const location = {
+      lat: Number(position.coords.latitude.toFixed(6)),
+      lon: Number(position.coords.longitude.toFixed(6)),
+      accuracy: Math.round(position.coords.accuracy),
+    };
+    editMap.value?.setUserLocation(location);
+    if (useForCoordinates) {
+      draft.lat = location.lat;
+      draft.lon = location.lon;
+      editMap.value?.setPoints([{lon: draft.lon, lat: draft.lat, kinds: draft.kinds}]);
+      editMap.value?.focusPoint(draft.lon, draft.lat);
+      ElMessage.success("已使用当前位置更新坐标");
+    } else {
+      ElMessage.success("已在地图上显示当前位置");
+    }
+    isLocating.value = false;
+  }, () => {
+    isLocating.value = false;
+    ElMessage.error("定位失败，请在浏览器设置中重新开启位置权限后重试");
+  }, {
+    timeout: 8000,
+    enableHighAccuracy: true,
+  });
+}
+
 function saveDraft() {
   const item = workspace.selectedToilet;
   if (!item) return;
@@ -135,8 +169,10 @@ function saveDraft() {
 }
 
 watch(() => workspace.selectedToilet?.id, () => {
+  if (!workspace.selectedToilet) return;
   loadDraft();
   void renderEditMap();
+  updateEditLocation();
 }, {immediate: true});
 </script>
 
@@ -181,6 +217,12 @@ watch(() => workspace.selectedToilet?.id, () => {
           </el-form-item>
           <el-form-item label="经度">
             <el-input-number v-model="draft.lon" :precision="6" :step="0.0001" controls-position="right"/>
+          </el-form-item>
+          <el-form-item label="坐标定位">
+            <el-button :loading="isLocating" type="primary" plain @click="updateEditLocation(true)">
+              <el-icon><Location /></el-icon>
+              使用当前定位
+            </el-button>
           </el-form-item>
           <el-form-item label="国家">
             <el-input v-model="draft.country"/>

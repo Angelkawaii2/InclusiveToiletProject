@@ -160,11 +160,19 @@ function formatDistance(item: ToiletPlace) {
   return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
 }
 
-function updateCurrentLocation() {
+function updateCurrentLocation(showPermissionHint = true) {
   loadError.value = "";
   if (!navigator.geolocation) {
-    loadError.value = "当前浏览器不支持定位，无法显示距离。";
+    loadError.value = "当前浏览器不支持定位，请使用支持位置权限的浏览器。";
     return;
+  }
+  if (showPermissionHint) {
+    ElNotification.info({
+      title: "需要位置权限",
+      message: "请在浏览器授权弹窗中允许使用当前位置。",
+      position: "top-right",
+      duration: 2600,
+    });
   }
   isLocating.value = true;
   navigator.geolocation.getCurrentPosition((position) => {
@@ -181,7 +189,7 @@ function updateCurrentLocation() {
     void focusAroundUserLocation();
     isLocating.value = false;
   }, () => {
-    loadError.value = "定位失败，请检查浏览器定位权限后重试。";
+    loadError.value = "定位失败，请在浏览器设置中重新开启位置权限后重试。";
     isLocating.value = false;
   }, {
     timeout: 8000,
@@ -339,7 +347,7 @@ watch([userLocation, userLocationAccuracy], ([location, accuracy]) => {
 
 onMounted(() => {
   loadStaticMockData();
-  updateCurrentLocation();
+  updateCurrentLocation(true);
 })
 </script>
 

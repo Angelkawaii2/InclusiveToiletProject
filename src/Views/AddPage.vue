@@ -80,9 +80,10 @@ function resetDraft() {
 
 function fillCurrentLocation() {
   if (!navigator.geolocation) {
-    ElMessage.error("当前浏览器不支持定位");
+    ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
     return;
   }
+  ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
   navigator.geolocation.getCurrentPosition(async (position) => {
     draft.lat = Number(position.coords.latitude.toFixed(6));
@@ -106,7 +107,7 @@ function fillCurrentLocation() {
       isLocating.value = false;
     }
   }, () => {
-    ElMessage.error("定位失败，请检查浏览器定位权限");
+    ElMessage.error("定位失败，请在浏览器设置中重新开启位置权限后重试");
     isLocating.value = false;
   }, {
     timeout: 8000,

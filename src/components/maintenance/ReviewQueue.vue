@@ -67,9 +67,10 @@ function formatDistance(record: ToiletPlace) {
 
 function getCurrentLocation(): Promise<{lat: number; lon: number} | null> {
   if (!navigator.geolocation) {
-    ElMessage.error("当前浏览器不支持定位，无法确定导航起点");
+    ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
     return Promise.resolve(null);
   }
+  ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -82,7 +83,7 @@ function getCurrentLocation(): Promise<{lat: number; lon: number} | null> {
       resolve(location);
     }, () => {
       isLocating.value = false;
-      ElMessage.error("无法获取当前位置，导航需要明确的起点");
+      ElMessage.error("定位失败，请在浏览器设置中重新开启位置权限后重试");
       resolve(null);
     }, {
       timeout: 8000,
