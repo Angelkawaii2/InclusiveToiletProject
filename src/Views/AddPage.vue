@@ -9,10 +9,12 @@ import {
   type ToiletKind,
   type ToiletPlace
 } from "@/domain/toilet/v6";
+import {buildLocalExportBundle, createLocalExportFilename} from "@/domain/toilet/v6";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {DATA_VERSION} from "@/constants/projectVersions";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
+import {downloadJsonFile} from "@/Utils/downloadJson";
 
 defineProps<{
   embedded?: boolean
@@ -166,17 +168,7 @@ function buildRecord(options: {reviewed?: boolean; source?: string} = {}): Toile
 
 function downloadRecord() {
   const record = buildRecord();
-  downloadJson(record, `${record.id}.json`);
-}
-
-function downloadJson(data: unknown, filename: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
+  downloadJsonFile(record, `${record.id}.json`);
 }
 
 function saveRecordToBrowser() {
@@ -188,7 +180,10 @@ function saveRecordToBrowser() {
     reviewed: captureMode.value === "full",
     source: captureMode.value === "quick" ? "local-quick-capture" : "local-create-form"
   });
-  localCache.addToilet(record);
+  if (!localCache.addToilet(record)) {
+    ElMessage.error(localCache.storageError || "保存到浏览器缓存失败");
+    return;
+  }
   if (captureMode.value === "quick") {
     draft.name = "";
     draft.description = "";
@@ -203,7 +198,8 @@ function downloadCachedRecords() {
     ElMessage.warning("浏览器缓存中还没有记录");
     return;
   }
-  downloadJson(localCache.toilets, "toilet-local-cache-v6.json");
+  downloadJsonFile(buildLocalExportBundle(localCache.toilets), createLocalExportFilename());
+  ElMessage.success(`已聚合导出 ${localCache.count} 条缓存记录`);
 }
 
 function clearCachedRecords() {

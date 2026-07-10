@@ -15,12 +15,18 @@ function readCachedToilets(): ToiletPlace[] {
 }
 
 function writeCachedToilets(toilets: ToiletPlace[]) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toilets));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toilets));
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
     state: () => ({
         toilets: readCachedToilets(),
+        storageError: "",
     }),
     getters: {
         count: (state) => state.toilets.length,
@@ -28,21 +34,40 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
     },
     actions: {
         addToilet(toilet: ToiletPlace) {
-            this.toilets = [toilet, ...this.toilets];
-            writeCachedToilets(this.toilets);
+            const previousToilets = this.toilets;
+            this.toilets = [toilet, ...this.toilets.filter((item) => item.id !== toilet.id)];
+            if (!writeCachedToilets(this.toilets)) {
+                this.toilets = previousToilets;
+                this.storageError = "浏览器缓存空间不足或不可用";
+                return false;
+            }
+            this.storageError = "";
+            return true;
         },
         updateToilet(toilet: ToiletPlace) {
             const index = this.toilets.findIndex((item) => item.id === toilet.id);
             if (index < 0) return false;
+            const previousToilet = this.toilets[index];
             this.toilets.splice(index, 1, toilet);
-            writeCachedToilets(this.toilets);
+            if (!writeCachedToilets(this.toilets)) {
+                this.toilets.splice(index, 1, previousToilet);
+                this.storageError = "浏览器缓存空间不足或不可用";
+                return false;
+            }
+            this.storageError = "";
             return true;
         },
         removeToilet(id: string) {
             const nextToilets = this.toilets.filter((item) => item.id !== id);
             if (nextToilets.length === this.toilets.length) return false;
+            const previousToilets = this.toilets;
             this.toilets = nextToilets;
-            writeCachedToilets(this.toilets);
+            if (!writeCachedToilets(this.toilets)) {
+                this.toilets = previousToilets;
+                this.storageError = "浏览器缓存空间不足或不可用";
+                return false;
+            }
+            this.storageError = "";
             return true;
         },
         hasToilet(id: string) {
@@ -51,6 +76,7 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
         clear() {
             this.toilets = [];
             localStorage.removeItem(STORAGE_KEY);
+            this.storageError = "";
         },
     },
 });

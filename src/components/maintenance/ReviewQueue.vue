@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
-import {Check, Delete, Edit} from "@element-plus/icons-vue";
+import {Check, Delete, Download, Edit} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {ToiletPlace} from "@/domain/toilet/v6";
-import {TOILET_KIND_OPTIONS} from "@/domain/toilet/v6";
+import {buildLocalExportBundle, createLocalExportFilename, TOILET_KIND_OPTIONS} from "@/domain/toilet/v6";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
+import {downloadJsonFile} from "@/Utils/downloadJson";
 
 type QueueFilter = "pending" | "reviewed" | "all";
 
@@ -32,6 +33,7 @@ const visibleRecords = computed(() => allRecords.value.filter((item) => {
 const pendingCount = computed(() => allRecords.value.filter((item) => !item.audit.reviewed).length);
 const selectedVisibleIds = computed(() => selectedIds.value.filter((id) => visibleRecords.value.some((item) => item.id === id)));
 const allVisibleSelected = computed(() => visibleRecords.value.length > 0 && selectedVisibleIds.value.length === visibleRecords.value.length);
+const selectedCachedRecords = computed(() => localCache.toilets.filter((item) => selectedIds.value.includes(item.id)));
 const kindLabels = new Map(TOILET_KIND_OPTIONS.map((item) => [item.value, item.label]));
 
 function toggleAllVisible(value: boolean) {
@@ -86,6 +88,15 @@ async function removeDraft(record: ToiletPlace) {
   selectedIds.value = selectedIds.value.filter((id) => id !== record.id);
   ElMessage.success("缓存草稿已删除");
 }
+
+function exportCachedRecords(records: ToiletPlace[]) {
+  if (records.length === 0) {
+    ElMessage.warning("没有可导出的缓存记录");
+    return;
+  }
+  downloadJsonFile(buildLocalExportBundle(records), createLocalExportFilename());
+  ElMessage.success(`已聚合导出 ${records.length} 条缓存记录`);
+}
 </script>
 
 <template>
@@ -115,6 +126,14 @@ async function removeDraft(record: ToiletPlace) {
         <el-button type="success" :disabled="selectedVisibleIds.length === 0" @click="markSelectedReviewed">
           <el-icon><Check /></el-icon>
           批量确认（{{ selectedVisibleIds.length }}）
+        </el-button>
+        <el-button :disabled="selectedCachedRecords.length === 0" @click="exportCachedRecords(selectedCachedRecords)">
+          <el-icon><Download /></el-icon>
+          导出选中缓存（{{ selectedCachedRecords.length }}）
+        </el-button>
+        <el-button type="primary" :disabled="localCache.count === 0" @click="exportCachedRecords(localCache.toilets)">
+          <el-icon><Download /></el-icon>
+          导出全部缓存（{{ localCache.count }}）
         </el-button>
       </div>
     </div>
