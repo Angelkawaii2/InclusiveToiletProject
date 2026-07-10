@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import Map from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
@@ -30,10 +30,12 @@ const props = withDefaults(defineProps<{
   basemapStyle?: BasemapStyle;
   editableMarker?: boolean;
   clusterPoints?: boolean;
+  selectedPointId?: string;
 }>(), {
   basemapStyle: "mono",
   editableMarker: false,
   clusterPoints: true,
+  selectedPointId: "",
 });
 
 const emit = defineEmits<{
@@ -75,6 +77,21 @@ const markerStyles = {
   }),
 };
 
+const selectedMarkerStyles = {
+  male: new Style({
+    image: new CircleStyle({radius: 11, fill: new Fill({color: "#2f80ed"}), stroke: new Stroke({color: "#ffffff", width: 4})}),
+  }),
+  female: new Style({
+    image: new CircleStyle({radius: 11, fill: new Fill({color: "#f26ba7"}), stroke: new Stroke({color: "#ffffff", width: 4})}),
+  }),
+  neutral: new Style({
+    image: new CircleStyle({radius: 11, fill: new Fill({color: "#29a36a"}), stroke: new Stroke({color: "#ffffff", width: 4})}),
+  }),
+  mixed: new Style({
+    image: new CircleStyle({radius: 11, fill: new Fill({color: "#8b6bdc"}), stroke: new Stroke({color: "#ffffff", width: 4})}),
+  }),
+};
+
 const editablePinStyle = new Style({
   image: new Icon({
     anchor: [0.5, 1],
@@ -87,17 +104,18 @@ const editablePinStyle = new Style({
   }),
 });
 
-function getMarkerStyle(kinds: ToiletKind[]) {
-  if (kinds.includes("allGender")) return markerStyles.neutral;
-  if (kinds.includes("male") && !kinds.includes("female")) return markerStyles.male;
-  if (kinds.includes("female") && !kinds.includes("male")) return markerStyles.female;
-  return markerStyles.mixed;
+function getMarkerStyle(kinds: ToiletKind[], selected = false) {
+  const styles = selected ? selectedMarkerStyles : markerStyles;
+  if (kinds.includes("allGender")) return styles.neutral;
+  if (kinds.includes("male") && !kinds.includes("female")) return styles.male;
+  if (kinds.includes("female") && !kinds.includes("male")) return styles.female;
+  return styles.mixed;
 }
 
 const vectorSource = new VectorSource();
 const vectorLayer = new VectorLayer({
   source: vectorSource,
-  style: (feature) => feature.get("editable") ? editablePinStyle : getMarkerStyle(feature.get("kinds") || []),
+  style: (feature) => feature.get("editable") ? editablePinStyle : getMarkerStyle(feature.get("kinds") || [], feature.get("selected") === true),
 });
 vectorLayer.setZIndex(10);
 
@@ -114,7 +132,7 @@ function getClusterStyle(feature: Feature) {
   if (!clusteredFeatures?.length) return markerStyles.mixed;
   if (clusteredFeatures.length === 1) {
     const point = clusteredFeatures[0];
-    return point.get("editable") ? editablePinStyle : getMarkerStyle(point.get("kinds") || []);
+    return point.get("editable") ? editablePinStyle : getMarkerStyle(point.get("kinds") || [], point.get("selected") === true);
   }
   const count = clusteredFeatures.length;
   const cachedStyle = clusterStyles.get(count);
@@ -241,6 +259,7 @@ function setPoints(points: ToiletMapPoint[]) {
     editable: props.editableMarker,
   }));
   vectorSource.addFeatures(features);
+  setSelectedPoint(props.selectedPointId);
 
   if (!map || features.length === 0) return;
   map.getView().fit(vectorSource.getExtent(), {
@@ -248,6 +267,14 @@ function setPoints(points: ToiletMapPoint[]) {
     maxZoom: 15,
     duration: 220,
   });
+}
+
+function setSelectedPoint(id = "") {
+  vectorSource.getFeatures().forEach((feature) => {
+    feature.set("selected", Boolean(id) && feature.get("id") === id);
+  });
+  vectorLayer.changed();
+  clusterLayer.changed();
 }
 
 function focusPoint(lon: number, lat: number) {
@@ -302,10 +329,15 @@ function fitAroundLocation(location: { lon: number; lat: number }, points: Array
 
 defineExpose({
   setPoints,
+  setSelectedPoint,
   focusPoint,
   setUserLocation,
   fitAroundLocation,
 });
+
+watch(() => props.selectedPointId, (id) => {
+  setSelectedPoint(id);
+}, {immediate: true});
 
 onUnmounted(() => {
   if (map && translateInteraction) map.removeInteraction(translateInteraction);

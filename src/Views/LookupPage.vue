@@ -357,7 +357,12 @@ onMounted(() => {
 
     <div class="search-layout">
       <div class="map-column">
-        <toilet-map ref="mapComponent" :basemap-style="basemapStyle" @point-click="selectMapPoint"/>
+        <toilet-map
+            ref="mapComponent"
+            :basemap-style="basemapStyle"
+            :selected-point-id="selectedId"
+            @point-click="selectMapPoint"
+        />
       </div>
 
       <aside class="result-column">
