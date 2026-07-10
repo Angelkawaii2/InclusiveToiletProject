@@ -478,7 +478,7 @@ onMounted(() => {
                 </el-tag>
                 <el-tag v-if="item.accessibility.hasAccessibleToilet" size="small" type="success">无障碍</el-tag>
                 <el-tag v-if="item.facilities.parkingAllowed" size="small" type="info">可停车</el-tag>
-                <el-tag v-if="item.audit.reviewed" size="small" type="success" effect="plain">已确认</el-tag>
+                <el-tag v-if="item.audit.reviewed" size="small" type="success" effect="plain">已人工核验</el-tag>
               </div>
             </div>
             <p class="address">{{ formatAddress(item) }}</p>
