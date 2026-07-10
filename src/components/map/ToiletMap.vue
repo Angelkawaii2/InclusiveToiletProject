@@ -14,6 +14,7 @@ import {Point} from "ol/geom";
 import {Circle as CircleStyle, Fill, Stroke, Style, Text} from "ol/style";
 import Icon from "ol/style/Icon";
 import Translate from "ol/interaction/Translate";
+import Select from "ol/interaction/Select";
 import type {ToiletKind} from "@/domain/toilet/v6";
 
 export interface ToiletMapPoint {
@@ -155,6 +156,24 @@ userLocationLayer.setZIndex(20);
 
 let map: Map | null = null;
 let translateInteraction: Translate | null = null;
+let selectInteraction: Select | null = null;
+
+function handleClusterSelection(feature: Feature) {
+  const clusteredFeatures = feature.get("features") as Feature[] | undefined;
+  if (!clusteredFeatures?.length) return;
+  if (clusteredFeatures.length > 1) {
+    const geometry = feature.getGeometry();
+    if (!(geometry instanceof Point) || !map) return;
+    map.getView().animate({
+      center: geometry.getCoordinates(),
+      zoom: Math.min(18, (map.getView().getZoom() || 0) + 2),
+      duration: 240,
+    });
+    return;
+  }
+  const recordId = clusteredFeatures[0].get("id");
+  if (typeof recordId === "string") emit("pointClick", recordId);
+}
 
 onMounted(() => {
   if (!mapElement.value) return;
@@ -193,21 +212,19 @@ onMounted(() => {
     map.addInteraction(translateInteraction);
   }
 
-  map.on("singleclick", (event) => {
-    const clickedFeature = map?.forEachFeatureAtPixel(event.pixel, (feature) => feature, {hitTolerance: 10});
-    const clusteredFeatures = clickedFeature?.get("features") as Feature[] | undefined;
-    if (props.clusterPoints && clusteredFeatures && clusteredFeatures.length > 1) {
-      map?.getView().animate({
-        center: event.coordinate,
-        zoom: Math.min(18, (map.getView().getZoom() || 0) + 2),
-        duration: 240,
-      });
-      return;
-    }
-    const point = clusteredFeatures?.[0] || clickedFeature;
-    const recordId = point?.get("id");
-    if (typeof recordId === "string") emit("pointClick", recordId);
-  });
+  if (props.clusterPoints) {
+    selectInteraction = new Select({
+      layers: [clusterLayer],
+      hitTolerance: 12,
+      style: null,
+    });
+    selectInteraction.on("select", (event) => {
+      const selectedFeature = event.selected[0];
+      if (selectedFeature) handleClusterSelection(selectedFeature);
+      selectInteraction?.getFeatures().clear();
+    });
+    map.addInteraction(selectInteraction);
+  }
 });
 
 function setPoints(points: ToiletMapPoint[]) {
@@ -276,7 +293,9 @@ defineExpose({
 
 onUnmounted(() => {
   if (map && translateInteraction) map.removeInteraction(translateInteraction);
+  if (map && selectInteraction) map.removeInteraction(selectInteraction);
   translateInteraction = null;
+  selectInteraction = null;
   map = null;
 });
 </script>
