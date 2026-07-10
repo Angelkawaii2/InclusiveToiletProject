@@ -779,11 +779,18 @@ onMounted(() => {
 .map-column,
 .result-column {
   min-width: 0;
+  min-height: 0;
+}
+
+.map-column {
+  height: 100%;
 }
 
 .result-column {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  overflow: hidden;
   padding: 12px;
   border: 1px solid rgba(111, 139, 153, 0.2);
   border-color: var(--itp-border);
@@ -914,6 +921,7 @@ onMounted(() => {
 
 .result-list {
   display: grid;
+  height: 100%;
   gap: 10px;
   margin-top: 14px;
   min-height: 0;
