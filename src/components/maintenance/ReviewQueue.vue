@@ -127,12 +127,16 @@ function updateReviewState(record: ToiletPlace, reviewed: boolean) {
       updatedBy: "local-review-workflow"
     }
   };
+  if (!localCache.addToilet(updated)) {
+    ElMessage.error(localCache.storageError || "保存 Review 状态失败，刷新后无法保留修改");
+    return false;
+  }
   dataset.updateToilet(updated);
-  localCache.updateToilet(updated);
+  return true;
 }
 
 function markReviewed(record: ToiletPlace) {
-  updateReviewState(record, true);
+  if (!updateReviewState(record, true)) return;
   selectedIds.value = selectedIds.value.filter((id) => id !== record.id);
   ElMessage.success("记录已通过人工 Review");
 }
@@ -143,9 +147,9 @@ function markSelectedReviewed() {
     ElMessage.warning("请先选择待 Review 记录");
     return;
   }
-  selected.forEach((item) => updateReviewState(item, true));
+  const savedCount = selected.filter((item) => updateReviewState(item, true)).length;
   selectedIds.value = [];
-  ElMessage.success(`已确认 ${selected.length} 条记录`);
+  if (savedCount > 0) ElMessage.success(`已确认 ${savedCount} 条记录`);
 }
 
 function editRecord(record: ToiletPlace) {

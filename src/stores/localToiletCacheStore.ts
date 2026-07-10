@@ -73,6 +73,14 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
         hasToilet(id: string) {
             return this.toilets.some((item) => item.id === id);
         },
+        mergeWithDataset(datasetToilets: ToiletPlace[]) {
+            const cachedById = new Map(this.toilets.map((item) => [item.id, item]));
+            const datasetIds = new Set(datasetToilets.map((item) => item.id));
+            return [
+                ...datasetToilets.map((item) => cachedById.get(item.id) || item),
+                ...this.toilets.filter((item) => !datasetIds.has(item.id)),
+            ];
+        },
         clear() {
             this.toilets = [];
             localStorage.removeItem(STORAGE_KEY);

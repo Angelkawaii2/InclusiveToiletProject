@@ -14,11 +14,13 @@ import {
 import {Aim, Download, Edit, Location, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
+import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {ElNotification} from "element-plus";
 
 const files = ref<File[]>([])
 const workspace = useWorkspaceStore()
 const dataset = useToiletDatasetStore()
+const localCache = useLocalToiletCacheStore()
 
 const keyword = ref("")
 const isLoading = ref(false)
@@ -87,7 +89,8 @@ async function loadStaticMockData() {
     const region = manifest.regions[0];
     const regionResponse = await fetch(`./data/${region.dataUrl.replace("./", "")}`);
     const toilets = await regionResponse.json() as ToiletPlace[];
-    dataset.replaceDataset(toilets, `${region.name}：${toilets.length} 条`);
+    const mergedToilets = localCache.mergeWithDataset(toilets);
+    dataset.replaceDataset(mergedToilets, `${region.name}：${mergedToilets.length} 条`);
     await nextTick();
     renderPoints();
   } catch (err) {

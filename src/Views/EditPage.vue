@@ -122,10 +122,13 @@ function saveDraft() {
   };
   item.audit.updatedAt = Date.now();
   item.audit.reviewed = draft.reviewed;
+  if (!localCache.addToilet(item)) {
+    ElMessage.error(localCache.storageError || "保存到浏览器缓存失败，刷新后无法保留修改");
+    return;
+  }
   dataset.updateToilet(item);
-  localCache.updateToilet(item);
   workspace.selectToilet(item);
-  ElMessage.success("记录已更新到当前会话数据中");
+  ElMessage.success("记录已保存到浏览器缓存，刷新后仍会保留修改");
 }
 
 watch(() => workspace.selectedToilet?.id, () => {
