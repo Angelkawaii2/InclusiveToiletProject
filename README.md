@@ -1,102 +1,66 @@
-# InclusiveToiletProject
+# 卫生间数据采集工具
 
-![Master Build Status](https://github.com/angelkawaii2/InclusiveToiletProject/actions/workflows/deploy-master.yml/badge.svg)
-![Dev Build Status](https://github.com/angelkawaii2/InclusiveToiletProject/actions/workflows/deploy-dev.yml/badge.svg)
-![Pages Deployment Workflow](https://github.com/Angelkawaii2/InclusiveToiletProject/actions/workflows/pages/pages-build-deployment/badge.svg)
+一个不依赖后端的卫生间地图与数据采集工具。项目以静态 v6 数据集为基础，支持地图浏览、现场快速采集、人工核验、本地修改，以及 JSON 数据的导入导出。
 
-包容性卫生间地图数据采集项目
+当前应用版本：`v0.6.0.20260708`
 
-[//]: # (【稳定版&#40;经过测试&#41;】[➡️ 在线体验&#40;支持PWA&#41;]&#40;https://angelkawaii2.github.io/InclusiveToiletProject/&#41;)
+## 当前能力
 
-在线访问：=> [🛠️ Dev 测试分支](https://angelkawaii2.github.io/InclusiveToiletProject/dev/) <=
+- 在 OpenStreetMap 上浏览卫生间点位，按距离、类型、开放状态和无障碍条件筛选。
+- 获取当前位置并显示定位精度；可从列表或地图双向选中点位并调用系统导航。
+- 快速采集模式，现场记录先保存至浏览器缓存，之后可在待 Review 队列中补全和人工核验。
+- 编辑已有记录，保留本地修改，并在静态数据源更新时检测冲突。
+- 独立的数据导入导出页面：支持普通 v6 JSON、项目聚合导出包，以及按编辑状态、创建来源和最后编辑时间筛选导出。
+- PWA 应用壳和静态资源缓存，支持离线再次打开；检测到新版本时会提示更新。
+- 日间和夜间主题。
 
----
+## 本地运行
 
-## 当前分支版本 | App Version
+需要 Node.js 和 pnpm。项目使用 `pnpm@11.7.0`。
 
-### v0.6.0.20260708 (v0.6.0.20260708)
-1. 新增 v6 数据结构草案，项目转向静态数据包和本地预览模式
-2. 重构搜索浏览、数据维护、新增/编辑记录页面
-3. 统一项目版本常量，移除旧 v4/v5 编辑代码和测试入口
-4. 增加 200 条 v6 模拟数据和静态 manifest 加载流程
+```bash
+pnpm install
+pnpm dev
+```
 
-### v0.5.3.20250507 (20241121)
-1. 修复 i18n t 符号 warning
-2. el-radio 增加 label（未完成）
-3. 修复 .env 版本号未更新问题
+默认开发地址为 `http://localhost:5173`。
 
-### v0.5.2.20250507 (20241121)
-1. 移除pwa包（依赖冲突）
-2. 修复typescript支持（``tsconfig include /types``）
-3. 更新三方依赖版本
-4. 更新``en-us``翻译
+常用命令：
 
-### v0.5.1.20241121 (20241121)
+```bash
+pnpm build
+pnpm preview
+pnpm generate:mock-data
+```
 
-1. 修复组件瀑布流显示问题
+## 数据与本地存储
 
-### v0.5.0.20241121 (20241121)
+- 数据结构：v6 `ToiletPlace`，定义位于 [`src/domain/toilet/v6`](./src/domain/toilet/v6)。
+- 静态数据：通过 `public/data/manifest.json` 及其区域 JSON 加载；当前内置 200 条青岛模拟记录。
+- 浏览器缓存：新增、编辑和 Review 产生的本地记录保存于 `localStorage`。缓存仅存在于当前浏览器和设备，应通过“数据导入导出”页面定期导出备份或传输。
+- 离线缓存：PWA 使用 Cache Storage 保存应用资源和静态数据资源。它不替代浏览器记录缓存，也不等同于云端同步。
+- 导出格式：项目聚合包为 JSON，包含导出时间、数据版本和去重后的记录列表；可再次导入本项目。
 
-1. 升级数据版本到 20241121
-2. 重构对应组件到新版本
-3. 实现数据查询页面的导入测试效果预览（需要优化性能）
-4. 引入 Tailwind CSS
-5. 调整部分页面布局
+## Roadmap
 
-### v0.4.0.20241119 (20240628)
+### 下一阶段
 
-1. 封装设置项，增加独立设置页
-2. 拆分功能到独立tab
-3. 暂时移除部分语言文件
-4. 优化GPS获取
-    - 修复超时卡住问题
-    - 获取失败时，提示更详细的错误内容
+- 区域化静态数据包：按城市、行政区或地图范围下载，按需加载与缓存。
+- 数据包版本与校验：manifest 增加哈希、版本比较、过期提示和可控更新。
+- 导入导出完善：导入预览、字段校验报告、冲突处理和更明确的本地/数据源来源信息。
+- 采集效率优化：继续压缩快速采集流程，支持常用地点和字段预设。
 
----
+### 中期
 
-[//]: # (**不同分支请在 GitHub Pages 的 URL 后添加分支名:**)
+- 地图体验：更完整的聚合交互、离线底图策略、地图范围筛选和更稳健的导航适配。
+- 数据质量：重复点检测、批量编辑、变更历史和更细的 Review 流程。
+- 媒体与大容量数据：评估引入 IndexedDB，用于图片、离线区域包和较大的编辑历史。
 
-[//]: # ()
-[//]: # (- ``dev``: 开发中分支，供测试预览)
+### 长期
 
-[//]: # (- ``master``: 经过测试的版本 &#40;默认&#41;)
+- 在保持静态数据可用的前提下，设计可选的协作同步与发布流程。
+- 建立数据贡献、审核和版本发布规范，形成可复用的区域数据包生产链路。
 
-### 数据版本 | DataVersion
+## 许可证
 
-1. [v0.0.1 => v1-20240210](./data_structure/v1-20240210.md)
-2. [v0.1.0 => v2-20240221](./data_structure/v2-20240221.md)
-3. [v0.2.0 => v3-20240301](./data_structure/v3-20240301.md)
-4. [v0.3.0 => v4-20240628](./data_structure/v4-20240628.md)
-5. [v0.4.0+ => v5-20241121](./data_structure/v5-20240915.md)
-6. [v0.6.0 => v6-20260708](./data_structure/v6-20260708.md)
-
-## 更新路线 | RoadMap
-
-详细开发路线、架构改进方向和版本规划见：[开发路线与改进方向](./docs/development-roadmap.md)
-
-- [x] 数据采集功能
-    - [x] 记录GPS坐标
-    - [x] 记录照片
-- [x] i18n 多语言支持 (英语、简体中文、日语)
-    - 除中文以外均由 GPT 翻译，欢迎提交更正
-- [ ] 静态数据包与本地缓存
-    - [x] 单条数据导出
-    - [x] 浏览器本地缓存新增记录
-    - [x] 静态 manifest 加载
-    - [x] PWA 应用壳与静态数据缓存
-    - [ ] 区域分片下载
-    - [ ] 静态数据版本失效和自动刷新
-    - [ ] 全量数据包导出
-- [ ] 数据编辑
-- [x] JSON 数据导入预览
-- [ ] 云端评价/评论功能
-
-## 本地存储策略
-
-- 新增记录草稿：当前使用 `localStorage` 保存轻量 v6 JSON 记录，适合外出临时采集后批量导出。
-- 静态数据包：PWA 使用 Cache Storage 缓存应用壳、manifest 和区域 JSON，支持弱网或离线再次打开。
-- 后续若要保存图片、大量区域包或复杂编辑历史，再引入 IndexedDB。
-
-## 开源许可证 | License
-
-GPL v3
+GPL-3.0
