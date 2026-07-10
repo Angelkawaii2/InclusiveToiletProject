@@ -167,6 +167,7 @@ function updateCurrentLocation() {
     mapComponent.value?.setUserLocation({
       lat: userLocation.value.lat,
       lon: userLocation.value.lon,
+      accuracy: userLocationAccuracy.value,
     });
     void focusAroundUserLocation();
     isLocating.value = false;
@@ -323,8 +324,8 @@ watch([
   });
 }, {deep: true, flush: "post"});
 
-watch(userLocation, (location) => {
-  mapComponent.value?.setUserLocation(location ? {lat: location.lat, lon: location.lon} : null);
+watch([userLocation, userLocationAccuracy], ([location, accuracy]) => {
+  mapComponent.value?.setUserLocation(location ? {lat: location.lat, lon: location.lon, accuracy} : null);
 }, {flush: "post"});
 
 onMounted(() => {

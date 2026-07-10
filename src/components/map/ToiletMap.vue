@@ -10,7 +10,7 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import Cluster from "ol/source/Cluster";
 import {Feature} from "ol";
-import {Point} from "ol/geom";
+import {Circle as CircleGeometry, Point} from "ol/geom";
 import {Circle as CircleStyle, Fill, Stroke, Style, Text} from "ol/style";
 import Icon from "ol/style/Icon";
 import Translate from "ol/interaction/Translate";
@@ -142,15 +142,20 @@ const clusterLayer = new VectorLayer({
 clusterLayer.setZIndex(10);
 
 const userLocationSource = new VectorSource();
+const userAccuracyStyle = new Style({
+  fill: new Fill({color: "rgba(96, 165, 250, 0.18)"}),
+  stroke: new Stroke({color: "rgba(96, 165, 250, 0.78)", width: 2}),
+});
+const userCenterStyle = new Style({
+  image: new CircleStyle({
+    radius: 7,
+    fill: new Fill({color: "#1a73e8"}),
+    stroke: new Stroke({color: "#ffffff", width: 2}),
+  }),
+});
 const userLocationLayer = new VectorLayer({
   source: userLocationSource,
-  style: new Style({
-    image: new CircleStyle({
-      radius: 12,
-      fill: new Fill({color: "#1a73e8"}),
-      stroke: new Stroke({color: "rgba(147, 197, 253, 0.68)", width: 10}),
-    }),
-  }),
+  style: (feature) => feature.get("type") === "accuracy" ? userAccuracyStyle : userCenterStyle,
 });
 userLocationLayer.setZIndex(20);
 
@@ -254,12 +259,23 @@ function focusPoint(lon: number, lat: number) {
   });
 }
 
-function setUserLocation(location: { lon: number; lat: number } | null) {
+function setUserLocation(location: { lon: number; lat: number; accuracy?: number | null } | null) {
   userLocationSource.clear();
   if (!location) return;
+  const center = fromLonLat([location.lon, location.lat]);
+  const accuracy = Number.isFinite(location.accuracy) && (location.accuracy || 0) > 0
+    ? location.accuracy!
+    : 40;
   userLocationSource.addFeature(new Feature({
-    geometry: new Point(fromLonLat([location.lon, location.lat])),
+    geometry: new CircleGeometry(center, accuracy),
+    type: "accuracy",
   }));
+  if (accuracy <= 40) {
+    userLocationSource.addFeature(new Feature({
+      geometry: new Point(center),
+      type: "center",
+    }));
+  }
 }
 
 function fitAroundLocation(location: { lon: number; lat: number }, points: Array<{ lon: number; lat: number }> = []) {
