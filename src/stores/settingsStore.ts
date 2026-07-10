@@ -5,6 +5,7 @@ export const SETTINGS_KEYS = {
     LANGUAGE: "language",
     THEME: "theme",
     AUTO_REVIEW_ON_EDIT: "autoReviewOnEdit",
+    AUTO_UPDATE_PWA: "autoUpdatePwa",
 } as const;
 
 export type ThemeMode = "light" | "dark";
@@ -15,6 +16,7 @@ export const useSettingStore = defineStore("global.settings", {
         language: localStorage.getItem(SETTINGS_KEYS.LANGUAGE) || "zh-cn",
         theme: (localStorage.getItem(SETTINGS_KEYS.THEME) || "light") as ThemeMode,
         autoReviewOnEdit: localStorage.getItem(SETTINGS_KEYS.AUTO_REVIEW_ON_EDIT) === "true",
+        autoUpdatePwa: localStorage.getItem(SETTINGS_KEYS.AUTO_UPDATE_PWA) === "true",
     }),
     actions: {
         updateDebugMode(isDebug: boolean) {
@@ -35,6 +37,10 @@ export const useSettingStore = defineStore("global.settings", {
         updateAutoReviewOnEdit(autoReviewOnEdit: boolean) {
             this.autoReviewOnEdit = autoReviewOnEdit;
             localStorage.setItem(SETTINGS_KEYS.AUTO_REVIEW_ON_EDIT, String(autoReviewOnEdit));
+        },
+        updateAutoUpdatePwa(autoUpdatePwa: boolean) {
+            this.autoUpdatePwa = autoUpdatePwa;
+            localStorage.setItem(SETTINGS_KEYS.AUTO_UPDATE_PWA, String(autoUpdatePwa));
         },
     },
 });

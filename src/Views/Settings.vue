@@ -25,6 +25,15 @@ const autoReviewOnEdit = computed({
   }
 });
 
+const autoUpdatePwa = computed({
+  get: () => setting.autoUpdatePwa,
+  set: (value: boolean) => {
+    if (setting.autoUpdatePwa === value) return;
+    setting.updateAutoUpdatePwa(value);
+    notifySuccess(value ? "检测到应用更新后将自动更新" : "检测到应用更新后将询问是否更新");
+  }
+});
+
 
 </script>
 
@@ -39,6 +48,9 @@ const autoReviewOnEdit = computed({
 
           <el-text class="label">启用调试（Debug）模式</el-text>
           <el-switch v-model="isDebug" size="large"></el-switch>
+
+          <el-text class="label">自动更新离线应用（PWA）</el-text>
+          <el-switch v-model="autoUpdatePwa" active-text="自动更新" inactive-text="询问后更新"/>
 
           <template v-if="isDebug">
             <el-text class="label">当前语言</el-text>

@@ -11,7 +11,7 @@ export default defineConfig({
         vue(),
         VitePWA({
             includeAssets: ['favicon.ico', 'logo-144.svg', 'logo-192.svg', 'logo-512.svg', '144x144.png'],
-            registerType: 'autoUpdate',
+            registerType: 'prompt',
             manifest: {
                 name: 'InclusiveToiletProject',
                 short_name: 'ToiletMarker',
