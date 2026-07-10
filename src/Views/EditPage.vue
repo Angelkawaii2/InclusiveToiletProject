@@ -261,6 +261,7 @@ watch(() => workspace.selectedToilet?.id, () => {
                 ref="editMap"
                 basemap-style="mono"
                 editable-marker
+                :cluster-points="false"
                 @coordinate-change="handleMapCoordinateChange"
             />
           </div>

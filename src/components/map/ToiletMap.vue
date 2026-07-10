@@ -8,9 +8,10 @@ import {fromLonLat, toLonLat} from "ol/proj";
 import {boundingExtent} from "ol/extent";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
+import Cluster from "ol/source/Cluster";
 import {Feature} from "ol";
 import {Point} from "ol/geom";
-import {Circle as CircleStyle, Fill, Stroke, Style} from "ol/style";
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from "ol/style";
 import Icon from "ol/style/Icon";
 import Translate from "ol/interaction/Translate";
 import type {ToiletKind} from "@/domain/toilet/v6";
@@ -27,9 +28,11 @@ export type BasemapStyle = "standard" | "mono" | "light" | "dark";
 const props = withDefaults(defineProps<{
   basemapStyle?: BasemapStyle;
   editableMarker?: boolean;
+  clusterPoints?: boolean;
 }>(), {
   basemapStyle: "mono",
   editableMarker: false,
+  clusterPoints: true,
 });
 
 const emit = defineEmits<{
@@ -97,6 +100,46 @@ const vectorLayer = new VectorLayer({
 });
 vectorLayer.setZIndex(10);
 
+const clusterSource = new Cluster({
+  distance: 52,
+  minDistance: 16,
+  source: vectorSource,
+});
+
+const clusterStyles = new Map<number, Style>();
+
+function getClusterStyle(feature: Feature) {
+  const clusteredFeatures = feature.get("features") as Feature[] | undefined;
+  if (!clusteredFeatures?.length) return markerStyles.mixed;
+  if (clusteredFeatures.length === 1) {
+    const point = clusteredFeatures[0];
+    return point.get("editable") ? editablePinStyle : getMarkerStyle(point.get("kinds") || []);
+  }
+  const count = clusteredFeatures.length;
+  const cachedStyle = clusterStyles.get(count);
+  if (cachedStyle) return cachedStyle;
+  const style = new Style({
+    image: new CircleStyle({
+      radius: Math.min(22, 12 + Math.log2(count) * 3),
+      fill: new Fill({color: "#2f80ed"}),
+      stroke: new Stroke({color: "#ffffff", width: 2}),
+    }),
+    text: new Text({
+      text: String(count),
+      fill: new Fill({color: "#ffffff"}),
+      font: "600 12px sans-serif",
+    }),
+  });
+  clusterStyles.set(count, style);
+  return style;
+}
+
+const clusterLayer = new VectorLayer({
+  source: clusterSource,
+  style: getClusterStyle,
+});
+clusterLayer.setZIndex(10);
+
 const userLocationSource = new VectorSource();
 const userLocationLayer = new VectorLayer({
   source: userLocationSource,
@@ -115,6 +158,7 @@ let translateInteraction: Translate | null = null;
 
 onMounted(() => {
   if (!mapElement.value) return;
+  const pointLayer = props.clusterPoints ? clusterLayer : vectorLayer;
   map = new Map({
     target: mapElement.value,
     layers: [
@@ -122,7 +166,7 @@ onMounted(() => {
         className: "ol-layer osm-basemap-layer",
         source: new OSM(),
       }),
-      vectorLayer,
+      pointLayer,
       userLocationLayer,
     ],
     view: new View({
@@ -150,10 +194,18 @@ onMounted(() => {
   }
 
   map.on("singleclick", (event) => {
-    const recordId = map?.forEachFeatureAtPixel(event.pixel, (feature) => feature.get("id"), {
-      hitTolerance: 10,
-      layerFilter: (layer) => layer === vectorLayer,
-    });
+    const clickedFeature = map?.forEachFeatureAtPixel(event.pixel, (feature) => feature, {hitTolerance: 10});
+    const clusteredFeatures = clickedFeature?.get("features") as Feature[] | undefined;
+    if (props.clusterPoints && clusteredFeatures && clusteredFeatures.length > 1) {
+      map?.getView().animate({
+        center: event.coordinate,
+        zoom: Math.min(18, (map.getView().getZoom() || 0) + 2),
+        duration: 240,
+      });
+      return;
+    }
+    const point = clusteredFeatures?.[0] || clickedFeature;
+    const recordId = point?.get("id");
     if (typeof recordId === "string") emit("pointClick", recordId);
   });
 });
