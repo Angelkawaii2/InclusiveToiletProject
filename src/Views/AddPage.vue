@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, reactive, ref} from "vue";
-import {Delete, Download, Location, RefreshLeft} from "@element-plus/icons-vue";
+import {Check, Delete, Download, Location, RefreshLeft} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import {
   ACCESS_RESTRICTION_OPTIONS,
@@ -21,6 +21,8 @@ defineProps<{
 const workspace = useWorkspaceStore();
 const localCache = useLocalToiletCacheStore();
 const isLocating = ref(false);
+const captureMode = ref<"quick" | "full">("quick");
+const hasCapturedLocation = ref(false);
 
 const draft = reactive({
   name: "",
@@ -45,7 +47,10 @@ const draft = reactive({
   openingText: "",
 });
 
-const previewRecord = computed(() => buildRecord());
+const previewRecord = computed(() => buildRecord({
+  reviewed: captureMode.value === "full",
+  source: captureMode.value === "quick" ? "local-quick-capture" : "local-create-form"
+}));
 
 function resetDraft() {
   draft.name = "";
@@ -68,6 +73,7 @@ function resetDraft() {
   draft.accessibilityNotes = "";
   draft.isAlwaysOpen = null;
   draft.openingText = "";
+  hasCapturedLocation.value = false;
 }
 
 function fillCurrentLocation() {
@@ -80,6 +86,7 @@ function fillCurrentLocation() {
     draft.lat = Number(position.coords.latitude.toFixed(6));
     draft.lon = Number(position.coords.longitude.toFixed(6));
     draft.accuracy = Math.round(position.coords.accuracy);
+    hasCapturedLocation.value = true;
     try {
       const address = await reverseGeocode(draft.lat, draft.lon);
       if (address) {
@@ -105,7 +112,7 @@ function fillCurrentLocation() {
   });
 }
 
-function buildRecord(): ToiletPlace {
+function buildRecord(options: {reviewed?: boolean; source?: string} = {}): ToiletPlace {
   const now = Date.now();
   const id = `local-${now}-${Math.random().toString(36).slice(2, 8)}`;
   return {
@@ -151,8 +158,8 @@ function buildRecord(): ToiletPlace {
     audit: {
       createdAt: now,
       updatedAt: now,
-      reviewed: true,
-      source: "local-create-form"
+      reviewed: options.reviewed ?? true,
+      source: options.source || "local-create-form"
     }
   };
 }
@@ -173,9 +180,22 @@ function downloadJson(data: unknown, filename: string) {
 }
 
 function saveRecordToBrowser() {
-  const record = buildRecord();
+  if (captureMode.value === "quick" && !hasCapturedLocation.value) {
+    ElMessage.warning("请先获取当前位置，避免保存到错误的坐标");
+    return;
+  }
+  const record = buildRecord({
+    reviewed: captureMode.value === "full",
+    source: captureMode.value === "quick" ? "local-quick-capture" : "local-create-form"
+  });
   localCache.addToilet(record);
-  ElMessage.success(`已保存到浏览器缓存，当前 ${localCache.count} 条`);
+  if (captureMode.value === "quick") {
+    draft.name = "";
+    draft.description = "";
+    draft.accuracy = null;
+    hasCapturedLocation.value = false;
+  }
+  ElMessage.success(`已保存为${record.audit.reviewed ? "记录" : "待 Review 草稿"}，当前缓存 ${localCache.count} 条`);
 }
 
 function downloadCachedRecords() {
@@ -202,9 +222,9 @@ function useAsEditingRecord() {
   <section class="workspace-page">
     <div v-if="!embedded" class="workspace-hero create-hero">
       <div>
-        <p class="workspace-eyebrow">新增采集</p>
-        <h2>记录一个新的 v6 卫生间点位</h2>
-        <p>按 v6 数据结构填写位置、类型、通行、无障碍和开放时间，可导出单条 JSON 或转入编辑模式继续调整。</p>
+        <p class="workspace-eyebrow">现场采集</p>
+        <h2>快速记录卫生间点位</h2>
+        <p>快速模式只记录现场可确认的信息，保存后可在待 Review 队列中补全；也可以切换到完整表单。</p>
       </div>
       <div class="hero-actions">
         <el-button type="danger" @click="resetDraft">
@@ -220,8 +240,8 @@ function useAsEditingRecord() {
 
     <div v-else class="embedded-toolbar">
       <div>
-        <h3>新增点位</h3>
-        <p>按 v6 数据结构创建一条卫生间记录。浏览器缓存中已有 {{ localCache.count }} 条。</p>
+        <h3>采集点位</h3>
+        <p>快速保存现场信息，稍后再 Review。浏览器缓存中已有 {{ localCache.count }} 条。</p>
       </div>
       <div class="hero-actions">
         <el-button type="danger" @click="resetDraft">
@@ -235,7 +255,86 @@ function useAsEditingRecord() {
       </div>
     </div>
 
-    <div class="create-layout">
+    <el-segmented v-model="captureMode" class="capture-mode" :options="[
+      {label: '快速采集', value: 'quick'},
+      {label: '完整采集', value: 'full'}
+    ]"/>
+
+    <div v-if="captureMode === 'quick'" class="quick-capture">
+      <div class="quick-heading">
+        <div>
+          <p class="workspace-eyebrow">10-15 秒采集</p>
+          <h3>先留下可靠的位置和现场信息</h3>
+        </div>
+        <el-tag type="warning" effect="plain">保存后待 Review</el-tag>
+      </div>
+
+      <el-form label-position="top">
+        <section class="quick-location" :class="{'is-ready': hasCapturedLocation}">
+          <div>
+            <strong>{{ hasCapturedLocation ? '位置已获取' : '第一步：获取当前位置' }}</strong>
+            <p v-if="hasCapturedLocation">
+              {{ draft.city || draft.province || draft.country || '地址识别中' }} ·
+              {{ draft.lat.toFixed(6) }}, {{ draft.lon.toFixed(6) }}
+            </p>
+            <p v-else>定位成功后会自动填写国家、省份、城市和位置描述。</p>
+          </div>
+          <el-button type="primary" size="large" :loading="isLocating" @click="fillCurrentLocation">
+            <el-icon><Location /></el-icon>
+            {{ hasCapturedLocation ? '重新定位' : '使用当前位置' }}
+          </el-button>
+        </section>
+
+        <div class="quick-form-grid">
+          <el-form-item label="名称或一句话描述">
+            <el-input v-model="draft.name" size="large" placeholder="可不填，例如：商场一楼服务台旁"/>
+          </el-form-item>
+          <el-form-item label="卫生间类型">
+            <el-checkbox-group v-model="draft.kinds" class="quick-kind-options">
+              <el-checkbox-button v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.value">
+                {{ item.label }}
+              </el-checkbox-button>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="无障碍卫生间">
+            <el-radio-group v-model="draft.hasAccessibleToilet">
+              <el-radio-button :label="null">未知</el-radio-button>
+              <el-radio-button :label="true">有</el-radio-button>
+              <el-radio-button :label="false">无</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="允许停车">
+            <el-radio-group v-model="draft.parkingAllowed">
+              <el-radio-button :label="null">未知</el-radio-button>
+              <el-radio-button :label="true">允许</el-radio-button>
+              <el-radio-button :label="false">不允许</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="进入限制">
+            <el-select v-model="draft.restriction" size="large">
+              <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="24 小时开放">
+            <el-radio-group v-model="draft.isAlwaysOpen">
+              <el-radio-button :label="null">未知</el-radio-button>
+              <el-radio-button :label="true">是</el-radio-button>
+              <el-radio-button :label="false">否</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </div>
+
+        <div class="quick-save-bar">
+          <span>已缓存 {{ localCache.count }} 条，本条将进入待 Review 队列</span>
+          <el-button type="success" size="large" :disabled="!hasCapturedLocation" @click="saveRecordToBrowser">
+            <el-icon><Check /></el-icon>
+            保存并继续采集
+          </el-button>
+        </div>
+      </el-form>
+    </div>
+
+    <div v-else class="create-layout">
       <el-form class="create-form" label-position="top">
         <section class="form-section">
           <h3>基础信息</h3>
@@ -443,6 +542,78 @@ function useAsEditingRecord() {
   margin-top: 16px;
 }
 
+.capture-mode {
+  margin-top: 16px;
+}
+
+.quick-capture {
+  max-width: 920px;
+  margin: 16px auto 0;
+  padding: 20px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface);
+}
+
+.quick-heading,
+.quick-location,
+.quick-save-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.quick-heading {
+  margin-bottom: 18px;
+}
+
+.quick-heading h3 {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+
+.quick-location {
+  margin-bottom: 18px;
+  padding: 16px;
+  border: 1px solid var(--itp-border-strong);
+  border-radius: 8px;
+  background: var(--itp-surface-soft);
+}
+
+.quick-location.is-ready {
+  border-color: var(--el-color-success-light-5);
+  background: var(--el-color-success-light-9);
+}
+
+.quick-location p {
+  margin: 5px 0 0;
+  color: var(--itp-text-muted);
+  font-size: 13px;
+}
+
+.quick-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+}
+
+.quick-kind-options {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.quick-save-bar {
+  position: sticky;
+  bottom: 0;
+  margin: 6px -20px -20px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--itp-border);
+  background: var(--itp-surface);
+  color: var(--itp-text-muted);
+  font-size: 13px;
+}
+
 .create-form,
 .preview-panel {
   min-width: 0;
@@ -549,6 +720,30 @@ function useAsEditingRecord() {
   .embedded-toolbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .quick-capture {
+    padding: 16px;
+  }
+
+  .quick-heading,
+  .quick-location,
+  .quick-save-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .quick-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-save-bar {
+    margin: 6px -16px -16px;
+    padding: 12px 16px;
+  }
+
+  .quick-save-bar .el-button {
+    width: 100%;
   }
 }
 </style>
