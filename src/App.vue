@@ -204,10 +204,6 @@ watchEffect(() => {
   box-shadow: 0 10px 28px rgba(21, 128, 61, 0.3);
 }
 
-:global(.workspace-dialog) {
-  margin-top: 4vh;
-}
-
 :global(.workspace-dialog .el-dialog__body) {
   max-height: calc(92vh - 70px);
   padding-top: 8px;
