@@ -205,7 +205,7 @@ function selectMapPoint(id: string) {
 }
 
 function openDataEntry() {
-  workspace.openMaintenance("create");
+  workspace.openCapture();
 }
 
 function viewDetails(item: ToiletPlace) {

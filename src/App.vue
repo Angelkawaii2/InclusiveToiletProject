@@ -5,6 +5,7 @@ import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
 import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
 import DataTransferPage from "@/Views/DataTransferPage.vue";
+import AddPage from "@/Views/AddPage.vue";
 import {Moon, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
@@ -64,6 +65,10 @@ watchEffect(() => {
       <el-backtop :bottom="100" :right="40"/>
 
       <el-tabs v-model=tab class="workspace-tabs">
+        <el-tab-pane label="新增点位" name="capture">
+          <add-page/>
+        </el-tab-pane>
+
         <el-tab-pane label="搜索浏览" name="search">
           <lookup-page/>
         </el-tab-pane>

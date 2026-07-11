@@ -249,20 +249,11 @@ function useAsEditingRecord() {
 
 <template>
   <section class="workspace-page">
-    <div v-if="!embedded" class="workspace-hero create-hero">
-      <div>
-        <p class="workspace-eyebrow">现场采集</p>
-        <h2>快速记录卫生间点位</h2>
-        <p>快速模式只记录现场可确认的信息，保存后可在待 Review 队列中补全；也可以切换到完整表单。</p>
-      </div>
+    <div v-if="!embedded" class="capture-toolbar">
       <div class="hero-actions">
         <el-button type="danger" @click="resetDraft">
           <el-icon><RefreshLeft /></el-icon>
           重置
-        </el-button>
-        <el-button type="primary" @click="downloadRecord">
-          <el-icon><Download /></el-icon>
-          导出 v6 JSON
         </el-button>
       </div>
     </div>
@@ -531,15 +522,15 @@ function useAsEditingRecord() {
 </template>
 
 <style scoped>
-.create-hero {
-  border-color: rgba(198, 80, 80, 0.2);
-  background: var(--itp-create-hero);
-}
-
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  justify-content: flex-end;
+}
+
+.capture-toolbar {
+  display: flex;
   justify-content: flex-end;
 }
 
