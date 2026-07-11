@@ -17,6 +17,7 @@ import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {ElNotification} from "element-plus";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
+import {requestCurrentLocation} from "@/domain/geo/currentLocation";
 
 const files = ref<File[]>([])
 const workspace = useWorkspaceStore()
@@ -151,7 +152,7 @@ function formatDistance(item: ToiletPlace) {
   return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
 }
 
-async function updateCurrentLocation(showPermissionHint = true) {
+async function updateCurrentLocation(forceRefresh = false, showPermissionHint = true) {
   loadError.value = "";
   if (!navigator.geolocation) {
     loadError.value = "当前浏览器不支持定位，请使用支持位置权限的浏览器。";
@@ -171,12 +172,13 @@ async function updateCurrentLocation(showPermissionHint = true) {
     });
   }
   isLocating.value = true;
-  navigator.geolocation.getCurrentPosition((position) => {
+  const location = await requestCurrentLocation({forceRefresh});
+  if (location) {
     userLocation.value = {
-      lat: position.coords.latitude,
-      lon: position.coords.longitude
+      lat: location.lat,
+      lon: location.lon,
     };
-    userLocationAccuracy.value = Math.round(position.coords.accuracy);
+    userLocationAccuracy.value = location.accuracy;
     mapComponent.value?.setUserLocation({
       lat: userLocation.value.lat,
       lon: userLocation.value.lon,
@@ -184,13 +186,10 @@ async function updateCurrentLocation(showPermissionHint = true) {
     });
     void focusAroundUserLocation();
     isLocating.value = false;
-  }, () => {
+  } else {
     loadError.value = "定位失败，请在浏览器设置中重新开启位置权限后重试。";
     isLocating.value = false;
-  }, {
-    timeout: 8000,
-    enableHighAccuracy: true
-  });
+  }
 }
 
 function selectToilet(item: ToiletPlace) {
@@ -343,7 +342,7 @@ watch([userLocation, userLocationAccuracy], ([location, accuracy]) => {
 
 onMounted(() => {
   loadStaticMockData();
-  updateCurrentLocation(true);
+  void updateCurrentLocation(false, true);
 })
 </script>
 
@@ -382,7 +381,7 @@ onMounted(() => {
             </template>
           </el-input>
           <div class="toolbar-actions">
-            <el-button :loading="isLocating" @click="updateCurrentLocation">
+            <el-button :loading="isLocating" @click="updateCurrentLocation(true)">
               <el-icon><Location /></el-icon>
               获取当前位置
             </el-button>

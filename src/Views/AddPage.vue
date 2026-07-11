@@ -13,6 +13,7 @@ import {buildLocalExportBundle, createLocalExportFilename} from "@/domain/toilet
 import {DATA_VERSION} from "@/constants/projectVersions";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
+import {requestCurrentLocation} from "@/domain/geo/currentLocation";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 import ToiletMap from "@/components/map/ToiletMap.vue";
@@ -118,61 +119,41 @@ async function fillCurrentLocation() {
   }
   if (permissionState === "prompt") ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
-  let finished = false;
-  const finishGps = () => {
-    if (finished) return false;
-    finished = true;
-    window.clearTimeout(timeout);
-    return true;
-  };
-  const timeout = window.setTimeout(() => {
-    if (!finishGps()) return;
+  const location = await requestCurrentLocation({forceRefresh: true, timeout: GPS_TIMEOUT_MS});
+  if (!location) {
     isLocating.value = false;
-    ElMessage.warning("定位超时，请确认已开启定位服务和浏览器位置权限后重试");
-  }, GPS_TIMEOUT_MS);
-  navigator.geolocation.getCurrentPosition(async (position) => {
-    if (!finishGps()) return;
-    draft.lat = Number(position.coords.latitude.toFixed(6));
-    draft.lon = Number(position.coords.longitude.toFixed(6));
-    draft.accuracy = Math.round(position.coords.accuracy);
-    hasCapturedLocation.value = true;
-    if (captureMode.value === "quick") {
-      draft.country = "";
-      draft.province = "";
-      draft.city = "";
-      draft.description = "";
-      isLocating.value = false;
-      ElMessage.success("已填入当前位置，可在 Review 阶段反查地址");
-      return;
-    }
-    try {
-      const address = await reverseGeocode(draft.lat, draft.lon);
-      if (address) {
-        draft.country = address.country || draft.country;
-        draft.province = address.province || draft.province;
-        draft.city = address.city || draft.city;
-        draft.description = address.description || draft.description;
-        ElMessage.success("已填入当前位置和地址信息");
-      } else {
-        ElMessage.success("已填入当前位置，地址信息未识别");
-      }
-    } catch {
-      ElMessage.success("已填入当前位置，地址反查失败");
-    } finally {
-      isLocating.value = false;
-    }
-  }, (error) => {
-    if (!finishGps()) return;
+    ElMessage.warning("定位失败或超时，请确认已开启定位服务和浏览器位置权限后重试");
+    return;
+  }
+  draft.lat = location.lat;
+  draft.lon = location.lon;
+  draft.accuracy = location.accuracy;
+  hasCapturedLocation.value = true;
+  if (captureMode.value === "quick") {
+    draft.country = "";
+    draft.province = "";
+    draft.city = "";
+    draft.description = "";
     isLocating.value = false;
-    const message = error.code === error.PERMISSION_DENIED
-      ? "定位权限未开启，请在浏览器或系统设置中允许访问位置后重试"
-      : "定位失败，请确认已开启定位服务后重试";
-    ElMessage.error(message);
-  }, {
-    timeout: GPS_TIMEOUT_MS,
-    maximumAge: 0,
-    enableHighAccuracy: true
-  });
+    ElMessage.success("已填入当前位置，可在 Review 阶段反查地址");
+    return;
+  }
+  try {
+    const address = await reverseGeocode(draft.lat, draft.lon);
+    if (address) {
+      draft.country = address.country || draft.country;
+      draft.province = address.province || draft.province;
+      draft.city = address.city || draft.city;
+      draft.description = address.description || draft.description;
+      ElMessage.success("已填入当前位置和地址信息");
+    } else {
+      ElMessage.success("已填入当前位置，地址信息未识别");
+    }
+  } catch {
+    ElMessage.success("已填入当前位置，地址反查失败");
+  } finally {
+    isLocating.value = false;
+  }
 }
 
 function buildRecord(options: {reviewed?: boolean; source?: string} = {}): ToiletPlace {

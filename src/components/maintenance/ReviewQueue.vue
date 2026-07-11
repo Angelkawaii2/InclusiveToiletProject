@@ -10,6 +10,7 @@ import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
+import {requestCurrentLocation} from "@/domain/geo/currentLocation";
 import EditPage from "@/Views/EditPage.vue";
 
 type QueueFilter = "pending" | "reviewed" | "conflict" | "all";
@@ -106,24 +107,14 @@ async function getCurrentLocation(): Promise<{lat: number; lon: number} | null> 
   }
   if (permissionState === "prompt") ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
-  return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const location = {
-        lat: Number(position.coords.latitude.toFixed(6)),
-        lon: Number(position.coords.longitude.toFixed(6)),
-      };
-      currentLocation.value = location;
-      isLocating.value = false;
-      resolve(location);
-    }, () => {
-      isLocating.value = false;
-      ElMessage.error("定位失败，请在浏览器设置中重新开启位置权限后重试");
-      resolve(null);
-    }, {
-      timeout: 8000,
-      enableHighAccuracy: true,
-    });
-  });
+  const location = await requestCurrentLocation();
+  isLocating.value = false;
+  if (!location) {
+    ElMessage.error("定位失败，请在浏览器设置中重新开启位置权限后重试");
+    return null;
+  }
+  currentLocation.value = {lat: location.lat, lon: location.lon};
+  return currentLocation.value;
 }
 
 function navigateToRecord(record: ToiletPlace) {

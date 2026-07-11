@@ -14,6 +14,7 @@ import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import ToiletMap from "@/components/map/ToiletMap.vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
+import {requestCurrentLocation} from "@/domain/geo/currentLocation";
 
 const props = defineProps<{
   embedded?: boolean
@@ -97,7 +98,7 @@ function handleMapCoordinateChange(location: {lon: number; lat: number}) {
   draft.lat = location.lat;
 }
 
-async function updateEditLocation(useForCoordinates = false) {
+async function updateEditLocation(useForCoordinates = false, forceRefresh = false) {
   if (!navigator.geolocation) {
     ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
     return;
@@ -109,12 +110,8 @@ async function updateEditLocation(useForCoordinates = false) {
   }
   if (permissionState === "prompt") ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
-  navigator.geolocation.getCurrentPosition((position) => {
-    const location = {
-      lat: Number(position.coords.latitude.toFixed(6)),
-      lon: Number(position.coords.longitude.toFixed(6)),
-      accuracy: Math.round(position.coords.accuracy),
-    };
+  const location = await requestCurrentLocation({forceRefresh});
+  if (location) {
     editMap.value?.setUserLocation(location);
     if (useForCoordinates) {
       draft.lat = location.lat;
@@ -126,13 +123,10 @@ async function updateEditLocation(useForCoordinates = false) {
       ElMessage.success("已在地图上显示当前位置");
     }
     isLocating.value = false;
-  }, () => {
+  } else {
     isLocating.value = false;
     ElMessage.error("定位失败，请在浏览器设置中重新开启位置权限后重试");
-  }, {
-    timeout: 8000,
-    enableHighAccuracy: true,
-  });
+  }
 }
 
 function saveDraft() {
@@ -249,7 +243,7 @@ watch(() => workspace.selectedToilet?.id, () => {
             <el-input-number v-model="draft.lon" :precision="6" :step="0.0001" controls-position="right"/>
           </el-form-item>
           <el-form-item label="坐标定位">
-            <el-button :loading="isLocating" type="primary" plain @click="updateEditLocation(true)">
+            <el-button :loading="isLocating" type="primary" plain @click="updateEditLocation(true, true)">
               <el-icon><Location /></el-icon>
               使用当前定位
             </el-button>
