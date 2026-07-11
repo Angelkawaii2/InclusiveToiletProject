@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, reactive, ref} from "vue";
+import {computed, nextTick, onMounted, reactive, ref, watch} from "vue";
 import {Check, Delete, Download, Location, RefreshLeft} from "@element-plus/icons-vue";
 import {ElMessage, ElNotification} from "element-plus";
 import {
@@ -15,11 +15,13 @@ import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
+import ToiletMap from "@/components/map/ToiletMap.vue";
 
 const localCache = useLocalToiletCacheStore();
 const isLocating = ref(false);
 const captureMode = ref<"quick" | "full">("quick");
 const hasCapturedLocation = ref(false);
+const captureMap = ref<InstanceType<typeof ToiletMap> | null>(null);
 const GPS_TIMEOUT_MS = 12_000;
 
 const draft = reactive({
@@ -49,6 +51,35 @@ const previewRecord = computed(() => buildRecord({
   reviewed: captureMode.value === "full",
   source: captureMode.value === "quick" ? "local-quick-capture" : "local-create-form"
 }));
+
+async function refreshCaptureMap() {
+  await nextTick();
+  captureMap.value?.setPoints([{
+    lat: Number(draft.lat),
+    lon: Number(draft.lon),
+    kinds: draft.kinds,
+  }]);
+  captureMap.value?.setUserLocation(hasCapturedLocation.value ? {
+    lat: Number(draft.lat),
+    lon: Number(draft.lon),
+    accuracy: draft.accuracy,
+  } : null);
+  captureMap.value?.focusPoint(Number(draft.lon), Number(draft.lat));
+}
+
+function handleCaptureMapCoordinateChange(location: {lon: number; lat: number}) {
+  draft.lat = location.lat;
+  draft.lon = location.lon;
+  hasCapturedLocation.value = true;
+}
+
+watch([() => draft.lat, () => draft.lon, () => draft.kinds, captureMode, hasCapturedLocation], () => {
+  void refreshCaptureMap();
+}, {deep: true, flush: "post"});
+
+onMounted(() => {
+  void refreshCaptureMap();
+});
 
 function resetDraft() {
   draft.name = "";
@@ -289,6 +320,25 @@ function clearCachedRecords() {
           </el-button>
         </section>
 
+        <section class="capture-map-panel">
+          <div class="capture-map-heading">
+            <div>
+              <strong>位置预览</strong>
+              <p>{{ hasCapturedLocation ? "拖动大头钉可微调采集坐标" : "获取当前位置后会将大头钉移到当前位置" }}</p>
+            </div>
+            <el-tag size="small" type="info" effect="plain">{{ draft.lat.toFixed(5) }}, {{ draft.lon.toFixed(5) }}</el-tag>
+          </div>
+          <div class="capture-map-canvas quick-map-canvas">
+            <toilet-map
+                ref="captureMap"
+                basemap-style="mono"
+                editable-marker
+                :cluster-points="false"
+                @coordinate-change="handleCaptureMapCoordinateChange"
+            />
+          </div>
+        </section>
+
         <div class="quick-form-grid">
           <el-form-item label="名称或一句话描述">
             <el-input v-model="draft.name" size="large" placeholder="可不填，例如：商场一楼服务台旁"/>
@@ -368,6 +418,24 @@ function clearCachedRecords() {
             使用当前位置
           </el-button>
           <p class="field-hint">会先填入经纬度，并尝试联网反查国家、省份、城市和行政区描述。</p>
+          <section class="capture-map-panel full-map-panel">
+            <div class="capture-map-heading">
+              <div>
+                <strong>位置预览</strong>
+                <p>使用当前位置或拖动大头钉可直接调整表单坐标。</p>
+              </div>
+              <el-tag size="small" type="info" effect="plain">{{ draft.lat.toFixed(5) }}, {{ draft.lon.toFixed(5) }}</el-tag>
+            </div>
+            <div class="capture-map-canvas">
+              <toilet-map
+                  ref="captureMap"
+                  basemap-style="mono"
+                  editable-marker
+                  :cluster-points="false"
+                  @coordinate-change="handleCaptureMapCoordinateChange"
+              />
+            </div>
+          </section>
         </section>
 
         <section class="form-section">
@@ -589,6 +657,42 @@ function clearCachedRecords() {
   font-size: 13px;
 }
 
+.capture-map-panel {
+  margin: 0 0 18px;
+  padding: 14px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface-soft);
+}
+
+.capture-map-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.capture-map-heading p {
+  margin: 4px 0 0;
+  color: var(--itp-text-muted);
+  font-size: 13px;
+}
+
+.capture-map-canvas {
+  height: 260px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.quick-map-canvas {
+  height: 220px;
+}
+
+.capture-map-canvas :deep(.map-container) {
+  min-height: 100%;
+}
+
 .quick-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -736,6 +840,20 @@ function clearCachedRecords() {
 
   .quick-save-bar .el-button {
     width: 100%;
+  }
+
+  .capture-map-panel {
+    padding: 12px;
+  }
+
+  .capture-map-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .capture-map-canvas,
+  .quick-map-canvas {
+    height: 200px;
   }
 
   .mode-actions {
