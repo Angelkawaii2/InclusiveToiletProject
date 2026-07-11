@@ -1,3 +1,5 @@
+import {debugLog} from "@/Utils/Debug";
+
 export interface CurrentLocation {
   lat: number;
   lon: number;
@@ -9,6 +11,7 @@ interface CurrentLocationOptions {
   forceRefresh?: boolean;
   timeout?: number;
   enableHighAccuracy?: boolean;
+  reason?: string;
 }
 
 export const CURRENT_LOCATION_CACHE_MS = 15_000;
@@ -26,11 +29,22 @@ export function getCurrentLocationCache() {
 }
 
 export function requestCurrentLocation(options: CurrentLocationOptions = {}) {
-  const {forceRefresh = false, timeout = 8000, enableHighAccuracy = true} = options;
+  const {forceRefresh = false, timeout = 8000, enableHighAccuracy = true, reason = "位置请求"} = options;
   const cached = getFreshCachedLocation();
-  if (cached && !forceRefresh) return Promise.resolve(cached);
-  if (pendingLocationRequest) return pendingLocationRequest;
-  if (!navigator.geolocation) return Promise.resolve(null);
+  if (cached && !forceRefresh) {
+    debugLog("定位", `${reason}：使用 ${Date.now() - cached.capturedAt} ms 前的位置缓存`, cached);
+    return Promise.resolve(cached);
+  }
+  if (pendingLocationRequest) {
+    debugLog("定位", `${reason}：复用进行中的浏览器定位请求`);
+    return pendingLocationRequest;
+  }
+  if (!navigator.geolocation) {
+    debugLog("定位", `${reason}：当前浏览器不支持定位`, undefined, "warning");
+    return Promise.resolve(null);
+  }
+
+  debugLog("定位", `${reason}：向浏览器请求当前位置（超时 ${timeout / 1000} 秒）`, {forceRefresh, enableHighAccuracy});
 
   pendingLocationRequest = new Promise<CurrentLocation | null>((resolve) => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -41,8 +55,12 @@ export function requestCurrentLocation(options: CurrentLocationOptions = {}) {
         capturedAt: Date.now(),
       };
       cachedLocation = location;
+      debugLog("定位", `${reason}：定位成功，精度 ${location.accuracy ?? "未知"} 米`, location);
       resolve(location);
-    }, () => resolve(null), {
+    }, (error) => {
+      debugLog("定位", `${reason}：定位失败（${error.code}: ${error.message || "未知错误"}）`, error, "warning");
+      resolve(null);
+    }, {
       timeout,
       maximumAge: 0,
       enableHighAccuracy,

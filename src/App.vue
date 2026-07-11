@@ -18,9 +18,9 @@ const isMobile = ref(false)
 let mobileMedia: MediaQueryList | null = null
 let gpsRefreshTimer: number | null = null
 
-function refreshGpsLocation() {
+function refreshGpsLocation(reason: "定时刷新" | "窗口重新聚焦" | "页面重新显示" | "启用自动刷新") {
   if (!settings.autoRefreshGps || document.visibilityState !== "visible") return
-  void requestCurrentLocation({forceRefresh: true})
+  void requestCurrentLocation({forceRefresh: true, reason: `自动刷新 GPS（${reason}）`})
 }
 
 function syncGpsRefreshTimer(enabled = settings.autoRefreshGps) {
@@ -29,16 +29,16 @@ function syncGpsRefreshTimer(enabled = settings.autoRefreshGps) {
     gpsRefreshTimer = null
   }
   if (!enabled) return
-  gpsRefreshTimer = window.setInterval(refreshGpsLocation, CURRENT_LOCATION_CACHE_MS)
-  refreshGpsLocation()
+  gpsRefreshTimer = window.setInterval(() => refreshGpsLocation("定时刷新"), CURRENT_LOCATION_CACHE_MS)
+  refreshGpsLocation("启用自动刷新")
 }
 
 function handlePageFocus() {
-  refreshGpsLocation()
+  refreshGpsLocation("窗口重新聚焦")
 }
 
 function handleVisibilityChange() {
-  if (document.visibilityState === "visible") refreshGpsLocation()
+  if (document.visibilityState === "visible") refreshGpsLocation("页面重新显示")
 }
 
 function updateMobileLayout(event?: MediaQueryListEvent) {
