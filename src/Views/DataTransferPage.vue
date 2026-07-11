@@ -25,7 +25,7 @@ interface ExportRow {
 const dataset = useToiletDatasetStore();
 const localCache = useLocalToiletCacheStore();
 const exportScope = ref<ExportScope>("all");
-const editFilter = ref<EditFilter>("all");
+const editFilter = ref<EditFilter>("edited");
 const creationFilter = ref<CreationFilter>("all");
 const dateRange = ref<[Date, Date] | null>(null);
 const selectedIds = ref<string[]>([]);

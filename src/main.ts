@@ -1,5 +1,6 @@
 import './assets/main.css'
 import './style.css'
+import 'ol/ol.css'
 
 import {createApp} from 'vue'
 import App from './App.vue'
