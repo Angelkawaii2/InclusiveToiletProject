@@ -105,6 +105,15 @@ function fillCurrentLocation() {
     draft.lon = Number(position.coords.longitude.toFixed(6));
     draft.accuracy = Math.round(position.coords.accuracy);
     hasCapturedLocation.value = true;
+    if (captureMode.value === "quick") {
+      draft.country = "";
+      draft.province = "";
+      draft.city = "";
+      draft.description = "";
+      isLocating.value = false;
+      ElMessage.success("已填入当前位置，可在 Review 阶段反查地址");
+      return;
+    }
     try {
       const address = await reverseGeocode(draft.lat, draft.lon);
       if (address) {

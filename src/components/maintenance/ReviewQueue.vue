@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, ref, watch} from "vue";
-import {Check, Delete, Download, Edit, Position} from "@element-plus/icons-vue";
+import {Check, Delete, Download, Edit, Location, Position} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import type {ToiletPlace} from "@/domain/toilet/v6";
 import {buildLocalExportBundle, createLocalExportFilename, TOILET_KIND_OPTIONS} from "@/domain/toilet/v6";
@@ -8,6 +8,7 @@ import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
+import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 
 type QueueFilter = "pending" | "reviewed" | "conflict" | "all";
 type QueueSort = "updated" | "nearest";
@@ -20,6 +21,7 @@ const queueSort = ref<QueueSort>("updated");
 const selectedIds = ref<string[]>([]);
 const currentLocation = ref<{lat: number; lon: number} | null>(null);
 const isLocating = ref(false);
+const reverseGeocodingId = ref("");
 
 const allRecords = computed(() => {
   const records = new Map<string, ToiletPlace>();
@@ -137,6 +139,45 @@ function updateReviewState(record: ToiletPlace, reviewed: boolean) {
   }
   dataset.updateToilet(updated);
   return true;
+}
+
+async function reverseGeocodeRecord(record: ToiletPlace) {
+  if (reverseGeocodingId.value) return;
+  reverseGeocodingId.value = record.id;
+  try {
+    const address = await reverseGeocode(record.location.lat, record.location.lon);
+    if (!address) {
+      ElMessage.warning("未能识别地址，请稍后重试或手动编辑");
+      return;
+    }
+    const baseUpdatedAt = localCache.getMetadata(record.id)?.baseUpdatedAt ?? record.audit.updatedAt;
+    const updated: ToiletPlace = {
+      ...record,
+      address: {
+        ...(record.address || {}),
+        country: address.country || record.address?.country,
+        province: address.province || record.address?.province,
+        city: address.city || record.address?.city,
+        description: address.description || record.address?.description,
+      },
+      audit: {
+        ...record.audit,
+        updatedAt: Date.now(),
+        updatedBy: "local-review-reverse-geocode",
+      },
+    };
+    if (!localCache.saveEditedToilet(updated, baseUpdatedAt)) {
+      ElMessage.error(localCache.storageError || "保存反查地址失败");
+      return;
+    }
+    dataset.updateToilet(updated);
+    if (workspace.selectedToilet?.id === updated.id) workspace.selectToilet(updated);
+    ElMessage.success("已反查并保存地址信息");
+  } catch {
+    ElMessage.error("地址反查失败，请检查网络后重试");
+  } finally {
+    reverseGeocodingId.value = "";
+  }
 }
 
 function keepLocalConflict(record: ToiletPlace) {
@@ -291,6 +332,7 @@ function exportCachedRecords(records: ToiletPlace[]) {
           <el-button v-if="localCache.hasConflict(record.id)" size="small" type="warning" @click="keepLocalConflict(record)">保留本地</el-button>
           <el-button v-if="localCache.hasConflict(record.id)" size="small" type="danger" @click="acceptSourceConflict(record)">采用数据源</el-button>
           <el-button circle type="success" title="导航到卫生间" :loading="isLocating" @click="navigateToRecord(record)"><el-icon><Position /></el-icon></el-button>
+          <el-button circle title="反查地址" :loading="reverseGeocodingId === record.id" @click="reverseGeocodeRecord(record)"><el-icon><Location /></el-icon></el-button>
           <el-button circle title="编辑记录" @click="editRecord(record)"><el-icon><Edit /></el-icon></el-button>
           <el-button v-if="!record.audit.reviewed" circle type="success" title="确认通过" @click="markReviewed(record)"><el-icon><Check /></el-icon></el-button>
           <el-button v-if="localCache.hasToilet(record.id)" circle type="danger" title="删除缓存草稿" @click="removeDraft(record)"><el-icon><Delete /></el-icon></el-button>
