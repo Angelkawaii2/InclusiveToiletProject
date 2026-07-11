@@ -425,6 +425,7 @@ function exportCachedRecords(records: ToiletPlace[]) {
         class="pipeline-dialog"
         title="流水线 Review"
         width="min(1180px, 94vw)"
+        align-center
         :fullscreen="isMobile"
         destroy-on-close
         @closed="closePipeline"

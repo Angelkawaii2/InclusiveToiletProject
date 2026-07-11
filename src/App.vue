@@ -115,6 +115,7 @@ watchEffect(() => {
           class="workspace-dialog capture-dialog"
           title="新增点位"
           width="min(1100px, 94vw)"
+          align-center
           :fullscreen="isMobile"
           destroy-on-close
       >
@@ -126,6 +127,7 @@ watchEffect(() => {
           class="workspace-dialog edit-dialog"
           title="编辑卫生间记录"
           width="min(1180px, 94vw)"
+          align-center
           :fullscreen="isMobile"
           destroy-on-close
       >
