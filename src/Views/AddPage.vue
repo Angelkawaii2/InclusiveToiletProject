@@ -13,7 +13,7 @@ import {buildLocalExportBundle, createLocalExportFilename} from "@/domain/toilet
 import {DATA_VERSION} from "@/constants/projectVersions";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
-import {requestCurrentLocation} from "@/domain/geo/currentLocation";
+import {getCurrentLocationCache, requestCurrentLocation} from "@/domain/geo/currentLocation";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 import ToiletMap from "@/components/map/ToiletMap.vue";
@@ -78,7 +78,22 @@ watch([() => draft.lat, () => draft.lon, () => draft.kinds, captureMode, hasCapt
   void refreshCaptureMap();
 }, {deep: true, flush: "post"});
 
+function applyCachedLocation() {
+  const cachedLocation = getCurrentLocationCache();
+  if (!cachedLocation) return false;
+  draft.lat = cachedLocation.lat;
+  draft.lon = cachedLocation.lon;
+  draft.accuracy = cachedLocation.accuracy;
+  draft.country = "";
+  draft.province = "";
+  draft.city = "";
+  draft.description = "";
+  hasCapturedLocation.value = true;
+  return true;
+}
+
 onMounted(() => {
+  applyCachedLocation();
   void refreshCaptureMap();
 });
 
@@ -104,6 +119,7 @@ function resetDraft() {
   draft.isAlwaysOpen = null;
   draft.openingText = "";
   hasCapturedLocation.value = false;
+  applyCachedLocation();
 }
 
 async function fillCurrentLocation() {
