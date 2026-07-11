@@ -10,13 +10,15 @@ import EditPage from "@/Views/EditPage.vue";
 import {Moon, Plus, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
-import {CURRENT_LOCATION_CACHE_MS, requestCurrentLocation} from "@/domain/geo/currentLocation";
+import {CURRENT_LOCATION_CACHE_MS, onCurrentLocationSuccess, requestCurrentLocation} from "@/domain/geo/currentLocation";
+import {debugLog} from "@/Utils/Debug";
 
 const settings = useSettingStore()
 const workspace = useWorkspaceStore()
 const isMobile = ref(false)
 let mobileMedia: MediaQueryList | null = null
 let gpsRefreshTimer: number | null = null
+let removeLocationSuccessListener: (() => void) | null = null
 
 function refreshGpsLocation(reason: "定时刷新" | "窗口重新聚焦" | "页面重新显示" | "启用自动刷新") {
   if (!settings.autoRefreshGps || document.visibilityState !== "visible") return
@@ -31,6 +33,13 @@ function syncGpsRefreshTimer(enabled = settings.autoRefreshGps) {
   if (!enabled) return
   gpsRefreshTimer = window.setInterval(() => refreshGpsLocation("定时刷新"), CURRENT_LOCATION_CACHE_MS)
   refreshGpsLocation("启用自动刷新")
+}
+
+function resetGpsRefreshTimer() {
+  if (!settings.autoRefreshGps || gpsRefreshTimer === null) return
+  window.clearInterval(gpsRefreshTimer)
+  gpsRefreshTimer = window.setInterval(() => refreshGpsLocation("定时刷新"), CURRENT_LOCATION_CACHE_MS)
+  debugLog("GPS 自动刷新", `定位成功，已从现在起重新计时 ${CURRENT_LOCATION_CACHE_MS / 1000} 秒`)
 }
 
 function handlePageFocus() {
@@ -51,6 +60,7 @@ onMounted(() => {
   mobileMedia.addEventListener('change', updateMobileLayout)
   window.addEventListener("focus", handlePageFocus)
   document.addEventListener("visibilitychange", handleVisibilityChange)
+  removeLocationSuccessListener = onCurrentLocationSuccess(resetGpsRefreshTimer)
   syncGpsRefreshTimer()
 })
 
@@ -58,6 +68,8 @@ onBeforeUnmount(() => {
   mobileMedia?.removeEventListener('change', updateMobileLayout)
   window.removeEventListener("focus", handlePageFocus)
   document.removeEventListener("visibilitychange", handleVisibilityChange)
+  removeLocationSuccessListener?.()
+  removeLocationSuccessListener = null
   syncGpsRefreshTimer(false)
 })
 

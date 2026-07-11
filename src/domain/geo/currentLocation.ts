@@ -18,6 +18,7 @@ export const CURRENT_LOCATION_CACHE_MS = 15_000;
 
 let cachedLocation: CurrentLocation | null = null;
 let pendingLocationRequest: Promise<CurrentLocation | null> | null = null;
+const locationSuccessListeners = new Set<(location: CurrentLocation) => void>();
 
 function getFreshCachedLocation() {
   if (!cachedLocation || Date.now() - cachedLocation.capturedAt >= CURRENT_LOCATION_CACHE_MS) return null;
@@ -26,6 +27,11 @@ function getFreshCachedLocation() {
 
 export function getCurrentLocationCache() {
   return getFreshCachedLocation();
+}
+
+export function onCurrentLocationSuccess(listener: (location: CurrentLocation) => void) {
+  locationSuccessListeners.add(listener);
+  return () => locationSuccessListeners.delete(listener);
 }
 
 export function requestCurrentLocation(options: CurrentLocationOptions = {}) {
@@ -55,6 +61,7 @@ export function requestCurrentLocation(options: CurrentLocationOptions = {}) {
         capturedAt: Date.now(),
       };
       cachedLocation = location;
+      locationSuccessListeners.forEach((listener) => listener(location));
       debugLog("定位", `${reason}：定位成功，精度 ${location.accuracy ?? "未知"} 米`, location);
       resolve(location);
     }, (error) => {
