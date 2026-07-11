@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {computed, onBeforeUnmount, onMounted, ref, watchEffect} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch, watchEffect} from "vue";
 import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
 import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
@@ -10,11 +10,36 @@ import EditPage from "@/Views/EditPage.vue";
 import {Moon, Plus, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
+import {CURRENT_LOCATION_CACHE_MS, requestCurrentLocation} from "@/domain/geo/currentLocation";
 
 const settings = useSettingStore()
 const workspace = useWorkspaceStore()
 const isMobile = ref(false)
 let mobileMedia: MediaQueryList | null = null
+let gpsRefreshTimer: number | null = null
+
+function refreshGpsLocation() {
+  if (!settings.autoRefreshGps || document.visibilityState !== "visible") return
+  void requestCurrentLocation({forceRefresh: true})
+}
+
+function syncGpsRefreshTimer(enabled = settings.autoRefreshGps) {
+  if (gpsRefreshTimer !== null) {
+    window.clearInterval(gpsRefreshTimer)
+    gpsRefreshTimer = null
+  }
+  if (!enabled) return
+  gpsRefreshTimer = window.setInterval(refreshGpsLocation, CURRENT_LOCATION_CACHE_MS)
+  refreshGpsLocation()
+}
+
+function handlePageFocus() {
+  refreshGpsLocation()
+}
+
+function handleVisibilityChange() {
+  if (document.visibilityState === "visible") refreshGpsLocation()
+}
 
 function updateMobileLayout(event?: MediaQueryListEvent) {
   isMobile.value = event?.matches ?? mobileMedia?.matches ?? false
@@ -24,9 +49,19 @@ onMounted(() => {
   mobileMedia = window.matchMedia('(max-width: 760px)')
   updateMobileLayout()
   mobileMedia.addEventListener('change', updateMobileLayout)
+  window.addEventListener("focus", handlePageFocus)
+  document.addEventListener("visibilitychange", handleVisibilityChange)
+  syncGpsRefreshTimer()
 })
 
-onBeforeUnmount(() => mobileMedia?.removeEventListener('change', updateMobileLayout))
+onBeforeUnmount(() => {
+  mobileMedia?.removeEventListener('change', updateMobileLayout)
+  window.removeEventListener("focus", handlePageFocus)
+  document.removeEventListener("visibilitychange", handleVisibilityChange)
+  syncGpsRefreshTimer(false)
+})
+
+watch(() => settings.autoRefreshGps, (enabled) => syncGpsRefreshTimer(enabled))
 
 const v = VITE_APP_VERSION
 const b = VITE_BUILD_TIME

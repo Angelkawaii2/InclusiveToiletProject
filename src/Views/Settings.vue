@@ -34,6 +34,15 @@ const autoUpdatePwa = computed({
   }
 });
 
+const autoRefreshGps = computed({
+  get: () => setting.autoRefreshGps,
+  set: (value: boolean) => {
+    if (setting.autoRefreshGps === value) return;
+    setting.updateAutoRefreshGps(value);
+    notifySuccess(value ? "GPS 位置将自动刷新" : "GPS 位置将仅在手动操作时刷新");
+  }
+});
+
 
 </script>
 
@@ -51,6 +60,9 @@ const autoUpdatePwa = computed({
 
           <el-text class="label">自动更新离线应用（PWA）</el-text>
           <el-switch v-model="autoUpdatePwa" active-text="自动更新" inactive-text="询问后更新"/>
+
+          <el-text class="label">自动刷新 GPS 位置</el-text>
+          <el-switch v-model="autoRefreshGps" active-text="每 15 秒刷新" inactive-text="仅手动刷新"/>
 
           <template v-if="isDebug">
             <el-text class="label">当前语言</el-text>
