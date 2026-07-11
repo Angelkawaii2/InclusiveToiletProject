@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import {computed, ref, watch} from "vue";
-import {Check, Delete, Download, Edit, Location, Position} from "@element-plus/icons-vue";
-import {ElMessage, ElMessageBox} from "element-plus";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
+import {Check, Delete, Download, Edit, Location, Position, VideoPlay} from "@element-plus/icons-vue";
+import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
 import type {ToiletPlace} from "@/domain/toilet/v6";
 import {buildLocalExportBundle, createLocalExportFilename, TOILET_KIND_OPTIONS} from "@/domain/toilet/v6";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
@@ -10,6 +10,7 @@ import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
+import EditPage from "@/Views/EditPage.vue";
 
 type QueueFilter = "pending" | "reviewed" | "conflict" | "all";
 type QueueSort = "updated" | "nearest";
@@ -23,6 +24,25 @@ const selectedIds = ref<string[]>([]);
 const currentLocation = ref<{lat: number; lon: number} | null>(null);
 const isLocating = ref(false);
 const reverseGeocodingId = ref("");
+const pipelineVisible = ref(false);
+const pipelineIds = ref<string[]>([]);
+const pipelineIndex = ref(0);
+const pipelineReviewedCount = ref(0);
+const pipelineSkippedCount = ref(0);
+const isMobile = ref(false);
+let mobileMedia: MediaQueryList | null = null;
+
+function updateMobileLayout(event?: MediaQueryListEvent) {
+  isMobile.value = event?.matches ?? mobileMedia?.matches ?? false;
+}
+
+onMounted(() => {
+  mobileMedia = window.matchMedia("(max-width: 760px)");
+  updateMobileLayout();
+  mobileMedia.addEventListener("change", updateMobileLayout);
+});
+
+onBeforeUnmount(() => mobileMedia?.removeEventListener("change", updateMobileLayout));
 
 const allRecords = computed(() => {
   const records = new Map<string, ToiletPlace>();
@@ -44,6 +64,12 @@ const visibleRecords = computed(() => {
 });
 
 const pendingCount = computed(() => allRecords.value.filter((item) => !item.audit.reviewed).length);
+const pipelineEligibleCount = computed(() => visibleRecords.value.filter((item) => !item.audit.reviewed && !localCache.hasConflict(item.id)).length);
+const pipelineRecord = computed(() => {
+  const id = pipelineIds.value[pipelineIndex.value];
+  return id ? allRecords.value.find((item) => item.id === id) || null : null;
+});
+const pipelineProgress = computed(() => `${Math.min(pipelineIndex.value + 1, pipelineIds.value.length)} / ${pipelineIds.value.length}`);
 const selectedVisibleIds = computed(() => selectedIds.value.filter((id) => visibleRecords.value.some((item) => item.id === id)));
 const allVisibleSelected = computed(() => visibleRecords.value.length > 0 && selectedVisibleIds.value.length === visibleRecords.value.length);
 const selectedCachedRecords = computed(() => localCache.toilets.filter((item) => selectedIds.value.includes(item.id)));
@@ -233,6 +259,50 @@ function editRecord(record: ToiletPlace) {
   workspace.editToilet(record);
 }
 
+function startPipeline() {
+  const records = visibleRecords.value.filter((record) => !record.audit.reviewed && !localCache.hasConflict(record.id));
+  if (records.length === 0) {
+    ElMessage.warning("当前筛选条件下没有可流水线核验的待 Review 记录");
+    return;
+  }
+  pipelineIds.value = records.map((record) => record.id);
+  pipelineIndex.value = 0;
+  pipelineReviewedCount.value = 0;
+  pipelineSkippedCount.value = 0;
+  workspace.selectToilet(records[0]);
+  pipelineVisible.value = true;
+}
+
+function moveToNextPipelineRecord() {
+  pipelineIndex.value += 1;
+  const next = pipelineRecord.value;
+  if (next) {
+    workspace.selectToilet(next);
+    return;
+  }
+  pipelineVisible.value = false;
+  ElNotification({
+    title: "本轮 Review 已完成",
+    message: `已完成 ${pipelineReviewedCount.value} 条，跳过 ${pipelineSkippedCount.value} 条`,
+    type: "success",
+    duration: 5000,
+  });
+}
+
+function completePipelineRecord() {
+  pipelineReviewedCount.value += 1;
+  moveToNextPipelineRecord();
+}
+
+function skipPipelineRecord() {
+  pipelineSkippedCount.value += 1;
+  moveToNextPipelineRecord();
+}
+
+function closePipeline() {
+  pipelineVisible.value = false;
+}
+
 async function removeDraft(record: ToiletPlace) {
   if (!localCache.hasToilet(record.id)) return;
   await ElMessageBox.confirm("该草稿将从当前浏览器中删除，且无法恢复。", "删除缓存草稿", {
@@ -291,6 +361,10 @@ function exportCachedRecords(records: ToiletPlace[]) {
         {label: '最近距离', value: 'nearest'}
       ]" :disabled="isLocating"/>
       <div class="review-bulk-actions">
+        <el-button type="primary" :disabled="pipelineEligibleCount === 0" @click="startPipeline">
+          <el-icon><VideoPlay /></el-icon>
+          开始流水线 Review
+        </el-button>
         <el-checkbox :model-value="allVisibleSelected" @update:model-value="toggleAllVisible">
           全选当前列表
         </el-checkbox>
@@ -345,6 +419,37 @@ function exportCachedRecords(records: ToiletPlace[]) {
         </div>
       </article>
     </div>
+
+    <el-dialog
+        v-model="pipelineVisible"
+        class="pipeline-dialog"
+        title="流水线 Review"
+        width="min(1180px, 94vw)"
+        :fullscreen="isMobile"
+        destroy-on-close
+        @closed="closePipeline"
+    >
+      <template #header>
+        <div class="pipeline-dialog-header">
+          <div>
+            <h2>流水线 Review</h2>
+            <p>第 {{ pipelineProgress }} 条，完成后会自动进入下一条。</p>
+          </div>
+          <div class="pipeline-dialog-stats">
+            <el-tag type="success">已完成 {{ pipelineReviewedCount }}</el-tag>
+            <el-tag type="info">已跳过 {{ pipelineSkippedCount }}</el-tag>
+          </div>
+        </div>
+      </template>
+      <edit-page
+          v-if="pipelineRecord"
+          embedded
+          review-flow
+          @reviewed="completePipelineRecord"
+          @skipped="skipPipelineRecord"
+          @cancel="closePipeline"
+      />
+    </el-dialog>
   </section>
 </template>
 
@@ -354,6 +459,41 @@ function exportCachedRecords(records: ToiletPlace[]) {
   border: 1px solid var(--itp-border);
   border-radius: 8px;
   background: var(--itp-surface);
+}
+
+.pipeline-dialog-header,
+.pipeline-dialog-stats {
+  display: flex;
+  align-items: center;
+}
+
+.pipeline-dialog-header {
+  justify-content: space-between;
+  gap: 16px;
+  padding-right: 30px;
+}
+
+.pipeline-dialog-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.pipeline-dialog-header p {
+  margin: 5px 0 0;
+  color: var(--itp-text-muted);
+  font-size: 13px;
+}
+
+.pipeline-dialog-stats {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+:deep(.pipeline-dialog .el-dialog__body) {
+  max-height: calc(88vh - 100px);
+  padding-top: 6px;
+  overflow-y: auto;
 }
 
 .review-header,
@@ -466,6 +606,27 @@ function exportCachedRecords(records: ToiletPlace[]) {
 }
 
 @media (max-width: 760px) {
+  .pipeline-dialog-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-right: 0;
+  }
+
+  .pipeline-dialog-stats {
+    justify-content: flex-start;
+  }
+
+  :deep(.pipeline-dialog .el-dialog__header) {
+    margin-right: 0;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--itp-border);
+  }
+
+  :deep(.pipeline-dialog .el-dialog__body) {
+    max-height: calc(100dvh - 86px);
+    padding: 12px;
+  }
+
   .review-workspace {
     padding: 14px;
   }

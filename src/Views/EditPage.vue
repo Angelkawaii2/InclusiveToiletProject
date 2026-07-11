@@ -15,13 +15,16 @@ import ToiletMap from "@/components/map/ToiletMap.vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 
-defineProps<{
+const props = defineProps<{
   embedded?: boolean
+  reviewFlow?: boolean
 }>()
 
 const emit = defineEmits<{
   saved: []
   cancel: []
+  reviewed: []
+  skipped: []
 }>()
 
 const workspace = useWorkspaceStore();
@@ -170,7 +173,7 @@ function saveDraft() {
     text: draft.openingText.trim() || undefined,
   };
   updated.audit.updatedAt = Date.now();
-  updated.audit.reviewed = settings.autoReviewOnEdit || draft.reviewed;
+  updated.audit.reviewed = props.reviewFlow ? true : settings.autoReviewOnEdit || draft.reviewed;
   if (!localCache.saveEditedToilet(updated, baseUpdatedAt)) {
     ElNotification({
       title: "保存失败",
@@ -188,7 +191,11 @@ function saveDraft() {
     type: "success",
     duration: 5000,
   });
-  emit("saved");
+  if (props.reviewFlow) {
+    emit("reviewed");
+  } else {
+    emit("saved");
+  }
 }
 
 watch(() => workspace.selectedToilet?.id, () => {
@@ -307,11 +314,13 @@ watch(() => workspace.selectedToilet?.id, () => {
           <el-input v-model="draft.accessibilityNotes" type="textarea" :rows="2"/>
         </el-form-item>
         <div class="form-actions">
-          <el-button @click="emit('cancel')">取消</el-button>
+          <el-button @click="props.reviewFlow ? emit('skipped') : emit('cancel')">
+            {{ props.reviewFlow ? "跳过" : "取消" }}
+          </el-button>
           <el-button @click="loadDraft">重置草稿</el-button>
           <el-button type="primary" @click="saveDraft">
             <el-icon><Check /></el-icon>
-            保存修改
+            {{ props.reviewFlow ? "完成并下一条" : "保存修改" }}
           </el-button>
         </div>
       </el-form>
