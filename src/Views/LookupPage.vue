@@ -11,7 +11,7 @@ import {
   type ToiletKind,
   type ToiletPlace
 } from "@/domain/toilet/v6";
-import {Aim, Edit, Location, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
+import {Aim, Edit, Location, Plus, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
@@ -196,6 +196,10 @@ function selectToilet(item: ToiletPlace) {
 function selectMapPoint(id: string) {
   const item = dataset.toilets.find((record) => record.id === id);
   if (item) selectToilet(item);
+}
+
+function openDataEntry() {
+  workspace.openMaintenance("create");
 }
 
 function viewDetails(item: ToiletPlace) {
@@ -383,6 +387,10 @@ onMounted(() => {
             <el-button @click="resetFilters">
               清空条件
             </el-button>
+            <el-button class="desktop-capture-button" type="primary" @click="openDataEntry">
+              <el-icon><Plus /></el-icon>
+              录入数据
+            </el-button>
           </div>
           <div class="filter-panel desktop-filter-panel">
             <el-form label-position="top">
@@ -509,6 +517,10 @@ onMounted(() => {
     <button class="mobile-filter-button" type="button" @click="mobileFilterOpen = true">
       <el-icon><Search /></el-icon>
       筛选
+    </button>
+    <button class="mobile-capture-button" type="button" @click="openDataEntry">
+      <el-icon><Plus /></el-icon>
+      录入
     </button>
 
     <Transition name="mobile-filter">
@@ -834,6 +846,7 @@ onMounted(() => {
 }
 
 .mobile-filter-button,
+.mobile-capture-button,
 .mobile-filter-overlay {
   display: none;
 }
@@ -1167,6 +1180,25 @@ onMounted(() => {
     background: var(--itp-primary);
     color: #fff;
     box-shadow: 0 12px 28px rgba(51, 110, 190, 0.28);
+    font: inherit;
+  }
+
+  .mobile-capture-button {
+    position: fixed;
+    right: 16px;
+    bottom: max(72px, calc(env(safe-area-inset-bottom) + 56px));
+    z-index: 30;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--el-color-success);
+    color: #fff;
+    box-shadow: 0 12px 28px rgba(35, 145, 98, 0.28);
     font: inherit;
   }
 

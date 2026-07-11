@@ -25,6 +25,7 @@ const localCache = useLocalToiletCacheStore();
 const isLocating = ref(false);
 const captureMode = ref<"quick" | "full">("quick");
 const hasCapturedLocation = ref(false);
+const GPS_TIMEOUT_MS = 12_000;
 
 const draft = reactive({
   name: "",
@@ -79,13 +80,27 @@ function resetDraft() {
 }
 
 function fillCurrentLocation() {
+  if (isLocating.value) return;
   if (!navigator.geolocation) {
     ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
     return;
   }
   ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
+  let finished = false;
+  const finishGps = () => {
+    if (finished) return false;
+    finished = true;
+    window.clearTimeout(timeout);
+    return true;
+  };
+  const timeout = window.setTimeout(() => {
+    if (!finishGps()) return;
+    isLocating.value = false;
+    ElMessage.warning("定位超时，请确认已开启定位服务和浏览器位置权限后重试");
+  }, GPS_TIMEOUT_MS);
   navigator.geolocation.getCurrentPosition(async (position) => {
+    if (!finishGps()) return;
     draft.lat = Number(position.coords.latitude.toFixed(6));
     draft.lon = Number(position.coords.longitude.toFixed(6));
     draft.accuracy = Math.round(position.coords.accuracy);
@@ -106,11 +121,16 @@ function fillCurrentLocation() {
     } finally {
       isLocating.value = false;
     }
-  }, () => {
-    ElMessage.error("定位失败，请在浏览器设置中重新开启位置权限后重试");
+  }, (error) => {
+    if (!finishGps()) return;
     isLocating.value = false;
+    const message = error.code === error.PERMISSION_DENIED
+      ? "定位权限未开启，请在浏览器或系统设置中允许访问位置后重试"
+      : "定位失败，请确认已开启定位服务后重试";
+    ElMessage.error(message);
   }, {
-    timeout: 8000,
+    timeout: GPS_TIMEOUT_MS,
+    maximumAge: 0,
     enableHighAccuracy: true
   });
 }
@@ -170,6 +190,8 @@ function buildRecord(options: {reviewed?: boolean; source?: string} = {}): Toile
 function downloadRecord() {
   const record = buildRecord();
   downloadJsonFile(record, `${record.id}.json`);
+  resetDraft();
+  ElMessage.success("记录已导出，表单已重置");
 }
 
 function saveRecordToBrowser() {
@@ -185,12 +207,7 @@ function saveRecordToBrowser() {
     ElMessage.error(localCache.storageError || "保存到浏览器缓存失败");
     return;
   }
-  if (captureMode.value === "quick") {
-    draft.name = "";
-    draft.description = "";
-    draft.accuracy = null;
-    hasCapturedLocation.value = false;
-  }
+  resetDraft();
   ElMessage.success(`已保存为${record.audit.reviewed ? "记录" : "待 Review 草稿"}，当前缓存 ${localCache.count} 条`);
 }
 
