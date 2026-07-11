@@ -16,6 +16,7 @@ import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {ElNotification} from "element-plus";
+import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 
 const files = ref<File[]>([])
 const workspace = useWorkspaceStore()
@@ -150,13 +151,18 @@ function formatDistance(item: ToiletPlace) {
   return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
 }
 
-function updateCurrentLocation(showPermissionHint = true) {
+async function updateCurrentLocation(showPermissionHint = true) {
   loadError.value = "";
   if (!navigator.geolocation) {
     loadError.value = "当前浏览器不支持定位，请使用支持位置权限的浏览器。";
     return;
   }
-  if (showPermissionHint) {
+  const permissionState = await getLocationPermissionState();
+  if (permissionState === "denied") {
+    loadError.value = "定位权限未开启，请在浏览器或系统设置中允许访问位置后重试。";
+    return;
+  }
+  if (showPermissionHint && permissionState === "prompt") {
     ElNotification.info({
       title: "需要位置权限",
       message: "请在浏览器授权弹窗中允许使用当前位置。",

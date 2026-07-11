@@ -13,6 +13,7 @@ import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import ToiletMap from "@/components/map/ToiletMap.vue";
 import {useSettingStore} from "@/stores/settingsStore";
+import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 
 defineProps<{
   embedded?: boolean
@@ -88,12 +89,17 @@ function handleMapCoordinateChange(location: {lon: number; lat: number}) {
   draft.lat = location.lat;
 }
 
-function updateEditLocation(useForCoordinates = false) {
+async function updateEditLocation(useForCoordinates = false) {
   if (!navigator.geolocation) {
     ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
     return;
   }
-  ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
+  const permissionState = await getLocationPermissionState();
+  if (permissionState === "denied") {
+    ElMessage.error("定位权限未开启，请在浏览器或系统设置中允许访问位置后重试");
+    return;
+  }
+  if (permissionState === "prompt") ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
   navigator.geolocation.getCurrentPosition((position) => {
     const location = {

@@ -13,6 +13,7 @@ import {buildLocalExportBundle, createLocalExportFilename} from "@/domain/toilet
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {DATA_VERSION} from "@/constants/projectVersions";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
+import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 
@@ -79,13 +80,18 @@ function resetDraft() {
   hasCapturedLocation.value = false;
 }
 
-function fillCurrentLocation() {
+async function fillCurrentLocation() {
   if (isLocating.value) return;
   if (!navigator.geolocation) {
     ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
     return;
   }
-  ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
+  const permissionState = await getLocationPermissionState();
+  if (permissionState === "denied") {
+    ElMessage.error("定位权限未开启，请在浏览器或系统设置中允许访问位置后重试");
+    return;
+  }
+  if (permissionState === "prompt") ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
   let finished = false;
   const finishGps = () => {

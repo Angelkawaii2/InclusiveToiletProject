@@ -9,6 +9,7 @@ import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
+import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 
 type QueueFilter = "pending" | "reviewed" | "conflict" | "all";
 type QueueSort = "updated" | "nearest";
@@ -67,12 +68,17 @@ function formatDistance(record: ToiletPlace) {
   return meters >= 1000 ? `${(meters / 1000).toFixed(1)} km` : `${Math.round(meters)} m`;
 }
 
-function getCurrentLocation(): Promise<{lat: number; lon: number} | null> {
+async function getCurrentLocation(): Promise<{lat: number; lon: number} | null> {
   if (!navigator.geolocation) {
     ElMessage.error("当前浏览器不支持定位，请使用支持位置权限的浏览器");
-    return Promise.resolve(null);
+    return null;
   }
-  ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
+  const permissionState = await getLocationPermissionState();
+  if (permissionState === "denied") {
+    ElMessage.error("定位权限未开启，请在浏览器或系统设置中允许访问位置后重试");
+    return null;
+  }
+  if (permissionState === "prompt") ElMessage.info("请在浏览器授权弹窗中允许使用当前位置");
   isLocating.value = true;
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition((position) => {
