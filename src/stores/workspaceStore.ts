@@ -1,29 +1,34 @@
 import {defineStore} from "pinia";
 import type {ToiletPlace} from "@/domain/toilet/v6";
 
-export type WorkspaceTab = "search" | "capture" | "maintenance" | "data-transfer" | "settings";
-export type MaintenanceMode = "edit" | "review";
+export type WorkspaceTab = "search" | "maintenance" | "data-transfer" | "settings";
 
 export const useWorkspaceStore = defineStore("workspace", {
     state: () => ({
         activeTab: "search" as WorkspaceTab,
-        maintenanceMode: "review" as MaintenanceMode,
         selectedToilet: null as ToiletPlace | null,
+        captureOpen: false,
+        editOpen: false,
     }),
     actions: {
         openSearch() {
             this.activeTab = "search";
         },
         openCapture() {
-            this.activeTab = "capture";
+            this.captureOpen = true;
         },
-        openMaintenance(mode: MaintenanceMode = "review") {
+        closeCapture() {
+            this.captureOpen = false;
+        },
+        openMaintenance() {
             this.activeTab = "maintenance";
-            this.maintenanceMode = mode;
         },
         editToilet(toilet: ToiletPlace) {
             this.selectedToilet = toilet;
-            this.openMaintenance("edit");
+            this.editOpen = true;
+        },
+        closeEditor() {
+            this.editOpen = false;
         },
         selectToilet(toilet: ToiletPlace) {
             this.selectedToilet = toilet;

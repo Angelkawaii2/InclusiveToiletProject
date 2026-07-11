@@ -1,17 +1,32 @@
-<script setup>
+<script lang="ts" setup>
 
-import {computed, ref, watchEffect} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watchEffect} from "vue";
 import Settings from "@/Views/Settings.vue";
 import LookupPage from "@/Views/LookupPage.vue";
 import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
 import DataTransferPage from "@/Views/DataTransferPage.vue";
 import AddPage from "@/Views/AddPage.vue";
-import {Moon, Sunny} from "@element-plus/icons-vue";
+import EditPage from "@/Views/EditPage.vue";
+import {Moon, Plus, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 
 const settings = useSettingStore()
 const workspace = useWorkspaceStore()
+const isMobile = ref(false)
+let mobileMedia: MediaQueryList | null = null
+
+function updateMobileLayout(event?: MediaQueryListEvent) {
+  isMobile.value = event?.matches ?? mobileMedia?.matches ?? false
+}
+
+onMounted(() => {
+  mobileMedia = window.matchMedia('(max-width: 760px)')
+  updateMobileLayout()
+  mobileMedia.addEventListener('change', updateMobileLayout)
+})
+
+onBeforeUnmount(() => mobileMedia?.removeEventListener('change', updateMobileLayout))
 
 const v = VITE_APP_VERSION
 const b = VITE_BUILD_TIME
@@ -65,10 +80,6 @@ watchEffect(() => {
       <el-backtop :bottom="100" :right="40"/>
 
       <el-tabs v-model=tab class="workspace-tabs">
-        <el-tab-pane label="新增点位" name="capture">
-          <add-page/>
-        </el-tab-pane>
-
         <el-tab-pane label="搜索浏览" name="search">
           <lookup-page/>
         </el-tab-pane>
@@ -86,6 +97,40 @@ watchEffect(() => {
         </el-tab-pane>
 
       </el-tabs>
+
+      <el-button
+          class="global-capture-button"
+          type="success"
+          size="large"
+          aria-label="新增点位"
+          title="新增点位"
+          @click="workspace.openCapture()"
+      >
+        <el-icon><Plus /></el-icon>
+        <span>新增点位</span>
+      </el-button>
+
+      <el-dialog
+          v-model="workspace.captureOpen"
+          class="workspace-dialog capture-dialog"
+          title="新增点位"
+          width="min(1100px, 94vw)"
+          :fullscreen="isMobile"
+          destroy-on-close
+      >
+        <add-page/>
+      </el-dialog>
+
+      <el-dialog
+          v-model="workspace.editOpen"
+          class="workspace-dialog edit-dialog"
+          title="编辑卫生间记录"
+          width="min(1180px, 94vw)"
+          :fullscreen="isMobile"
+          destroy-on-close
+      >
+        <edit-page embedded @saved="workspace.closeEditor()" @cancel="workspace.closeEditor()"/>
+      </el-dialog>
 
       <footer class="app-footer">
         <el-link href="https://github.com/Angelkawaii2/InclusiveToiletProject" target="_blank" type="primary">GitHub Project</el-link>
@@ -150,7 +195,51 @@ watchEffect(() => {
   padding: 14px 16px 18px;
 }
 
+.global-capture-button {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 1200;
+  min-height: 48px;
+  box-shadow: 0 10px 28px rgba(21, 128, 61, 0.3);
+}
+
+:global(.workspace-dialog) {
+  margin-top: 4vh;
+}
+
+:global(.workspace-dialog .el-dialog__body) {
+  max-height: calc(92vh - 70px);
+  padding-top: 8px;
+  overflow-y: auto;
+}
+
 @media (max-width: 720px) {
+  .global-capture-button {
+    right: 16px;
+    bottom: 18px;
+    width: 54px;
+    min-width: 54px;
+    height: 54px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .global-capture-button span:not(.el-icon) {
+    display: none;
+  }
+
+  :global(.workspace-dialog .el-dialog__header) {
+    margin-right: 0;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--itp-border);
+  }
+
+  :global(.workspace-dialog .el-dialog__body) {
+    max-height: calc(100dvh - 56px);
+    padding: 12px;
+  }
+
   .app-footer {
     justify-content: flex-start;
     flex-wrap: wrap;

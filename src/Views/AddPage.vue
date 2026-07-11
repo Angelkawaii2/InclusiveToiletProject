@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {computed, reactive, ref} from "vue";
 import {Check, Delete, Download, Location, RefreshLeft} from "@element-plus/icons-vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import {
   ACCESS_RESTRICTION_OPTIONS,
   TOILET_KIND_OPTIONS,
@@ -10,18 +10,12 @@ import {
   type ToiletPlace
 } from "@/domain/toilet/v6";
 import {buildLocalExportBundle, createLocalExportFilename} from "@/domain/toilet/v6";
-import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {DATA_VERSION} from "@/constants/projectVersions";
 import {reverseGeocode} from "@/domain/geo/reverseGeocode";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {downloadJsonFile} from "@/Utils/downloadJson";
 
-defineProps<{
-  embedded?: boolean
-}>()
-
-const workspace = useWorkspaceStore();
 const localCache = useLocalToiletCacheStore();
 const isLocating = ref(false);
 const captureMode = ref<"quick" | "full">("quick");
@@ -211,7 +205,12 @@ function downloadRecord() {
 
 function saveRecordToBrowser() {
   if (captureMode.value === "quick" && !hasCapturedLocation.value) {
-    ElMessage.warning("请先获取当前位置，避免保存到错误的坐标");
+    ElNotification({
+      title: "尚未保存",
+      message: "请先获取当前位置，避免保存到错误的坐标",
+      type: "warning",
+      duration: 4500,
+    });
     return;
   }
   const record = buildRecord({
@@ -219,11 +218,21 @@ function saveRecordToBrowser() {
     source: captureMode.value === "quick" ? "local-quick-capture" : "local-create-form"
   });
   if (!localCache.addToilet(record)) {
-    ElMessage.error(localCache.storageError || "保存到浏览器缓存失败");
+    ElNotification({
+      title: "保存失败",
+      message: localCache.storageError || "无法保存到浏览器缓存，请检查浏览器存储空间后重试",
+      type: "error",
+      duration: 0,
+    });
     return;
   }
   resetDraft();
-  ElMessage.success(`已保存为${record.audit.reviewed ? "记录" : "待 Review 草稿"}，当前缓存 ${localCache.count} 条`);
+  ElNotification({
+    title: "保存成功",
+    message: `已保存为${record.audit.reviewed ? "记录" : "待 Review 草稿"}，当前缓存 ${localCache.count} 条，可以继续采集`,
+    type: "success",
+    duration: 5000,
+  });
 }
 
 function downloadCachedRecords() {
@@ -240,41 +249,10 @@ function clearCachedRecords() {
   ElMessage.success("已清空浏览器缓存记录");
 }
 
-function useAsEditingRecord() {
-  const record = buildRecord();
-  workspace.editToilet(record);
-  ElMessage.success("已创建草稿并切换到编辑模式");
-}
 </script>
 
 <template>
   <section class="workspace-page">
-    <div v-if="!embedded" class="capture-toolbar">
-      <div class="hero-actions">
-        <el-button type="danger" @click="resetDraft">
-          <el-icon><RefreshLeft /></el-icon>
-          重置
-        </el-button>
-      </div>
-    </div>
-
-    <div v-else class="embedded-toolbar">
-      <div>
-        <h3>采集点位</h3>
-        <p>快速保存现场信息，稍后再 Review。浏览器缓存中已有 {{ localCache.count }} 条。</p>
-      </div>
-      <div class="hero-actions">
-        <el-button type="danger" @click="resetDraft">
-          <el-icon><RefreshLeft /></el-icon>
-          重置
-        </el-button>
-        <el-button type="primary" @click="downloadRecord">
-          <el-icon><Download /></el-icon>
-          导出 v6 JSON
-        </el-button>
-      </div>
-    </div>
-
     <el-segmented v-model="captureMode" class="capture-mode" :options="[
       {label: '快速采集', value: 'quick'},
       {label: '完整采集', value: 'full'}
@@ -286,7 +264,13 @@ function useAsEditingRecord() {
           <p class="workspace-eyebrow">10-15 秒采集</p>
           <h3>先留下可靠的位置和现场信息</h3>
         </div>
-        <el-tag type="warning" effect="plain">保存后待 Review</el-tag>
+        <div class="mode-actions">
+          <el-tag type="warning" effect="plain">保存后待 Review</el-tag>
+          <el-button type="danger" plain @click="resetDraft">
+            <el-icon><RefreshLeft /></el-icon>
+            重置
+          </el-button>
+        </div>
       </div>
 
       <el-form label-position="top">
@@ -356,6 +340,13 @@ function useAsEditingRecord() {
 
     <div v-else class="create-layout">
       <el-form class="create-form" label-position="top">
+        <div class="full-form-toolbar">
+          <strong>完整采集表单</strong>
+          <el-button type="danger" plain @click="resetDraft">
+            <el-icon><RefreshLeft /></el-icon>
+            重置
+          </el-button>
+        </div>
         <section class="form-section">
           <h3>基础信息</h3>
           <div class="form-grid">
@@ -470,7 +461,6 @@ function useAsEditingRecord() {
           <h3>输出</h3>
           <p class="field-hint">外出采集时建议先保存到浏览器缓存，回到电脑前再批量导出 JSON。缓存只保存在当前浏览器中。</p>
           <div class="form-actions">
-            <el-button @click="useAsEditingRecord">创建为编辑草稿</el-button>
             <el-button type="success" @click="saveRecordToBrowser">保存到浏览器缓存</el-button>
             <el-button type="primary" @click="downloadRecord">
               <el-icon><Download /></el-icon>
@@ -529,32 +519,6 @@ function useAsEditingRecord() {
   justify-content: flex-end;
 }
 
-.capture-toolbar {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.embedded-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px;
-  border: 1px solid var(--itp-border);
-  border-radius: 8px;
-  background: var(--itp-surface-soft);
-}
-
-.embedded-toolbar h3 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.embedded-toolbar p {
-  margin: 6px 0 0;
-  color: var(--itp-text-muted);
-}
-
 .create-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
@@ -586,6 +550,19 @@ function useAsEditingRecord() {
 
 .quick-heading {
   margin-bottom: 18px;
+}
+
+.mode-actions,
+.full-form-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.full-form-toolbar {
+  margin-bottom: 12px;
+  padding: 10px 0;
 }
 
 .quick-heading h3 {
@@ -737,11 +714,6 @@ function useAsEditingRecord() {
     grid-template-columns: 1fr;
   }
 
-  .embedded-toolbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .quick-capture {
     padding: 16px;
   }
@@ -764,6 +736,10 @@ function useAsEditingRecord() {
 
   .quick-save-bar .el-button {
     width: 100%;
+  }
+
+  .mode-actions {
+    align-items: flex-end;
   }
 }
 </style>

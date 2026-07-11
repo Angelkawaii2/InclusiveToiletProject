@@ -2,7 +2,7 @@
 import {computed, nextTick, reactive, ref, watch} from "vue";
 import {Check, Edit, Location, UploadFilled} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import {
   ACCESS_RESTRICTION_OPTIONS,
   TOILET_KIND_OPTIONS,
@@ -17,6 +17,11 @@ import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 
 defineProps<{
   embedded?: boolean
+}>()
+
+const emit = defineEmits<{
+  saved: []
+  cancel: []
 }>()
 
 const workspace = useWorkspaceStore();
@@ -131,47 +136,59 @@ function saveDraft() {
   const item = workspace.selectedToilet;
   if (!item) return;
   const baseUpdatedAt = localCache.getMetadata(item.id)?.baseUpdatedAt ?? item.audit.updatedAt;
-  item.name = draft.name.trim() || "未命名卫生间";
-  item.isActive = draft.isActive;
-  item.location.lat = Number(draft.lat);
-  item.location.lon = Number(draft.lon);
-  item.address = {
-    ...(item.address || {}),
+  const updated = structuredClone(item);
+  updated.name = draft.name.trim() || "未命名卫生间";
+  updated.isActive = draft.isActive;
+  updated.location.lat = Number(draft.lat);
+  updated.location.lon = Number(draft.lon);
+  updated.address = {
+    ...(updated.address || {}),
     country: draft.country.trim() || undefined,
     province: draft.province.trim() || undefined,
     city: draft.city.trim() || undefined,
     description: draft.description.trim() || undefined,
   };
-  item.kinds = [...draft.kinds];
-  item.access = {
-    ...item.access,
+  updated.kinds = [...draft.kinds];
+  updated.access = {
+    ...updated.access,
     restriction: draft.restriction,
     notes: draft.accessNotes.trim() || undefined,
   };
-  item.facilities = {
-    ...item.facilities,
+  updated.facilities = {
+    ...updated.facilities,
     parkingAllowed: draft.parkingAllowed,
   };
-  item.accessibility = {
-    ...item.accessibility,
+  updated.accessibility = {
+    ...updated.accessibility,
     hasAccessibleToilet: draft.hasAccessibleToilet,
     isSeparateStall: draft.isSeparateStall,
     isLocked: draft.isLocked,
     notes: draft.accessibilityNotes.trim() || undefined,
   };
-  item.openingHours = {
-    ...(item.openingHours || {isAlwaysOpen: null}),
+  updated.openingHours = {
+    ...(updated.openingHours || {isAlwaysOpen: null}),
     text: draft.openingText.trim() || undefined,
   };
-  item.audit.updatedAt = Date.now();
-  item.audit.reviewed = settings.autoReviewOnEdit || draft.reviewed;
-  if (!localCache.saveEditedToilet(item, baseUpdatedAt)) {
-    ElMessage.error(localCache.storageError || "保存到浏览器缓存失败，刷新后无法保留修改");
+  updated.audit.updatedAt = Date.now();
+  updated.audit.reviewed = settings.autoReviewOnEdit || draft.reviewed;
+  if (!localCache.saveEditedToilet(updated, baseUpdatedAt)) {
+    ElNotification({
+      title: "保存失败",
+      message: localCache.storageError || "无法保存到浏览器缓存，原记录未被修改",
+      type: "error",
+      duration: 0,
+    });
     return;
   }
-  dataset.updateToilet(item);
-  workspace.selectToilet(item);
-  ElMessage.success("记录已保存到浏览器缓存，刷新后仍会保留修改");
+  dataset.updateToilet(updated);
+  workspace.selectToilet(updated);
+  ElNotification({
+    title: "保存成功",
+    message: `${updated.name} 已保存到浏览器缓存，并标记为本地人工修改`,
+    type: "success",
+    duration: 5000,
+  });
+  emit("saved");
 }
 
 watch(() => workspace.selectedToilet?.id, () => {
@@ -290,6 +307,7 @@ watch(() => workspace.selectedToilet?.id, () => {
           <el-input v-model="draft.accessibilityNotes" type="textarea" :rows="2"/>
         </el-form-item>
         <div class="form-actions">
+          <el-button @click="emit('cancel')">取消</el-button>
           <el-button @click="loadDraft">重置草稿</el-button>
           <el-button type="primary" @click="saveDraft">
             <el-icon><Check /></el-icon>
@@ -319,13 +337,6 @@ watch(() => workspace.selectedToilet?.id, () => {
       </div>
     </div>
 
-    <div v-else class="edit-empty-state">
-      <el-icon><Edit /></el-icon>
-      <div>
-        <h3>尚未选择记录</h3>
-        <p>下一步可以把搜索结果列表和这里打通：点击某条记录后进入编辑状态，保存时写回本地数据集。</p>
-      </div>
-    </div>
   </section>
 </template>
 
@@ -438,6 +449,24 @@ watch(() => workspace.selectedToilet?.id, () => {
 @media (max-width: 760px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .edit-map-canvas {
+    height: 240px;
+  }
+
+  .edit-map-canvas :deep(.map-container) {
+    min-height: 240px;
+  }
+
+  .edit-form,
+  .edit-map-panel,
+  .edit-selected-state {
+    padding: 14px;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
   }
 }
 </style>
