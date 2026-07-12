@@ -15,6 +15,7 @@ import {Aim, Edit, Location, Position, Search, View, UploadFilled} from "@elemen
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
+import {useSettingStore} from "@/stores/settingsStore";
 import {ElNotification} from "element-plus";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 import {requestCurrentLocation} from "@/domain/geo/currentLocation";
@@ -23,6 +24,7 @@ const files = ref<File[]>([])
 const workspace = useWorkspaceStore()
 const dataset = useToiletDatasetStore()
 const localCache = useLocalToiletCacheStore()
+const settings = useSettingStore()
 
 const keyword = ref("")
 const isLoading = ref(false)
@@ -36,7 +38,6 @@ const detailToilet = ref<ToiletPlace | null>(null)
 const selectedKinds = ref<ToiletKind[]>([])
 const selectedRestrictions = ref<AccessRestriction[]>([])
 const activeFilter = ref<"all" | "active" | "inactive">("active")
-const basemapStyle = ref<"standard" | "mono" | "light" | "dark">("mono")
 const accessibleFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const separateStallFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const lockedFilter = ref<"all" | "yes" | "no" | "unknown">("all")
@@ -47,6 +48,9 @@ const mobileFilterOpen = ref(false)
 
 const mapComponent = ref<InstanceType<typeof ToiletMap> | null>(null)
 const detailDrawerSize = computed(() => "420px");
+const effectiveBasemapStyle = computed(() => settings.mapStyle === "mono"
+    ? "mono"
+    : settings.theme === "dark" ? "dark" : "light");
 
 function handleFiles(event: Event) {
   const selectFiles = (event.target as HTMLInputElement).files;
@@ -281,18 +285,6 @@ function matchesBinaryState(value: boolean, filter: "all" | "yes" | "no") {
   return filter === "yes" ? value : !value;
 }
 
-function resetFilters() {
-  keyword.value = "";
-  selectedKinds.value = [];
-  selectedRestrictions.value = [];
-  activeFilter.value = "active";
-  accessibleFilter.value = "all";
-  separateStallFilter.value = "all";
-  lockedFilter.value = "all";
-  manualImportFilter.value = "all";
-  editedFilter.value = "all";
-}
-
 const filteredBathrooms = computed(() => {
   const q = keyword.value.trim().toLowerCase()
   const filtered = dataset.toilets.filter((item) => {
@@ -383,10 +375,22 @@ onMounted(() => {
       <div class="map-column">
         <toilet-map
             ref="mapComponent"
-            :basemap-style="basemapStyle"
+            :basemap-style="effectiveBasemapStyle"
             :selected-point-id="selectedId"
             @point-click="selectMapPoint"
         />
+        <el-tooltip content="获取当前位置" placement="left">
+          <el-button
+              class="map-location-button"
+              :loading="isLocating"
+              circle
+              aria-label="获取当前位置"
+              title="获取当前位置"
+              @click="updateCurrentLocation(true)"
+          >
+            <el-icon><Location /></el-icon>
+          </el-button>
+        </el-tooltip>
       </div>
 
       <aside class="result-column">
@@ -396,15 +400,6 @@ onMounted(() => {
               <el-icon><Search /></el-icon>
             </template>
           </el-input>
-          <div class="toolbar-actions">
-            <el-button :loading="isLocating" @click="updateCurrentLocation(true)">
-              <el-icon><Location /></el-icon>
-              获取当前位置
-            </el-button>
-            <el-button @click="resetFilters">
-              清空条件
-            </el-button>
-          </div>
           <div class="filter-panel desktop-filter-panel">
             <el-form label-position="top">
               <div class="filter-section">
@@ -478,15 +473,6 @@ onMounted(() => {
           <div class="result-meta">
             <span>{{ dataset.dataSourceName }}</span>
             <span>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</span>
-          </div>
-          <div class="basemap-switcher">
-            <span>底图</span>
-            <el-segmented v-model="basemapStyle" :options="[
-              {label: '标准', value: 'standard'},
-              {label: '单色', value: 'mono'},
-              {label: '浅色', value: 'light'},
-              {label: '深色', value: 'dark'}
-            ]"/>
           </div>
           <div v-if="userLocation" class="location-meta">
             当前位置：{{ userLocation.lat.toFixed(5) }}, {{ userLocation.lon.toFixed(5) }}
@@ -633,10 +619,6 @@ onMounted(() => {
               </el-collapse-item>
             </el-collapse>
           </el-form>
-          <div class="mobile-filter-actions">
-            <el-button @click="resetFilters">清空条件</el-button>
-            <el-button type="primary" @click="mobileFilterOpen = false">应用</el-button>
-          </div>
         </div>
       </div>
     </Transition>
@@ -850,6 +832,7 @@ onMounted(() => {
 }
 
 .map-column {
+  position: relative;
   height: 100%;
 }
 
@@ -867,12 +850,6 @@ onMounted(() => {
 
 .result-toolbar {
   display: grid;
-  gap: 8px;
-}
-
-.toolbar-actions {
-  display: flex;
-  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -960,13 +937,12 @@ onMounted(() => {
   font-size: 13px;
 }
 
-.basemap-switcher {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  color: var(--itp-text-muted);
-  font-size: 13px;
+.map-location-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.22);
 }
 
 .map-legend {
@@ -1231,23 +1207,8 @@ onMounted(() => {
     gap: 8px;
   }
 
-  .toolbar-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .toolbar-actions :deep(.el-button) {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .toolbar-actions :deep(.el-button:nth-child(n + 3)) {
-    display: none;
-  }
-
   .desktop-filter-panel,
   .result-meta,
-  .basemap-switcher,
   .location-meta,
   .map-legend {
     display: none;
@@ -1319,8 +1280,7 @@ onMounted(() => {
     transform: translateY(18px) scale(0.98);
   }
 
-  .mobile-filter-header,
-  .mobile-filter-actions {
+  .mobile-filter-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1352,15 +1312,6 @@ onMounted(() => {
 
   .mobile-filter-grid :deep(.el-form-item) {
     margin-bottom: 0;
-  }
-
-  .mobile-filter-actions {
-    position: sticky;
-    bottom: -16px;
-    margin: 16px -16px -16px;
-    padding: 12px 16px max(12px, env(safe-area-inset-bottom));
-    border-top: 1px solid var(--itp-border);
-    background: var(--itp-surface);
   }
 
   .result-list {

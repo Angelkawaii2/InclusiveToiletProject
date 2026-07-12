@@ -7,9 +7,16 @@ export const SETTINGS_KEYS = {
     AUTO_REVIEW_ON_EDIT: "autoReviewOnEdit",
     AUTO_UPDATE_PWA: "autoUpdatePwa",
     AUTO_REFRESH_GPS: "autoRefreshGps",
+    MAP_STYLE: "mapStyle",
 } as const;
 
 export type ThemeMode = "light" | "dark";
+export type MapStyle = "mono" | "light" | "dark";
+
+function getMapStyle() {
+    const stored = localStorage.getItem(SETTINGS_KEYS.MAP_STYLE);
+    return stored === "light" || stored === "dark" || stored === "mono" ? stored : "mono";
+}
 
 export const useSettingStore = defineStore("global.settings", {
     state: () => ({
@@ -19,6 +26,7 @@ export const useSettingStore = defineStore("global.settings", {
         autoReviewOnEdit: localStorage.getItem(SETTINGS_KEYS.AUTO_REVIEW_ON_EDIT) === "true",
         autoUpdatePwa: localStorage.getItem(SETTINGS_KEYS.AUTO_UPDATE_PWA) === "true",
         autoRefreshGps: localStorage.getItem(SETTINGS_KEYS.AUTO_REFRESH_GPS) === "true",
+        mapStyle: getMapStyle() as MapStyle,
     }),
     actions: {
         updateDebugMode(isDebug: boolean) {
@@ -47,6 +55,10 @@ export const useSettingStore = defineStore("global.settings", {
         updateAutoRefreshGps(autoRefreshGps: boolean) {
             this.autoRefreshGps = autoRefreshGps;
             localStorage.setItem(SETTINGS_KEYS.AUTO_REFRESH_GPS, String(autoRefreshGps));
+        },
+        updateMapStyle(mapStyle: MapStyle) {
+            this.mapStyle = mapStyle;
+            localStorage.setItem(SETTINGS_KEYS.MAP_STYLE, mapStyle);
         },
     },
 });

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, ref} from "vue";
-import {useSettingStore} from "@/stores/settingsStore";
+import {type MapStyle, useSettingStore} from "@/stores/settingsStore";
 import {notifySuccess} from "@/Utils/Notify";
 
 const setting = useSettingStore();
@@ -43,6 +43,15 @@ const autoRefreshGps = computed({
   }
 });
 
+const mapStyle = computed({
+  get: () => setting.mapStyle,
+  set: (value: MapStyle) => {
+    if (setting.mapStyle === value) return;
+    setting.updateMapStyle(value);
+    notifySuccess(value === "mono" ? "地图已切换为单色样式" : "地图将随日间与夜间主题切换样式");
+  }
+});
+
 
 </script>
 
@@ -71,6 +80,17 @@ const autoRefreshGps = computed({
             <el-text>{{ setting.theme === 'dark' ? '夜间模式' : '日间模式' }}</el-text>
           </template>
         </div>
+      </el-tab-pane>
+
+      <el-tab-pane label="界面" name="appearance">
+        <section class="appearance-settings">
+          <h2>地图样式</h2>
+          <el-segmented v-model="mapStyle" :options="[
+            {label: '单色', value: 'mono'},
+            {label: '浅色', value: 'light'},
+            {label: '深色', value: 'dark'}
+          ]"/>
+        </section>
       </el-tab-pane>
 
       <el-tab-pane label="编辑" name="editing">
@@ -124,6 +144,21 @@ const autoRefreshGps = computed({
   background: var(--itp-surface-soft);
 }
 
+.appearance-settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--itp-border);
+  border-radius: 8px;
+  background: var(--itp-surface-soft);
+}
+
+.appearance-settings h2 {
+  margin: 0;
+}
+
 .editing-settings h2,
 .editing-setting-row h3 {
   margin: 0;
@@ -155,6 +190,11 @@ const autoRefreshGps = computed({
   }
 
   .editing-setting-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .appearance-settings {
     align-items: flex-start;
     flex-direction: column;
   }

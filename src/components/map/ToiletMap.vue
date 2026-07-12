@@ -24,7 +24,7 @@ export interface ToiletMapPoint {
   kinds: ToiletKind[];
 }
 
-export type BasemapStyle = "standard" | "mono" | "light" | "dark";
+export type BasemapStyle = "mono" | "light" | "dark";
 
 const props = withDefaults(defineProps<{
   basemapStyle?: BasemapStyle;
