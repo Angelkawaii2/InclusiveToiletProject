@@ -415,11 +415,6 @@ onMounted(() => {
                     <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="进入限制">
-                  <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
-                    <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
-                  </el-select>
-                </el-form-item>
                 <el-form-item label="是否启用">
                   <el-select v-model="activeFilter">
                     <el-option label="全部" value="all"/>
@@ -429,9 +424,14 @@ onMounted(() => {
                 </el-form-item>
                 </div>
               </div>
-              <div class="filter-section">
-                <span class="filter-section-label">数据状态</span>
-                <div class="filter-grid data-filter-grid">
+              <el-collapse v-model="advancedFiltersOpen" class="advanced-filter-collapse">
+                <el-collapse-item name="accessibility" title="更多条件">
+                  <div class="filter-grid advanced-filter-grid">
+                    <el-form-item label="进入限制">
+                      <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
+                        <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                      </el-select>
+                    </el-form-item>
                   <el-form-item label="手动导入">
                     <el-select v-model="manualImportFilter">
                       <el-option label="全部" value="all"/>
@@ -446,11 +446,6 @@ onMounted(() => {
                       <el-option label="仅未编辑" value="no"/>
                     </el-select>
                   </el-form-item>
-                </div>
-              </div>
-              <el-collapse v-model="advancedFiltersOpen" class="advanced-filter-collapse">
-                <el-collapse-item name="accessibility" title="更多条件">
-                  <div class="filter-grid advanced-filter-grid">
                     <el-form-item label="无障碍卫生间">
                       <el-select v-model="accessibleFilter">
                         <el-option label="全部" value="all"/>
@@ -579,11 +574,6 @@ onMounted(() => {
                     <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="进入限制">
-                  <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
-                    <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
-                  </el-select>
-                </el-form-item>
                 <el-form-item label="是否启用">
                   <el-select v-model="activeFilter">
                     <el-option label="全部" value="all"/>
@@ -593,9 +583,14 @@ onMounted(() => {
                 </el-form-item>
               </div>
             </div>
-            <div class="filter-section">
-              <span class="filter-section-label">数据状态</span>
-              <div class="filter-grid mobile-filter-grid">
+            <el-collapse v-model="advancedFiltersOpen" class="advanced-filter-collapse">
+              <el-collapse-item name="accessibility" title="更多条件">
+                <div class="filter-grid mobile-filter-grid">
+                  <el-form-item label="进入限制">
+                    <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
+                      <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                    </el-select>
+                  </el-form-item>
                 <el-form-item label="手动导入">
                   <el-select v-model="manualImportFilter">
                     <el-option label="全部" value="all"/>
@@ -610,11 +605,6 @@ onMounted(() => {
                     <el-option label="仅未编辑" value="no"/>
                   </el-select>
                 </el-form-item>
-              </div>
-            </div>
-            <el-collapse v-model="advancedFiltersOpen" class="advanced-filter-collapse">
-              <el-collapse-item name="accessibility" title="更多条件">
-                <div class="filter-grid mobile-filter-grid">
                   <el-form-item label="无障碍卫生间">
                     <el-select v-model="accessibleFilter">
                       <el-option label="全部" value="all"/>
@@ -922,7 +912,7 @@ onMounted(() => {
   font-weight: 600;
 }
 
-.data-filter-grid {
+.basic-filter-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
