@@ -11,22 +11,23 @@ import {
 import {downloadJsonFile} from "@/Utils/downloadJson";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
+import type {RecordChangeKind, RecordOrigin} from "@/domain/toilet/recordState";
 
 type ExportScope = "all" | "selected";
-type EditFilter = "all" | "edited" | "unedited";
-type CreationFilter = "all" | "created" | "source";
+type ChangeFilter = "all" | RecordChangeKind;
+type OriginFilter = "all" | RecordOrigin;
 
 interface ExportRow {
   record: ToiletPlace;
-  locallyEdited: boolean;
-  userCreated: boolean;
+  origin: RecordOrigin;
+  changeKind: RecordChangeKind;
 }
 
 const dataset = useToiletDatasetStore();
 const localCache = useLocalToiletCacheStore();
 const exportScope = ref<ExportScope>("all");
-const editFilter = ref<EditFilter>("edited");
-const creationFilter = ref<CreationFilter>("all");
+const changeFilter = ref<ChangeFilter>("modified");
+const originFilter = ref<OriginFilter>("all");
 const dateRange = ref<[Date, Date] | null>(null);
 const selectedIds = ref<string[]>([]);
 const importInput = ref<HTMLInputElement | null>(null);
@@ -40,21 +41,18 @@ const allRows = computed<ExportRow[]>(() => {
   return [...records.values()]
       .map((record) => {
         const metadata = localCache.getMetadata(record.id);
-        const source = record.audit.source || "";
         return {
           record,
-          locallyEdited: metadata?.locallyEdited === true,
-          userCreated: record.id.startsWith("local-") || source.startsWith("local-"),
+          origin: metadata?.origin ?? dataset.getRecordOrigin(record.id),
+          changeKind: metadata?.changeKind ?? "none",
         };
       })
       .sort((a, b) => b.record.audit.updatedAt - a.record.audit.updatedAt);
 });
 
 const filteredRows = computed(() => allRows.value.filter((row) => {
-  if (editFilter.value === "edited" && !row.locallyEdited) return false;
-  if (editFilter.value === "unedited" && row.locallyEdited) return false;
-  if (creationFilter.value === "created" && !row.userCreated) return false;
-  if (creationFilter.value === "source" && row.userCreated) return false;
+  if (changeFilter.value !== "all" && row.changeKind !== changeFilter.value) return false;
+  if (originFilter.value !== "all" && row.origin !== originFilter.value) return false;
   if (!dateRange.value) return true;
   const [start, end] = dateRange.value;
   const timestamp = row.record.audit.updatedAt;
@@ -79,6 +77,12 @@ function formatTime(timestamp: number) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(timestamp);
+}
+
+function formatOrigin(origin: RecordOrigin) {
+  if (origin === "fileImport") return "文件导入";
+  if (origin === "localCreate") return "本地新增";
+  return "内置数据";
 }
 
 function toggleAllVisible(value: boolean) {
@@ -135,7 +139,7 @@ function handleImport(event: Event) {
       <div>
         <p class="workspace-eyebrow">数据导入导出</p>
         <h2>管理本地卫生间数据文件</h2>
-        <p>导入普通 v6 JSON 或本项目导出的聚合包；导出前可按本地修改、创建来源和更新时间精确筛选。</p>
+        <p>导入普通 v6 JSON 或本项目导出的聚合包；导出前可按数据来源、本地状态和更新时间精确筛选。</p>
       </div>
     </div>
 
@@ -171,15 +175,16 @@ function handleImport(event: Event) {
           {label: '全部筛选结果', value: 'all'},
           {label: '部分勾选记录', value: 'selected'}
         ]"/>
-        <el-select v-model="editFilter" aria-label="编辑状态筛选">
-          <el-option label="编辑状态：全部" value="all"/>
-          <el-option label="仅用户编辑过" value="edited"/>
-          <el-option label="仅未编辑" value="unedited"/>
+        <el-select v-model="changeFilter" aria-label="本地状态筛选">
+          <el-option label="本地状态：全部" value="all"/>
+          <el-option label="仅未修改" value="none"/>
+          <el-option label="仅已修改" value="modified"/>
         </el-select>
-        <el-select v-model="creationFilter" aria-label="新增数据筛选">
-          <el-option label="创建来源：全部" value="all"/>
-          <el-option label="仅用户新增" value="created"/>
-          <el-option label="仅预置或导入" value="source"/>
+        <el-select v-model="originFilter" aria-label="数据来源筛选">
+          <el-option label="数据来源：全部" value="all"/>
+          <el-option label="仅内置数据" value="bundled"/>
+          <el-option label="仅文件导入" value="fileImport"/>
+          <el-option label="仅本地新增" value="localCreate"/>
         </el-select>
         <el-date-picker v-model="dateRange" type="daterange" range-separator="至" start-placeholder="最后编辑起始日期" end-placeholder="最后编辑结束日期"/>
       </div>
@@ -200,9 +205,8 @@ function handleImport(event: Event) {
           <div class="record-content">
             <div class="record-title-row">
               <h4>{{ row.record.name }}</h4>
-              <el-tag v-if="row.userCreated" type="success" effect="plain">用户新增</el-tag>
-              <el-tag v-else type="info" effect="plain">预置或导入</el-tag>
-              <el-tag v-if="row.locallyEdited" type="warning" effect="plain">用户编辑过</el-tag>
+              <el-tag :type="row.origin === 'localCreate' ? 'success' : 'info'" effect="plain">{{ formatOrigin(row.origin) }}</el-tag>
+              <el-tag v-if="row.changeKind === 'modified'" type="warning" effect="plain">本地已修改</el-tag>
             </div>
             <p>{{ [row.record.address?.province, row.record.address?.city, row.record.address?.description].filter(Boolean).join(" ") || "暂无地址描述" }}</p>
             <span>最后编辑：{{ formatTime(row.record.audit.updatedAt) }}</span>

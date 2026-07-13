@@ -168,7 +168,7 @@ function saveDraft() {
   };
   updated.audit.updatedAt = Date.now();
   updated.audit.reviewed = props.reviewFlow ? true : settings.autoReviewOnEdit || draft.reviewed;
-  if (!localCache.saveEditedToilet(updated, baseUpdatedAt)) {
+  if (!localCache.saveEditedToilet(updated, baseUpdatedAt, dataset.getRecordOrigin(item.id))) {
     ElNotification({
       title: "保存失败",
       message: localCache.storageError || "无法保存到浏览器缓存，原记录未被修改",
@@ -181,7 +181,7 @@ function saveDraft() {
   workspace.selectToilet(updated);
   ElNotification({
     title: "保存成功",
-    message: `${updated.name} 已保存到浏览器缓存，并标记为本地人工修改`,
+    message: `${updated.name} 已保存到浏览器缓存，并标记为本地已修改`,
     type: "success",
     duration: 5000,
   });

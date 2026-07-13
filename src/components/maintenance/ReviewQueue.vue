@@ -156,7 +156,7 @@ function updateReviewState(record: ToiletPlace, reviewed: boolean) {
       updatedBy: "local-review-workflow"
     }
   };
-  if (!localCache.saveEditedToilet(updated, baseUpdatedAt)) {
+  if (!localCache.saveEditedToilet(updated, baseUpdatedAt, dataset.getRecordOrigin(record.id))) {
     ElMessage.error(localCache.storageError || "保存 Review 状态失败，刷新后无法保留修改");
     return false;
   }
@@ -189,7 +189,7 @@ async function reverseGeocodeRecord(record: ToiletPlace) {
         updatedBy: "local-review-reverse-geocode",
       },
     };
-    if (!localCache.saveEditedToilet(updated, baseUpdatedAt)) {
+    if (!localCache.saveEditedToilet(updated, baseUpdatedAt, dataset.getRecordOrigin(record.id))) {
       ElMessage.error(localCache.storageError || "保存反查地址失败");
       return;
     }
@@ -225,6 +225,7 @@ async function acceptSourceConflict(record: ToiletPlace) {
     return;
   }
   dataset.updateToilet(acceptedRecord);
+  dataset.updateRecordOrigin(acceptedRecord.id, "bundled");
   workspace.selectToilet(acceptedRecord);
   ElMessage.success("已采用数据源更新");
 }
@@ -386,7 +387,7 @@ function exportCachedRecords(records: ToiletPlace[]) {
             <el-tag :type="record.audit.reviewed ? 'success' : 'warning'" effect="plain">
               {{ record.audit.reviewed ? "已确认" : "待 Review" }}
             </el-tag>
-            <el-tag v-if="localCache.getMetadata(record.id)?.locallyEdited" type="info" effect="plain">本地人工修改</el-tag>
+            <el-tag v-if="localCache.getMetadata(record.id)?.changeKind === 'modified'" type="info" effect="plain">本地已修改</el-tag>
             <el-tag v-if="localCache.hasConflict(record.id)" type="danger" effect="plain">数据源更新冲突</el-tag>
             <el-tag v-if="localCache.hasToilet(record.id)" type="info" effect="plain">浏览器缓存</el-tag>
           </div>

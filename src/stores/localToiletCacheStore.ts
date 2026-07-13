@@ -1,12 +1,19 @@
 import {defineStore} from "pinia";
 import type {ToiletPlace} from "@/domain/toilet/v6";
+import {
+    inferRecordOrigin,
+    type RecordChangeKind,
+    type RecordOrigin,
+} from "@/domain/toilet/recordState";
 
 const STORAGE_KEY = "itp.local.toilet-cache.v6";
-const CACHE_FORMAT = "itp.local.toilet-cache.v2";
+const CACHE_FORMAT = "itp.local.toilet-cache.v3";
+const LEGACY_CACHE_FORMAT = "itp.local.toilet-cache.v2";
 
 export interface LocalToiletSyncMetadata {
     baseUpdatedAt: number | null;
-    locallyEdited: boolean;
+    origin: RecordOrigin;
+    changeKind: RecordChangeKind;
     conflict?: {
         sourceUpdatedAt: number;
         detectedAt: number;
@@ -24,6 +31,15 @@ interface LocalToiletCachePayload {
     entries: LocalToiletCacheEntry[];
 }
 
+interface LegacyLocalToiletCacheEntry {
+    toilet: ToiletPlace;
+    sync: {
+        baseUpdatedAt: number | null;
+        locallyEdited: boolean;
+        conflict?: LocalToiletSyncMetadata["conflict"];
+    };
+}
+
 function isToiletPlaceArray(value: unknown): value is ToiletPlace[] {
     return Array.isArray(value);
 }
@@ -37,12 +53,24 @@ function readCachedEntries(): LocalToiletCacheEntry[] {
             // v1 缓存没有同步元数据；保守地将其视为人工改动，避免静默覆盖。
             return parsed.map((toilet) => ({
                 toilet,
-                sync: {baseUpdatedAt: null, locallyEdited: true},
+                sync: {baseUpdatedAt: null, origin: inferRecordOrigin(toilet), changeKind: "modified"},
             }));
         }
         if (typeof parsed === "object" && parsed !== null && "format" in parsed && "entries" in parsed) {
-            const payload = parsed as LocalToiletCachePayload;
-            return payload.format === CACHE_FORMAT && Array.isArray(payload.entries) ? payload.entries : [];
+            const payload = parsed as {format?: string; entries?: unknown[]};
+            if (!Array.isArray(payload.entries)) return [];
+            if (payload.format === CACHE_FORMAT) return payload.entries as LocalToiletCacheEntry[];
+            if (payload.format === LEGACY_CACHE_FORMAT) {
+                return (payload.entries as LegacyLocalToiletCacheEntry[]).map((entry) => ({
+                    toilet: entry.toilet,
+                    sync: {
+                        baseUpdatedAt: entry.sync.baseUpdatedAt,
+                        origin: inferRecordOrigin(entry.toilet),
+                        changeKind: entry.sync.locallyEdited ? "modified" : "none",
+                        conflict: entry.sync.conflict,
+                    },
+                }));
+            }
         }
         return [];
     } catch {
@@ -89,17 +117,19 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
         },
         addToilet(toilet: ToiletPlace, metadata: Partial<LocalToiletSyncMetadata> = {}) {
             const existing = this.entries.find((entry) => entry.toilet.id === toilet.id);
+            const origin = existing?.sync.origin ?? metadata.origin ?? inferRecordOrigin(toilet);
             const nextEntry: LocalToiletCacheEntry = {
                 toilet,
                 sync: {
                     baseUpdatedAt: metadata.baseUpdatedAt ?? existing?.sync.baseUpdatedAt ?? null,
-                    locallyEdited: metadata.locallyEdited ?? true,
+                    origin,
+                    changeKind: metadata.changeKind ?? existing?.sync.changeKind ?? (origin === "localCreate" ? "none" : "modified"),
                 },
             };
             return this.commitEntries([nextEntry, ...this.entries.filter((entry) => entry.toilet.id !== toilet.id)]);
         },
-        saveEditedToilet(toilet: ToiletPlace, baseUpdatedAt: number | null) {
-            return this.addToilet(toilet, {baseUpdatedAt, locallyEdited: true});
+        saveEditedToilet(toilet: ToiletPlace, baseUpdatedAt: number | null, origin?: RecordOrigin) {
+            return this.addToilet(toilet, {baseUpdatedAt, origin, changeKind: "modified"});
         },
         updateToilet(toilet: ToiletPlace) {
             const existing = this.entries.find((entry) => entry.toilet.id === toilet.id);
@@ -128,7 +158,8 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
                 ...item,
                 sync: {
                     baseUpdatedAt: conflict.sourceUpdatedAt,
-                    locallyEdited: true,
+                    origin: entry.sync.origin,
+                    changeKind: "modified",
                 },
             } : item);
             return this.commitEntries(nextEntries);
@@ -161,10 +192,14 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
                     continue;
                 }
 
-                if (!entry.sync.locallyEdited) {
+                if (entry.sync.changeKind === "none") {
                     const replacement: LocalToiletCacheEntry = {
                         toilet: sourceToilet,
-                        sync: {baseUpdatedAt: updatedAt, locallyEdited: false},
+                        sync: {
+                            baseUpdatedAt: updatedAt,
+                            origin: entry.sync.origin,
+                            changeKind: "none",
+                        },
                     };
                     nextEntries = nextEntries.map((item) => item.toilet.id === sourceToilet.id ? replacement : item);
                     entriesChanged = true;

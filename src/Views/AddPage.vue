@@ -245,7 +245,7 @@ function saveRecordToBrowser() {
     reviewed: captureMode.value === "full",
     source: captureMode.value === "quick" ? "local-quick-capture" : "local-create-form"
   });
-  if (!localCache.addToilet(record)) {
+  if (!localCache.addToilet(record, {origin: "localCreate", changeKind: "none"})) {
     ElNotification({
       title: "保存失败",
       message: localCache.storageError || "无法保存到浏览器缓存，请检查浏览器存储空间后重试",

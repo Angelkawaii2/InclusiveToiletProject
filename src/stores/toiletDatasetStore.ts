@@ -1,22 +1,26 @@
 import {defineStore} from "pinia";
 import type {ToiletPlace} from "@/domain/toilet/v6";
+import {inferRecordOrigin, type RecordOrigin} from "@/domain/toilet/recordState";
 
 export const useToiletDatasetStore = defineStore("toilet.dataset", {
     state: () => ({
         toilets: [] as ToiletPlace[],
         dataSourceName: "尚未加载",
         importErrors: [] as string[],
-        manuallyImportedIds: [] as string[],
+        recordOrigins: {} as Record<string, RecordOrigin>,
     }),
     getters: {
-        isManuallyImported: (state) => (id: string) => state.manuallyImportedIds.includes(id),
+        getRecordOrigin: (state) => (id: string): RecordOrigin => state.recordOrigins[id] ?? "bundled",
     },
     actions: {
-        replaceDataset(toilets: ToiletPlace[], sourceName: string) {
+        replaceDataset(toilets: ToiletPlace[], sourceName: string, origins: Record<string, RecordOrigin> = {}) {
             this.toilets = toilets;
             this.dataSourceName = sourceName;
             this.importErrors = [];
-            this.manuallyImportedIds = [];
+            this.recordOrigins = Object.fromEntries(toilets.map((toilet) => [
+                toilet.id,
+                origins[toilet.id] ?? inferRecordOrigin(toilet),
+            ]));
         },
         appendToilets(toilets: ToiletPlace[], sourceName: string, errors: string[] = []) {
             const merged = new Map(this.toilets.map((toilet) => [toilet.id, toilet]));
@@ -24,7 +28,10 @@ export const useToiletDatasetStore = defineStore("toilet.dataset", {
             this.toilets = [...merged.values()];
             this.dataSourceName = sourceName;
             this.importErrors = errors;
-            this.manuallyImportedIds = [...new Set([...this.manuallyImportedIds, ...toilets.map((toilet) => toilet.id)])];
+            this.recordOrigins = {
+                ...this.recordOrigins,
+                ...Object.fromEntries(toilets.map((toilet) => [toilet.id, "fileImport" as RecordOrigin])),
+            };
         },
         updateToilet(updatedToilet: ToiletPlace) {
             const index = this.toilets.findIndex((item) => item.id === updatedToilet.id);
@@ -32,7 +39,11 @@ export const useToiletDatasetStore = defineStore("toilet.dataset", {
                 this.toilets.splice(index, 1, updatedToilet);
             } else {
                 this.toilets.push(updatedToilet);
+                this.recordOrigins[updatedToilet.id] = inferRecordOrigin(updatedToilet);
             }
+        },
+        updateRecordOrigin(id: string, origin: RecordOrigin) {
+            this.recordOrigins[id] = origin;
         },
     },
 });

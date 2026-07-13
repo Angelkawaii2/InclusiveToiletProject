@@ -18,6 +18,7 @@ import {useSettingStore} from "@/stores/settingsStore";
 import {ElNotification} from "element-plus";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 import {requestCurrentLocation} from "@/domain/geo/currentLocation";
+import type {RecordChangeKind, RecordOrigin} from "@/domain/toilet/recordState";
 
 const workspace = useWorkspaceStore()
 const dataset = useToiletDatasetStore()
@@ -39,8 +40,8 @@ const activeFilter = ref<"all" | "active" | "inactive">("active")
 const accessibleFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const separateStallFilter = ref<"all" | "yes" | "no" | "unknown">("all")
 const lockedFilter = ref<"all" | "yes" | "no" | "unknown">("all")
-const manualImportFilter = ref<"all" | "yes" | "no">("all")
-const editedFilter = ref<"all" | "yes" | "no">("all")
+const originFilter = ref<"all" | RecordOrigin>("all")
+const changeFilter = ref<"all" | RecordChangeKind>("all")
 const advancedFiltersOpen = ref<string[]>([])
 const mobileFilterOpen = ref(false)
 
@@ -60,7 +61,11 @@ async function loadStaticMockData() {
     const regionResponse = await fetch(`./data/${region.dataUrl.replace("./", "")}`);
     const toilets = await regionResponse.json() as ToiletPlace[];
     const mergedDataset = localCache.mergeWithDataset(toilets);
-    dataset.replaceDataset(mergedDataset.toilets, `${region.name}：${mergedDataset.toilets.length} 条`);
+    const origins = Object.fromEntries(mergedDataset.toilets.map((toilet) => [
+      toilet.id,
+      localCache.getMetadata(toilet.id)?.origin ?? "bundled",
+    ])) as Record<string, RecordOrigin>;
+    dataset.replaceDataset(mergedDataset.toilets, `${region.name}：${mergedDataset.toilets.length} 条`, origins);
     if (mergedDataset.newConflictCount > 0) {
       ElNotification({
         title: "发现数据更新冲突",
@@ -241,11 +246,6 @@ function matchesTriState(value: boolean | null | undefined, filter: "all" | "yes
   return filter === "yes" ? value === true : value === false;
 }
 
-function matchesBinaryState(value: boolean, filter: "all" | "yes" | "no") {
-  if (filter === "all") return true;
-  return filter === "yes" ? value : !value;
-}
-
 const filteredBathrooms = computed(() => {
   const q = keyword.value.trim().toLowerCase()
   const filtered = dataset.toilets.filter((item) => {
@@ -263,8 +263,9 @@ const filteredBathrooms = computed(() => {
     const matchesKind = selectedKinds.value.length === 0 || selectedKinds.value.some((kind) => item.kinds.includes(kind));
     const matchesRestriction = selectedRestrictions.value.length === 0 || selectedRestrictions.value.includes(item.access.restriction);
     const matchesActive = activeFilter.value === "all" || (activeFilter.value === "active" ? item.isActive : !item.isActive);
-    const isManuallyImported = dataset.isManuallyImported(item.id);
-    const isLocallyEdited = localCache.getMetadata(item.id)?.locallyEdited === true;
+    const metadata = localCache.getMetadata(item.id);
+    const origin = metadata?.origin ?? dataset.getRecordOrigin(item.id);
+    const changeKind = metadata?.changeKind ?? "none";
     return matchesKeyword
         && matchesKind
         && matchesRestriction
@@ -272,8 +273,8 @@ const filteredBathrooms = computed(() => {
         && matchesTriState(item.accessibility.hasAccessibleToilet, accessibleFilter.value)
         && matchesTriState(item.accessibility.isSeparateStall, separateStallFilter.value)
         && matchesTriState(item.accessibility.isLocked, lockedFilter.value)
-        && matchesBinaryState(isManuallyImported, manualImportFilter.value)
-        && matchesBinaryState(isLocallyEdited, editedFilter.value);
+        && (originFilter.value === "all" || origin === originFilter.value)
+        && (changeFilter.value === "all" || changeKind === changeFilter.value);
   })
   if (!userLocation.value) return filtered;
   return [...filtered].sort((a, b) => {
@@ -292,8 +293,8 @@ watch([
   accessibleFilter,
   separateStallFilter,
   lockedFilter,
-  manualImportFilter,
-  editedFilter,
+  originFilter,
+  changeFilter,
 ], () => {
   ElNotification.closeAll();
   ElNotification({
@@ -373,18 +374,19 @@ onMounted(() => {
                         <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                       </el-select>
                     </el-form-item>
-                  <el-form-item label="手动导入">
-                    <el-select v-model="manualImportFilter">
-                      <el-option label="全部" value="all"/>
-                      <el-option label="仅手动导入" value="yes"/>
-                      <el-option label="排除手动导入" value="no"/>
+                  <el-form-item label="数据来源">
+                    <el-select v-model="originFilter">
+                      <el-option label="全部来源" value="all"/>
+                      <el-option label="内置数据" value="bundled"/>
+                      <el-option label="文件导入" value="fileImport"/>
+                      <el-option label="本地新增" value="localCreate"/>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="本地编辑">
-                    <el-select v-model="editedFilter">
-                      <el-option label="全部" value="all"/>
-                      <el-option label="仅编辑过" value="yes"/>
-                      <el-option label="仅未编辑" value="no"/>
+                  <el-form-item label="本地状态">
+                    <el-select v-model="changeFilter">
+                      <el-option label="全部状态" value="all"/>
+                      <el-option label="未修改" value="none"/>
+                      <el-option label="已修改" value="modified"/>
                     </el-select>
                   </el-form-item>
                     <el-form-item label="无障碍卫生间">
@@ -523,18 +525,19 @@ onMounted(() => {
                       <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                     </el-select>
                   </el-form-item>
-                <el-form-item label="手动导入">
-                  <el-select v-model="manualImportFilter">
-                    <el-option label="全部" value="all"/>
-                    <el-option label="仅手动导入" value="yes"/>
-                    <el-option label="排除手动导入" value="no"/>
+                <el-form-item label="数据来源">
+                  <el-select v-model="originFilter">
+                    <el-option label="全部来源" value="all"/>
+                    <el-option label="内置数据" value="bundled"/>
+                    <el-option label="文件导入" value="fileImport"/>
+                    <el-option label="本地新增" value="localCreate"/>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="本地编辑">
-                  <el-select v-model="editedFilter">
-                    <el-option label="全部" value="all"/>
-                    <el-option label="仅编辑过" value="yes"/>
-                    <el-option label="仅未编辑" value="no"/>
+                <el-form-item label="本地状态">
+                  <el-select v-model="changeFilter">
+                    <el-option label="全部状态" value="all"/>
+                    <el-option label="未修改" value="none"/>
+                    <el-option label="已修改" value="modified"/>
                   </el-select>
                 </el-form-item>
                   <el-form-item label="无障碍卫生间">
