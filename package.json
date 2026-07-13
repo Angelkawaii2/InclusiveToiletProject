@@ -9,7 +9,9 @@
     "pnpm": ">=11.11.0"
   },
   "scripts": {
+    "predev": "pnpm generate:mock-data",
     "dev": "vite",
+    "prebuild": "pnpm generate:mock-data",
     "build": "vite build",
     "generate:mock-data": "node scripts/generate-mock-v6-data.mjs",
     "preview": "vite preview"

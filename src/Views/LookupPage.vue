@@ -51,21 +51,34 @@ const effectiveBasemapStyle = computed(() => settings.mapStyle === "mono"
     ? "mono"
     : settings.theme === "dark" ? "dark" : "light");
 
-async function loadStaticMockData() {
+async function loadDatasetManifest(root: "data" | "mock-data") {
+  const response = await fetch(`./${root}/manifest.json`);
+  if (!response.ok) throw new Error(`${root} manifest unavailable`);
+  return response.json() as Promise<ToiletDatasetManifest>;
+}
+
+async function loadStaticData() {
   isLoading.value = true;
   loadError.value = "";
   try {
-    const manifestResponse = await fetch("./data/manifest.json");
-    const manifest = await manifestResponse.json() as ToiletDatasetManifest;
+    let dataRoot: "data" | "mock-data" = "data";
+    let manifest = await loadDatasetManifest(dataRoot);
+    if (manifest.regions.length === 0) {
+      dataRoot = "mock-data";
+      manifest = await loadDatasetManifest(dataRoot);
+    }
     const region = manifest.regions[0];
-    const regionResponse = await fetch(`./data/${region.dataUrl.replace("./", "")}`);
+    if (!region) throw new Error("dataset manifest has no regions");
+    const regionResponse = await fetch(`./${dataRoot}/${region.dataUrl.replace("./", "")}`);
+    if (!regionResponse.ok) throw new Error("dataset region unavailable");
     const toilets = await regionResponse.json() as ToiletPlace[];
     const mergedDataset = localCache.mergeWithDataset(toilets);
     const origins = Object.fromEntries(mergedDataset.toilets.map((toilet) => [
       toilet.id,
       localCache.getMetadata(toilet.id)?.origin ?? "bundled",
     ])) as Record<string, RecordOrigin>;
-    dataset.replaceDataset(mergedDataset.toilets, `${region.name}：${mergedDataset.toilets.length} 条`, origins);
+    const sourceLabel = region.isMock ? `${region.name}（Mock）` : region.name;
+    dataset.replaceDataset(mergedDataset.toilets, `${sourceLabel}：${mergedDataset.toilets.length} 条`, origins);
     if (mergedDataset.newConflictCount > 0) {
       ElNotification({
         title: "发现数据更新冲突",
@@ -78,7 +91,7 @@ async function loadStaticMockData() {
     await nextTick();
     renderPoints();
   } catch (err) {
-    loadError.value = "静态模拟数据加载失败。";
+    loadError.value = "静态数据加载失败。";
   } finally {
     isLoading.value = false;
   }
@@ -311,7 +324,7 @@ watch([userLocation, userLocationAccuracy], ([location, accuracy]) => {
 }, {flush: "post"});
 
 onMounted(() => {
-  loadStaticMockData();
+  loadStaticData();
   void updateCurrentLocation(false, true);
 })
 </script>
@@ -455,6 +468,7 @@ onMounted(() => {
                 <el-tag v-if="item.accessibility.hasAccessibleToilet" size="small" type="success">无障碍</el-tag>
                 <el-tag v-if="item.facilities.parkingAllowed" size="small" type="info">可停车</el-tag>
                 <el-tag v-if="item.audit.reviewed" size="small" type="success" effect="plain">已人工核验</el-tag>
+                <el-tag v-if="item.audit.isMock" size="small" type="warning" effect="plain">Mock</el-tag>
               </div>
             </div>
             <p class="address">{{ formatAddress(item) }}</p>
@@ -598,6 +612,7 @@ onMounted(() => {
             <el-tag :type="detailToilet.audit.reviewed ? 'success' : 'warning'">
               {{ detailToilet.audit.reviewed ? "已 Review" : "未 Review" }}
             </el-tag>
+            <el-tag v-if="detailToilet.audit.isMock" type="warning" effect="plain">Mock</el-tag>
           </div>
         </section>
 

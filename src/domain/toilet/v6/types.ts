@@ -39,6 +39,7 @@ export interface AuditMetadata {
     createdBy?: string;
     updatedBy?: string;
     source?: string;
+    isMock?: boolean;
 }
 
 export interface GeoPoint {
@@ -126,6 +127,7 @@ export interface ToiletDatasetRegion {
     recordCount: number;
     dataUrl: string;
     sha256?: string;
+    isMock?: boolean;
 }
 
 export interface ToiletDatasetManifest {

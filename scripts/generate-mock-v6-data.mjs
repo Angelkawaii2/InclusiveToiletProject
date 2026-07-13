@@ -1,8 +1,8 @@
 import {mkdirSync, readFileSync, writeFileSync} from "node:fs";
 import {dirname, resolve} from "node:path";
 
-const outputPath = resolve("public/data/regions/mock-qingdao.json");
-const manifestPath = resolve("public/data/manifest.json");
+const outputPath = resolve("public/mock-data/regions/mock-qingdao.json");
+const manifestPath = resolve("public/mock-data/manifest.json");
 const projectVersions = JSON.parse(readFileSync(resolve("project-versions.json"), "utf8"));
 const now = Date.now();
 
@@ -124,7 +124,8 @@ const records = Array.from({length: 200}, (_, index) => {
             createdAt: now - index * 86400000,
             updatedAt: now - index * 3600000,
             reviewed: false,
-            source: "mock-generator"
+            source: "mock-generator",
+            isMock: true
         }
     };
 });
@@ -139,7 +140,8 @@ const manifest = {
             bbox: [119.45, 35.55, 121.25, 37.15],
             updatedAt: now,
             recordCount: records.length,
-            dataUrl: "./regions/mock-qingdao.json"
+            dataUrl: "./regions/mock-qingdao.json",
+            isMock: true
         }
     ]
 };

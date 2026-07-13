@@ -36,7 +36,8 @@ pnpm generate:mock-data
 ## 数据与本地存储
 
 - 数据结构：v6 `ToiletPlace`，定义位于 [`src/domain/toilet/v6`](./src/domain/toilet/v6)。
-- 静态数据：通过 `public/data/manifest.json` 及其区域 JSON 加载；当前内置 200 条青岛模拟记录。
+- 真实静态数据：通过 `public/data/manifest.json` 及其区域 JSON 加载。
+- Mock 数据：开发和构建前自动生成到被 Git 忽略的 `public/mock-data`，与真实数据目录隔离；当前用于生成 200 条青岛测试记录。
 - 浏览器缓存：新增、编辑和 Review 产生的本地记录保存于 `localStorage`。缓存仅存在于当前浏览器和设备，应通过“数据导入导出”页面定期导出备份或传输。
 - 离线缓存：PWA 使用 Cache Storage 保存应用资源和静态数据资源。它不替代浏览器记录缓存，也不等同于云端同步。
 - 导出格式：项目聚合包为 JSON，包含导出时间、数据版本和去重后的记录列表；可再次导入本项目。

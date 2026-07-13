@@ -43,7 +43,7 @@ export default defineConfig({
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,json,webmanifest}'],
                 runtimeCaching: [
                     {
-                        urlPattern: ({url}) => url.pathname.includes('/data/'),
+                        urlPattern: ({url}) => url.pathname.includes('/data/') || url.pathname.includes('/mock-data/'),
                         handler: 'CacheFirst',
                         options: {
                             cacheName: 'itp-static-data',

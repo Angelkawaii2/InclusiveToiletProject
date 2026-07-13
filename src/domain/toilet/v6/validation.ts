@@ -47,5 +47,6 @@ export function isV6ToiletPlace(value: unknown): value is ToiletPlace {
     if (!isNullableBoolean(value.accessibility.isSeparateStall)) return false;
     if (!isNullableBoolean(value.accessibility.isLocked)) return false;
     if (!isObject(value.audit)) return false;
+    if (value.audit.isMock !== undefined && typeof value.audit.isMock !== "boolean") return false;
     return typeof value.audit.createdAt === "number" && typeof value.audit.updatedAt === "number";
 }

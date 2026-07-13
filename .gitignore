@@ -29,3 +29,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Generated mock datasets; regenerate with pnpm generate:mock-data.
+/public/mock-data/
