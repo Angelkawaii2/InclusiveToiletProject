@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import type {ToiletPlace} from "@/domain/toilet/v6";
+import {normalizeToiletKinds, type ToiletPlace} from "@/domain/toilet/v6";
 import {
     inferRecordOrigin,
     type RecordChangeKind,
@@ -44,6 +44,10 @@ function isToiletPlaceArray(value: unknown): value is ToiletPlace[] {
     return Array.isArray(value);
 }
 
+function normalizeCachedToilet(toilet: ToiletPlace): ToiletPlace {
+    return {...toilet, kinds: normalizeToiletKinds(toilet.kinds)};
+}
+
 function readCachedEntries(): LocalToiletCacheEntry[] {
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -52,17 +56,22 @@ function readCachedEntries(): LocalToiletCacheEntry[] {
         if (isToiletPlaceArray(parsed)) {
             // v1 缓存没有同步元数据；保守地将其视为人工改动，避免静默覆盖。
             return parsed.map((toilet) => ({
-                toilet,
+                toilet: normalizeCachedToilet(toilet),
                 sync: {baseUpdatedAt: null, origin: inferRecordOrigin(toilet), changeKind: "modified"},
             }));
         }
         if (typeof parsed === "object" && parsed !== null && "format" in parsed && "entries" in parsed) {
             const payload = parsed as {format?: string; entries?: unknown[]};
             if (!Array.isArray(payload.entries)) return [];
-            if (payload.format === CACHE_FORMAT) return payload.entries as LocalToiletCacheEntry[];
+            if (payload.format === CACHE_FORMAT) {
+                return (payload.entries as LocalToiletCacheEntry[]).map((entry) => ({
+                    ...entry,
+                    toilet: normalizeCachedToilet(entry.toilet),
+                }));
+            }
             if (payload.format === LEGACY_CACHE_FORMAT) {
                 return (payload.entries as LegacyLocalToiletCacheEntry[]).map((entry) => ({
-                    toilet: entry.toilet,
+                    toilet: normalizeCachedToilet(entry.toilet),
                     sync: {
                         baseUpdatedAt: entry.sync.baseUpdatedAt,
                         origin: inferRecordOrigin(entry.toilet),

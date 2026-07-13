@@ -8,8 +8,7 @@ export type ToiletKind =
     | "allGender"
     | "male"
     | "female"
-    | "family"
-    | "accessible"
+    | "familyAccessible"
     | "other";
 
 export type AccessRestriction =

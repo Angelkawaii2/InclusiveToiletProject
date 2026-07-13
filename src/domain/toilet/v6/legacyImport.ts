@@ -96,12 +96,15 @@ export function normalizeImportedToilets(input: unknown): ImportResult {
     const errors: string[] = [];
 
     items.forEach((item, index) => {
-        if (isV6ToiletPlace(item)) {
+        const normalizedItem = typeof item === "object" && item !== null && "kinds" in item
+            ? {...item, kinds: normalizeToiletKinds((item as {kinds?: unknown}).kinds)}
+            : item;
+        if (isV6ToiletPlace(normalizedItem)) {
             toilets.push({
-                ...item,
+                ...normalizedItem,
                 audit: {
-                    ...item.audit,
-                    reviewed: item.audit.reviewed ?? false,
+                    ...normalizedItem.audit,
+                    reviewed: normalizedItem.audit.reviewed ?? false,
                 },
             });
             return;

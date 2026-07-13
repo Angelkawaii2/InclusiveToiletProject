@@ -41,8 +41,7 @@ function maybe(value, chance = 0.75) {
 function buildKinds(index) {
     const kinds = new Set();
     kinds.add(index % 5 === 0 ? "allGender" : pick(["male", "female"]));
-    if (index % 3 === 0) kinds.add("accessible");
-    if (index % 8 === 0) kinds.add("family");
+    if (index % 3 === 0 || index % 8 === 0) kinds.add("familyAccessible");
     return [...kinds];
 }
 
@@ -52,7 +51,7 @@ const records = Array.from({length: 200}, (_, index) => {
     const lon = Number((baseLon + (rng() - 0.5) * 0.08).toFixed(6));
     const lat = Number((baseLat + (rng() - 0.5) * 0.06).toFixed(6));
     const kinds = buildKinds(index);
-    const isAccessible = kinds.includes("accessible");
+    const isAccessible = kinds.includes("familyAccessible");
     const placeType = pick(placeWords);
     const id = `mock-qingdao-${String(index + 1).padStart(3, "0")}`;
 

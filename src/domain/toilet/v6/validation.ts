@@ -25,8 +25,11 @@ function isAccessRestriction(value: unknown): value is AccessRestriction {
 
 export function normalizeToiletKinds(kinds: unknown): ToiletKind[] {
     if (!Array.isArray(kinds)) return ["other"];
-    const normalized = kinds.filter(isToiletKind);
-    return normalized.length > 0 ? normalized : ["other"];
+    const normalized = kinds
+        .map((kind) => kind === "family" || kind === "accessible" ? "familyAccessible" : kind)
+        .filter(isToiletKind);
+    const uniqueKinds = [...new Set(normalized)];
+    return uniqueKinds.length > 0 ? uniqueKinds : ["other"];
 }
 
 export function isV6ToiletPlace(value: unknown): value is ToiletPlace {

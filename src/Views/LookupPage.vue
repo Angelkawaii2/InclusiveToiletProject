@@ -4,13 +4,14 @@ import ToiletMap from "@/components/map/ToiletMap.vue";
 import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {
   ACCESS_RESTRICTION_OPTIONS,
+  normalizeToiletKinds,
   TOILET_KIND_OPTIONS,
   type AccessRestriction,
   type ToiletDatasetManifest,
   type ToiletKind,
   type ToiletPlace
 } from "@/domain/toilet/v6";
-import {Aim, Edit, Location, Position, Search, View} from "@element-plus/icons-vue";
+import {Edit, Location, Position, Search, View} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
@@ -71,7 +72,10 @@ async function loadStaticData() {
     if (!region) throw new Error("dataset manifest has no regions");
     const regionResponse = await fetch(`./${dataRoot}/${region.dataUrl.replace("./", "")}`);
     if (!regionResponse.ok) throw new Error("dataset region unavailable");
-    const toilets = await regionResponse.json() as ToiletPlace[];
+    const toilets = (await regionResponse.json() as ToiletPlace[]).map((toilet) => ({
+      ...toilet,
+      kinds: normalizeToiletKinds(toilet.kinds),
+    }));
     const mergedDataset = localCache.mergeWithDataset(toilets);
     const origins = Object.fromEntries(mergedDataset.toilets.map((toilet) => [
       toilet.id,
@@ -228,8 +232,7 @@ function getKindLabel(kind: ToiletKind) {
 function getKindTagType(kind: ToiletKind) {
   if (kind === "male") return "primary";
   if (kind === "female") return "danger";
-  if (kind === "accessible") return "success";
-  if (kind === "family") return "warning";
+  if (kind === "familyAccessible") return "success";
   if (kind === "allGender") return "success";
   return "info";
 }
@@ -370,11 +373,12 @@ onMounted(() => {
                     <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="是否启用">
-                  <el-select v-model="activeFilter">
+                <el-form-item label="单独隔间">
+                  <el-select v-model="separateStallFilter">
                     <el-option label="全部" value="all"/>
-                    <el-option label="启用" value="active"/>
-                    <el-option label="停用" value="inactive"/>
+                    <el-option label="是" value="yes"/>
+                    <el-option label="否" value="no"/>
+                    <el-option label="未知" value="unknown"/>
                   </el-select>
                 </el-form-item>
                 </div>
@@ -385,6 +389,13 @@ onMounted(() => {
                     <el-form-item label="进入限制">
                       <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
                         <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否启用">
+                      <el-select v-model="activeFilter">
+                        <el-option label="全部" value="all"/>
+                        <el-option label="启用" value="active"/>
+                        <el-option label="停用" value="inactive"/>
                       </el-select>
                     </el-form-item>
                   <el-form-item label="数据来源">
@@ -407,14 +418,6 @@ onMounted(() => {
                         <el-option label="全部" value="all"/>
                         <el-option label="有" value="yes"/>
                         <el-option label="无" value="no"/>
-                        <el-option label="未知" value="unknown"/>
-                      </el-select>
-                    </el-form-item>
-                    <el-form-item label="单独隔间">
-                      <el-select v-model="separateStallFilter">
-                        <el-option label="全部" value="all"/>
-                        <el-option label="是" value="yes"/>
-                        <el-option label="否" value="no"/>
                         <el-option label="未知" value="unknown"/>
                       </el-select>
                     </el-form-item>
@@ -442,7 +445,7 @@ onMounted(() => {
           <div class="map-legend">
             <span><i class="legend-dot male"></i>男厕</span>
             <span><i class="legend-dot female"></i>女厕</span>
-            <span><i class="legend-dot neutral"></i>中立/无性别</span>
+            <span><i class="legend-dot neutral"></i>无性别/单间</span>
             <span><i class="legend-dot mixed"></i>混合/其他</span>
           </div>
           <el-alert v-if="loadError" :title="loadError" show-icon type="error"/>
@@ -472,12 +475,8 @@ onMounted(() => {
               </div>
             </div>
             <p class="address">{{ formatAddress(item) }}</p>
-            <div class="result-footer">
-              <div class="coord">
-                <el-icon><Aim /></el-icon>
-                {{ item.location?.lat?.toFixed?.(5) ?? "?" }}, {{ item.location?.lon?.toFixed?.(5) ?? "?" }}
-              </div>
-              <span v-if="userLocation" class="distance">{{ formatDistance(item) }}</span>
+            <div v-if="userLocation" class="result-footer">
+              <span class="distance">{{ formatDistance(item) }}</span>
             </div>
             <div class="item-actions">
               <el-button size="small" @click.stop="viewDetails(item)">
@@ -522,11 +521,12 @@ onMounted(() => {
                     <el-option v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="是否启用">
-                  <el-select v-model="activeFilter">
+                <el-form-item label="单独隔间">
+                  <el-select v-model="separateStallFilter">
                     <el-option label="全部" value="all"/>
-                    <el-option label="启用" value="active"/>
-                    <el-option label="停用" value="inactive"/>
+                    <el-option label="是" value="yes"/>
+                    <el-option label="否" value="no"/>
+                    <el-option label="未知" value="unknown"/>
                   </el-select>
                 </el-form-item>
               </div>
@@ -537,6 +537,13 @@ onMounted(() => {
                   <el-form-item label="进入限制">
                     <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
                       <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="是否启用">
+                    <el-select v-model="activeFilter">
+                      <el-option label="全部" value="all"/>
+                      <el-option label="启用" value="active"/>
+                      <el-option label="停用" value="inactive"/>
                     </el-select>
                   </el-form-item>
                 <el-form-item label="数据来源">
@@ -559,14 +566,6 @@ onMounted(() => {
                       <el-option label="全部" value="all"/>
                       <el-option label="有" value="yes"/>
                       <el-option label="无" value="no"/>
-                      <el-option label="未知" value="unknown"/>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="单独隔间">
-                    <el-select v-model="separateStallFilter">
-                      <el-option label="全部" value="all"/>
-                      <el-option label="是" value="yes"/>
-                      <el-option label="否" value="no"/>
                       <el-option label="未知" value="unknown"/>
                     </el-select>
                   </el-form-item>
@@ -985,7 +984,6 @@ onMounted(() => {
 }
 
 .result-item p,
-.coord,
 .distance {
   margin: 0;
   color: var(--itp-text-muted);
@@ -998,7 +996,6 @@ onMounted(() => {
 }
 
 .result-footer,
-.coord,
 .item-actions {
   display: flex;
   align-items: center;
@@ -1007,10 +1004,6 @@ onMounted(() => {
 .result-footer {
   justify-content: space-between;
   gap: 10px;
-}
-
-.coord {
-  gap: 4px;
 }
 
 .item-actions {
@@ -1268,8 +1261,7 @@ onMounted(() => {
   }
 
   .result-item > div:first-child p,
-  .address,
-  .coord {
+  .address {
     display: none;
   }
 

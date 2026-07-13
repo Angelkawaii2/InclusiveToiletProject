@@ -4,8 +4,7 @@ export const TOILET_KIND_VALUES: ToiletKind[] = [
     "allGender",
     "male",
     "female",
-    "family",
-    "accessible",
+    "familyAccessible",
     "other",
 ];
 
@@ -18,11 +17,10 @@ export const ACCESS_RESTRICTION_VALUES: AccessRestriction[] = [
 ];
 
 export const TOILET_KIND_OPTIONS: Array<{ label: string; value: ToiletKind }> = [
-    {label: "无性别/包容", value: "allGender"},
+    {label: "无性别/单间", value: "allGender"},
     {label: "男厕", value: "male"},
     {label: "女厕", value: "female"},
-    {label: "家庭卫生间", value: "family"},
-    {label: "无障碍", value: "accessible"},
+    {label: "家庭/无障碍", value: "familyAccessible"},
     {label: "其他", value: "other"},
 ];
 
