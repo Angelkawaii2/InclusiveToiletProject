@@ -13,7 +13,6 @@ export const ACCESS_RESTRICTION_VALUES: AccessRestriction[] = [
     "public",
     "customersOnly",
     "ticketedArea",
-    "staffOnly",
     "private",
     "unknown",
 ];
@@ -31,7 +30,6 @@ export const ACCESS_RESTRICTION_OPTIONS: Array<{ label: string; value: AccessRes
     {label: "公共开放", value: "public"},
     {label: "仅顾客", value: "customersOnly"},
     {label: "票区内", value: "ticketedArea"},
-    {label: "仅员工", value: "staffOnly"},
     {label: "私人区域", value: "private"},
     {label: "未知", value: "unknown"},
 ];

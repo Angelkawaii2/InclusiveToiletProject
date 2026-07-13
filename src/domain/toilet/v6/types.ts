@@ -16,7 +16,6 @@ export type AccessRestriction =
     | "public"
     | "customersOnly"
     | "ticketedArea"
-    | "staffOnly"
     | "private"
     | "unknown";
 
