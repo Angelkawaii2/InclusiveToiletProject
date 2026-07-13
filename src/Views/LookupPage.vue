@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 
 import ToiletMap from "@/components/map/ToiletMap.vue";
+import FilterLabel from "@/components/filters/FilterLabel.vue";
 import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {
   ACCESS_RESTRICTION_OPTIONS,
@@ -386,19 +387,28 @@ onMounted(() => {
               <el-collapse v-model="advancedFiltersOpen" class="advanced-filter-collapse">
                 <el-collapse-item name="accessibility" title="更多条件">
                   <div class="filter-grid advanced-filter-grid">
-                    <el-form-item label="进入限制">
+                    <el-form-item>
+                      <template #label>
+                        <FilterLabel label="进入限制" description="按卫生间所在区域的进入条件筛选，例如公共开放、仅顾客或票区内。"/>
+                      </template>
                       <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
                         <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="是否启用">
+                    <el-form-item>
+                      <template #label>
+                        <FilterLabel label="是否启用" description="筛选当前可用的记录，停用记录通常表示点位暂时关闭或已失效。"/>
+                      </template>
                       <el-select v-model="activeFilter">
                         <el-option label="全部" value="all"/>
                         <el-option label="启用" value="active"/>
                         <el-option label="停用" value="inactive"/>
                       </el-select>
                     </el-form-item>
-                  <el-form-item label="数据来源">
+                  <el-form-item>
+                    <template #label>
+                      <FilterLabel label="数据来源" description="按记录最初进入项目的方式筛选：内置数据、文件导入或本地新增。"/>
+                    </template>
                     <el-select v-model="originFilter">
                       <el-option label="全部来源" value="all"/>
                       <el-option label="内置数据" value="bundled"/>
@@ -406,14 +416,20 @@ onMounted(() => {
                       <el-option label="本地新增" value="localCreate"/>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="本地状态">
+                  <el-form-item>
+                    <template #label>
+                      <FilterLabel label="本地状态" description="筛选记录载入后是否在当前浏览器中被人工修改过。"/>
+                    </template>
                     <el-select v-model="changeFilter">
                       <el-option label="全部状态" value="all"/>
                       <el-option label="未修改" value="none"/>
                       <el-option label="已修改" value="modified"/>
                     </el-select>
                   </el-form-item>
-                    <el-form-item label="无障碍卫生间">
+                    <el-form-item>
+                      <template #label>
+                        <FilterLabel label="无障碍卫生间" description="按点位是否设有可供行动不便人士使用的无障碍卫生间筛选。"/>
+                      </template>
                       <el-select v-model="accessibleFilter">
                         <el-option label="全部" value="all"/>
                         <el-option label="有" value="yes"/>
@@ -421,7 +437,10 @@ onMounted(() => {
                         <el-option label="未知" value="unknown"/>
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="是否上锁">
+                    <el-form-item>
+                      <template #label>
+                        <FilterLabel label="是否上锁" description="按无障碍卫生间是否通常处于上锁状态筛选。"/>
+                      </template>
                       <el-select v-model="lockedFilter">
                         <el-option label="全部" value="all"/>
                         <el-option label="是" value="yes"/>
@@ -534,19 +553,28 @@ onMounted(() => {
             <el-collapse v-model="advancedFiltersOpen" class="advanced-filter-collapse">
               <el-collapse-item name="accessibility" title="更多条件">
                 <div class="filter-grid mobile-filter-grid">
-                  <el-form-item label="进入限制">
+                  <el-form-item>
+                    <template #label>
+                      <FilterLabel label="进入限制" description="按卫生间所在区域的进入条件筛选，例如公共开放、仅顾客或票区内。"/>
+                    </template>
                     <el-select v-model="selectedRestrictions" clearable collapse-tags collapse-tags-tooltip multiple placeholder="全部限制">
                       <el-option v-for="item in ACCESS_RESTRICTION_OPTIONS" :key="item.value" :label="item.label" :value="item.value"/>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="是否启用">
+                  <el-form-item>
+                    <template #label>
+                      <FilterLabel label="是否启用" description="筛选当前可用的记录，停用记录通常表示点位暂时关闭或已失效。"/>
+                    </template>
                     <el-select v-model="activeFilter">
                       <el-option label="全部" value="all"/>
                       <el-option label="启用" value="active"/>
                       <el-option label="停用" value="inactive"/>
                     </el-select>
                   </el-form-item>
-                <el-form-item label="数据来源">
+                <el-form-item>
+                  <template #label>
+                    <FilterLabel label="数据来源" description="按记录最初进入项目的方式筛选：内置数据、文件导入或本地新增。"/>
+                  </template>
                   <el-select v-model="originFilter">
                     <el-option label="全部来源" value="all"/>
                     <el-option label="内置数据" value="bundled"/>
@@ -554,14 +582,20 @@ onMounted(() => {
                     <el-option label="本地新增" value="localCreate"/>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="本地状态">
+                <el-form-item>
+                  <template #label>
+                    <FilterLabel label="本地状态" description="筛选记录载入后是否在当前浏览器中被人工修改过。"/>
+                  </template>
                   <el-select v-model="changeFilter">
                     <el-option label="全部状态" value="all"/>
                     <el-option label="未修改" value="none"/>
                     <el-option label="已修改" value="modified"/>
                   </el-select>
                 </el-form-item>
-                  <el-form-item label="无障碍卫生间">
+                  <el-form-item>
+                    <template #label>
+                      <FilterLabel label="无障碍卫生间" description="按点位是否设有可供行动不便人士使用的无障碍卫生间筛选。"/>
+                    </template>
                     <el-select v-model="accessibleFilter">
                       <el-option label="全部" value="all"/>
                       <el-option label="有" value="yes"/>
@@ -569,7 +603,10 @@ onMounted(() => {
                       <el-option label="未知" value="unknown"/>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="是否上锁">
+                  <el-form-item>
+                    <template #label>
+                      <FilterLabel label="是否上锁" description="按无障碍卫生间是否通常处于上锁状态筛选。"/>
+                    </template>
                     <el-select v-model="lockedFilter">
                       <el-option label="全部" value="all"/>
                       <el-option label="是" value="yes"/>
