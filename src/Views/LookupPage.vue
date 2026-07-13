@@ -4,14 +4,13 @@ import ToiletMap from "@/components/map/ToiletMap.vue";
 import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {
   ACCESS_RESTRICTION_OPTIONS,
-  normalizeImportedToilets,
   TOILET_KIND_OPTIONS,
   type AccessRestriction,
   type ToiletDatasetManifest,
   type ToiletKind,
   type ToiletPlace
 } from "@/domain/toilet/v6";
-import {Aim, Edit, Location, Position, Search, View, UploadFilled} from "@element-plus/icons-vue";
+import {Aim, Edit, Location, Position, Search, View} from "@element-plus/icons-vue";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
 import {useToiletDatasetStore} from "@/stores/toiletDatasetStore";
 import {useLocalToiletCacheStore} from "@/stores/localToiletCacheStore";
@@ -20,7 +19,6 @@ import {ElNotification} from "element-plus";
 import {getLocationPermissionState} from "@/domain/geo/locationPermission";
 import {requestCurrentLocation} from "@/domain/geo/currentLocation";
 
-const files = ref<File[]>([])
 const workspace = useWorkspaceStore()
 const dataset = useToiletDatasetStore()
 const localCache = useLocalToiletCacheStore()
@@ -51,43 +49,6 @@ const detailDrawerSize = computed(() => "420px");
 const effectiveBasemapStyle = computed(() => settings.mapStyle === "mono"
     ? "mono"
     : settings.theme === "dark" ? "dark" : "light");
-
-function handleFiles(event: Event) {
-  const selectFiles = (event.target as HTMLInputElement).files;
-  if (!selectFiles) return;
-  files.value = Array.from(selectFiles);
-  readFiles(files.value)
-}
-
-function readFiles(fs: File[]) {
-  fs.forEach((file) => {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const fileContent = e.target.result;
-      try {
-        const jsonData = JSON.parse(fileContent as string);
-        const imported = normalizeImportedToilets(jsonData);
-        dataset.appendToilets(
-            imported.toilets,
-            `本地导入 ${imported.toilets.length} 条，当前共 ${dataset.toilets.length + imported.toilets.length} 条`,
-            imported.errors
-        );
-        loadError.value = imported.errors.length > 0 ? imported.errors.join("；") : "";
-        renderPoints();
-      } catch (err) {
-        loadError.value = "导入失败：JSON 格式不正确或不是支持的数据结构。";
-      }
-    };
-
-    reader.onerror = () => {
-      loadError.value = "读取文件失败，请重新选择 JSON 文件。";
-    };
-
-    reader.readAsText(file);
-
-  })
-}
 
 async function loadStaticMockData() {
   isLoading.value = true;
@@ -356,21 +317,6 @@ onMounted(() => {
 
 <template>
   <section class="workspace-page">
-    <div class="workspace-hero search-hero">
-      <div>
-        <p class="workspace-eyebrow">搜索浏览</p>
-        <h2>查看本地或静态数据里的卫生间</h2>
-        <p>默认加载 v6 静态模拟数据，也可以继续导入 JSON 文件叠加预览。</p>
-      </div>
-      <div class="hero-actions">
-        <label class="import-button">
-          <el-icon><UploadFilled /></el-icon>
-          导入 JSON
-          <input ref="fileInput" accept=".json" multiple type="file" @change="handleFiles"/>
-        </label>
-      </div>
-    </div>
-
     <div class="search-layout">
       <div class="map-column">
         <toilet-map
@@ -788,35 +734,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.search-hero {
-  border-color: rgba(51, 110, 190, 0.2);
-  background: var(--itp-search-hero);
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.import-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 16px;
-  border-radius: 6px;
-  background: var(--itp-primary);
-  color: #fff;
-  cursor: pointer;
-}
-
-.import-button input {
-  display: none;
-}
-
 .search-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.9fr);
@@ -1172,10 +1089,6 @@ onMounted(() => {
 }
 
 @media (max-width: 640px) {
-  .search-hero {
-    display: none;
-  }
-
   .search-layout {
     gap: 8px;
     margin-top: 0;
