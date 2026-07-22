@@ -1169,7 +1169,7 @@ onMounted(() => {
     position: sticky;
     top: 0;
     z-index: 3;
-    margin: -10px -10px 0;
+    margin: 0;
     border-bottom: 1px solid var(--itp-border);
     background: var(--itp-surface);
   }

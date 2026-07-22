@@ -260,6 +260,31 @@ watchEffect(() => {
 }
 
 @media (max-width: 720px) {
+  .app-shell {
+    width: 100%;
+    max-width: none;
+  }
+
+  .app-header {
+    margin-bottom: 0;
+    padding: 8px 12px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .workspace-tabs {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 8px 0 0;
+  }
+
+  .workspace-tabs :deep(.el-tabs__header) {
+    margin: 0 12px 8px;
+  }
+
   .global-capture-button {
     right: 16px;
     bottom: 18px;
@@ -286,6 +311,7 @@ watchEffect(() => {
   }
 
   .app-footer {
+    padding: 10px 12px 0;
     justify-content: flex-start;
     flex-wrap: wrap;
   }
