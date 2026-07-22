@@ -811,12 +811,36 @@ function clearCachedRecords() {
 }
 
 @media (max-width: 760px) {
-  .form-grid {
-    grid-template-columns: 1fr;
+  .quick-capture {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 12px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
   }
 
-  .quick-capture {
-    padding: 16px;
+  .create-layout {
+    gap: 0;
+  }
+
+  .full-form-toolbar {
+    margin-bottom: 0;
+    padding: 10px 12px;
+  }
+
+  .form-section,
+  .preview-panel {
+    margin-bottom: 8px;
+    padding: 14px 12px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 
   .quick-heading,
@@ -831,8 +855,8 @@ function clearCachedRecords() {
   }
 
   .quick-save-bar {
-    margin: 6px -16px -16px;
-    padding: 12px 16px;
+    margin: 6px -12px -12px;
+    padding: 12px;
   }
 
   .quick-save-bar .el-button {

@@ -266,12 +266,8 @@ watchEffect(() => {
   }
 
   .app-header {
-    margin-bottom: 0;
+    margin-bottom: 8px;
     padding: 8px 12px;
-    border-right: 0;
-    border-left: 0;
-    border-radius: 0;
-    box-shadow: none;
   }
 
   .workspace-tabs {
@@ -282,7 +278,7 @@ watchEffect(() => {
   }
 
   .workspace-tabs :deep(.el-tabs__header) {
-    margin: 0 12px 8px;
+    margin: 0 0 8px;
   }
 
   .global-capture-button {
@@ -310,8 +306,16 @@ watchEffect(() => {
     padding: 12px;
   }
 
+  :global(.capture-dialog .el-dialog__body) {
+    padding: 0;
+  }
+
+  :global(.capture-dialog.el-dialog.is-fullscreen) {
+    padding: 0;
+  }
+
   .app-footer {
-    padding: 10px 12px 0;
+    padding: 10px 0 0;
     justify-content: flex-start;
     flex-wrap: wrap;
   }
