@@ -8,6 +8,7 @@ export const SETTINGS_KEYS = {
     AUTO_UPDATE_PWA: "autoUpdatePwa",
     AUTO_REFRESH_GPS: "autoRefreshGps",
     MAP_STYLE: "mapStyle",
+    SHOW_MOCK_DATA: "showMockData",
 } as const;
 
 export type ThemeMode = "light" | "dark";
@@ -27,6 +28,7 @@ export const useSettingStore = defineStore("global.settings", {
         autoUpdatePwa: localStorage.getItem(SETTINGS_KEYS.AUTO_UPDATE_PWA) === "true",
         autoRefreshGps: localStorage.getItem(SETTINGS_KEYS.AUTO_REFRESH_GPS) === "true",
         mapStyle: getMapStyle() as MapStyle,
+        showMockData: localStorage.getItem(SETTINGS_KEYS.SHOW_MOCK_DATA) === "true",
     }),
     actions: {
         updateDebugMode(isDebug: boolean) {
@@ -59,6 +61,10 @@ export const useSettingStore = defineStore("global.settings", {
         updateMapStyle(mapStyle: MapStyle) {
             this.mapStyle = mapStyle;
             localStorage.setItem(SETTINGS_KEYS.MAP_STYLE, mapStyle);
+        },
+        updateShowMockData(showMockData: boolean) {
+            this.showMockData = showMockData;
+            localStorage.setItem(SETTINGS_KEYS.SHOW_MOCK_DATA, String(showMockData));
         },
     },
 });

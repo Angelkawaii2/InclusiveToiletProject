@@ -43,6 +43,15 @@ const autoRefreshGps = computed({
   }
 });
 
+const showMockData = computed({
+  get: () => setting.showMockData,
+  set: (value: boolean) => {
+    if (setting.showMockData === value) return;
+    setting.updateShowMockData(value);
+    notifySuccess(value ? "已显示 Mock 模拟数据" : "已隐藏 Mock 模拟数据");
+  }
+});
+
 const mapStyle = computed({
   get: () => setting.mapStyle,
   set: (value: MapStyle) => {
@@ -72,6 +81,9 @@ const mapStyle = computed({
 
           <el-text class="label">自动刷新 GPS 位置</el-text>
           <el-switch v-model="autoRefreshGps" active-text="每 15 秒刷新" inactive-text="仅手动刷新"/>
+
+          <el-text class="label">显示 Mock 模拟数据</el-text>
+          <el-switch v-model="showMockData" active-text="显示" inactive-text="隐藏"/>
 
           <template v-if="isDebug">
             <el-text class="label">当前语言</el-text>

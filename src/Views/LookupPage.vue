@@ -30,6 +30,7 @@ const settings = useSettingStore()
 const keyword = ref("")
 const isLoading = ref(false)
 const loadError = ref("")
+const dataNotice = ref("")
 const selectedId = ref("")
 const userLocation = ref<{ lat: number; lon: number } | null>(null)
 const userLocationAccuracy = ref<number | null>(null)
@@ -62,15 +63,31 @@ async function loadDatasetManifest(root: "data" | "mock-data") {
 async function loadStaticData() {
   isLoading.value = true;
   loadError.value = "";
+  dataNotice.value = "";
   try {
     let dataRoot: "data" | "mock-data" = "data";
     let manifest = await loadDatasetManifest(dataRoot);
-    if (manifest.regions.length === 0) {
+    let region = manifest.regions.find((item) => !item.isMock);
+    if (!region && settings.showMockData) {
       dataRoot = "mock-data";
       manifest = await loadDatasetManifest(dataRoot);
+      region = manifest.regions.find((item) => item.isMock);
     }
-    const region = manifest.regions[0];
-    if (!region) throw new Error("dataset manifest has no regions");
+    if (!region) {
+      const visibleToilets = localCache.toilets.filter((toilet) => !toilet.audit.isMock);
+      const origins = Object.fromEntries(visibleToilets.map((toilet) => [
+        toilet.id,
+        localCache.getMetadata(toilet.id)?.origin ?? "bundled",
+      ])) as Record<string, RecordOrigin>;
+      const sourceLabel = visibleToilets.length > 0
+        ? `浏览器本地数据：${visibleToilets.length} 条`
+        : "暂无真实静态数据";
+      dataset.replaceDataset(visibleToilets, sourceLabel, origins);
+      dataNotice.value = "Mock 模拟数据已隐藏。可在设置中开启“显示 Mock 模拟数据”，或导入真实静态数据。";
+      await nextTick();
+      renderPoints();
+      return;
+    }
     const regionResponse = await fetch(`./${dataRoot}/${region.dataUrl.replace("./", "")}`);
     if (!regionResponse.ok) throw new Error("dataset region unavailable");
     const toilets = (await regionResponse.json() as ToiletPlace[]).map((toilet) => ({
@@ -78,12 +95,13 @@ async function loadStaticData() {
       kinds: normalizeToiletKinds(toilet.kinds),
     }));
     const mergedDataset = localCache.mergeWithDataset(toilets);
-    const origins = Object.fromEntries(mergedDataset.toilets.map((toilet) => [
+    const visibleToilets = mergedDataset.toilets.filter((toilet) => settings.showMockData || !toilet.audit.isMock);
+    const origins = Object.fromEntries(visibleToilets.map((toilet) => [
       toilet.id,
       localCache.getMetadata(toilet.id)?.origin ?? "bundled",
     ])) as Record<string, RecordOrigin>;
     const sourceLabel = region.isMock ? `${region.name}（Mock）` : region.name;
-    dataset.replaceDataset(mergedDataset.toilets, `${sourceLabel}：${mergedDataset.toilets.length} 条`, origins);
+    dataset.replaceDataset(visibleToilets, `${sourceLabel}：${visibleToilets.length} 条`, origins);
     if (mergedDataset.newConflictCount > 0) {
       ElNotification({
         title: "发现数据更新冲突",
@@ -327,6 +345,10 @@ watch([userLocation, userLocationAccuracy], ([location, accuracy]) => {
   mapComponent.value?.setUserLocation(location ? {lat: location.lat, lon: location.lon, accuracy} : null);
 }, {flush: "post"});
 
+watch(() => settings.showMockData, () => {
+  void loadStaticData();
+});
+
 onMounted(() => {
   loadStaticData();
   void updateCurrentLocation(false, true);
@@ -468,7 +490,8 @@ onMounted(() => {
             <span><i class="legend-dot mixed"></i>混合/其他</span>
           </div>
           <el-alert v-if="loadError" :title="loadError" show-icon type="error"/>
-          <el-alert v-if="isLoading" title="正在加载静态模拟数据" show-icon type="info"/>
+          <el-alert v-if="dataNotice" :title="dataNotice" show-icon type="info" :closable="false"/>
+          <el-alert v-if="isLoading" title="正在加载静态数据" show-icon type="info"/>
         </div>
 
         <div v-if="filteredBathrooms.length === 0" class="empty-result">
