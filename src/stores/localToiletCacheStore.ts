@@ -111,6 +111,7 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
         count: (state) => state.entries.length,
         pendingReviewCount: (state) => state.entries.filter((entry) => !entry.toilet.audit.reviewed).length,
         conflictCount: (state) => state.entries.filter((entry) => Boolean(entry.sync.conflict)).length,
+        metadataById: (state) => new Map(state.entries.map((entry) => [entry.toilet.id, entry.sync])),
     },
     actions: {
         commitEntries(entries: LocalToiletCacheEntry[]) {
@@ -154,7 +155,7 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
             return this.entries.some((entry) => entry.toilet.id === id);
         },
         getMetadata(id: string) {
-            return this.entries.find((entry) => entry.toilet.id === id)?.sync;
+            return this.metadataById.get(id);
         },
         hasConflict(id: string) {
             return Boolean(this.getMetadata(id)?.conflict);
@@ -182,13 +183,16 @@ export const useLocalToiletCacheStore = defineStore("local.toilet.cache", {
         },
         mergeWithDataset(datasetToilets: ToiletPlace[]) {
             const sourceById = new Map(datasetToilets.map((toilet) => [toilet.id, toilet]));
+            const entryById = new Map<string, LocalToiletCacheEntry>(
+                this.entries.map((entry) => [entry.toilet.id, entry] as const),
+            );
             const resolvedToilets: ToiletPlace[] = [];
             let nextEntries = this.entries;
             let entriesChanged = false;
             let newConflictCount = 0;
 
             for (const sourceToilet of datasetToilets) {
-                const entry = this.entries.find((item) => item.toilet.id === sourceToilet.id);
+                const entry = entryById.get(sourceToilet.id);
                 if (!entry) {
                     resolvedToilets.push(sourceToilet);
                     continue;

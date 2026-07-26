@@ -32,6 +32,7 @@ const dateRange = ref<[Date, Date] | null>(null);
 const selectedIds = ref<string[]>([]);
 const importInput = ref<HTMLInputElement | null>(null);
 const isImporting = ref(false);
+const MAX_VISIBLE_ROWS = 80;
 
 const allRows = computed<ExportRow[]>(() => {
   const records = new Map<string, ToiletPlace>();
@@ -61,7 +62,11 @@ const filteredRows = computed(() => allRows.value.filter((row) => {
   return timestamp >= startAt && timestamp <= endAt;
 }));
 
-const selectedVisibleIds = computed(() => selectedIds.value.filter((id) => filteredRows.value.some((row) => row.record.id === id)));
+const displayedRows = computed(() => filteredRows.value.slice(0, MAX_VISIBLE_ROWS));
+const selectedVisibleIds = computed(() => {
+  const visibleIds = new Set(filteredRows.value.map((row) => row.record.id));
+  return selectedIds.value.filter((id) => visibleIds.has(id));
+});
 const allVisibleSelected = computed(() => filteredRows.value.length > 0 && selectedVisibleIds.value.length === filteredRows.value.length);
 const recordsToExport = computed(() => {
   if (exportScope.value === "all") return filteredRows.value.map((row) => row.record);
@@ -198,9 +203,12 @@ function handleImport(event: Event) {
 
       <el-empty v-if="filteredRows.length === 0" description="当前筛选条件下没有记录"/>
       <div v-else class="export-record-list">
-        <article v-for="row in filteredRows" :key="row.record.id" class="export-record">
+        <p v-if="filteredRows.length > displayedRows.length" class="record-limit-note">
+          当前列表显示前 {{ displayedRows.length }} 条，共 {{ filteredRows.length }} 条；导出仍使用完整筛选结果。
+        </p>
+        <article v-for="row in displayedRows" :key="row.record.id" class="export-record">
           <el-checkbox-group v-model="selectedIds" class="record-select">
-            <el-checkbox :label="row.record.id"><span class="sr-only">选择 {{ row.record.name }}</span></el-checkbox>
+            <el-checkbox :value="row.record.id"><span class="sr-only">选择 {{ row.record.name }}</span></el-checkbox>
           </el-checkbox-group>
           <div class="record-content">
             <div class="record-title-row">
@@ -310,6 +318,12 @@ function handleImport(event: Event) {
   gap: 8px;
   max-height: 480px;
   overflow: auto;
+}
+
+.record-limit-note {
+  margin: 0;
+  color: var(--itp-text-muted);
+  font-size: 12px;
 }
 
 .export-record {

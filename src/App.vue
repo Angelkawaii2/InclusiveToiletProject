@@ -1,12 +1,7 @@
 <script lang="ts" setup>
 
-import {computed, onBeforeUnmount, onMounted, ref, watch, watchEffect} from "vue";
-import Settings from "@/Views/Settings.vue";
+import {computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch, watchEffect} from "vue";
 import LookupPage from "@/Views/LookupPage.vue";
-import DataMaintenancePage from "@/Views/DataMaintenancePage.vue";
-import DataTransferPage from "@/Views/DataTransferPage.vue";
-import AddPage from "@/Views/AddPage.vue";
-import EditPage from "@/Views/EditPage.vue";
 import {Moon, Plus, Sunny} from "@element-plus/icons-vue";
 import {useSettingStore} from "@/stores/settingsStore";
 import {useWorkspaceStore} from "@/stores/workspaceStore";
@@ -15,6 +10,11 @@ import {debugLog} from "@/Utils/Debug";
 
 const settings = useSettingStore()
 const workspace = useWorkspaceStore()
+const Settings = defineAsyncComponent(() => import("@/Views/Settings.vue"))
+const DataMaintenancePage = defineAsyncComponent(() => import("@/Views/DataMaintenancePage.vue"))
+const DataTransferPage = defineAsyncComponent(() => import("@/Views/DataTransferPage.vue"))
+const AddPage = defineAsyncComponent(() => import("@/Views/AddPage.vue"))
+const EditPage = defineAsyncComponent(() => import("@/Views/EditPage.vue"))
 const isMobile = ref(false)
 let mobileMedia: MediaQueryList | null = null
 let gpsRefreshTimer: number | null = null
@@ -131,15 +131,15 @@ watchEffect(() => {
           <lookup-page/>
         </el-tab-pane>
 
-        <el-tab-pane label="数据维护" name="maintenance">
+        <el-tab-pane label="数据维护" name="maintenance" lazy>
           <data-maintenance-page/>
         </el-tab-pane>
 
-        <el-tab-pane label="数据导入导出" name="data-transfer">
+        <el-tab-pane label="数据导入导出" name="data-transfer" lazy>
           <data-transfer-page/>
         </el-tab-pane>
 
-        <el-tab-pane label="设置" name="settings">
+        <el-tab-pane label="设置" name="settings" lazy>
           <Settings></Settings>
         </el-tab-pane>
 

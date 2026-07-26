@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, onMounted, onUnmounted, ref, watch} from "vue";
-import Map from "ol/Map";
+import OlMap from "ol/Map";
 import View from "ol/View";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
@@ -113,6 +113,7 @@ function getMarkerStyle(kinds: ToiletKind[], selected = false) {
 }
 
 const vectorSource = new VectorSource();
+const pointFeaturesById = new Map<string, Feature>();
 const vectorLayer = new VectorLayer({
   source: vectorSource,
   style: (feature) => feature.get("editable") ? editablePinStyle : getMarkerStyle(feature.get("kinds") || [], feature.get("selected") === true),
@@ -199,9 +200,10 @@ const userLocationLayer = new VectorLayer({
 });
 userLocationLayer.setZIndex(20);
 
-let map: Map | null = null;
+let map: OlMap | null = null;
 let translateInteraction: Translate | null = null;
 let selectInteraction: Select | null = null;
+let selectedPointFeature: Feature | null = null;
 
 function handleClusterSelection(feature: Feature) {
   const clusteredFeatures = feature.get("features") as Feature[] | undefined;
@@ -223,7 +225,7 @@ function handleClusterSelection(feature: Feature) {
 onMounted(() => {
   if (!mapElement.value) return;
   const pointLayer = props.clusterPoints ? clusterLayer : vectorLayer;
-  map = new Map({
+  map = new OlMap({
     target: mapElement.value,
     layers: [
       new TileLayer({
@@ -273,17 +275,57 @@ onMounted(() => {
 });
 
 function setPoints(points: ToiletMapPoint[]) {
-  vectorSource.clear();
-  const features = points.map((item) => new Feature({
-    geometry: new Point(fromLonLat([item.lon, item.lat])),
-    id: item.id,
-    kinds: item.kinds,
-    editable: props.editableMarker,
-  }));
-  vectorSource.addFeatures(features);
+  const shouldFit = pointFeaturesById.size === 0;
+  const incomingIds = new Set<string>();
+  const featuresToAdd: Feature[] = [];
+  let stylesChanged = false;
+
+  points.forEach((item, index) => {
+    const pointKey = item.id ?? `__point-${index}`;
+    const kindsKey = item.kinds.join("|");
+    incomingIds.add(pointKey);
+    const existing = pointFeaturesById.get(pointKey);
+    if (existing) {
+      if (existing.get("lon") !== item.lon || existing.get("lat") !== item.lat) {
+        existing.setGeometry(new Point(fromLonLat([item.lon, item.lat])));
+        existing.set("lon", item.lon, true);
+        existing.set("lat", item.lat, true);
+      }
+      if (existing.get("kindsKey") !== kindsKey) {
+        existing.set("kinds", item.kinds, true);
+        existing.set("kindsKey", kindsKey, true);
+        stylesChanged = true;
+      }
+      return;
+    }
+    const feature = new Feature({
+      geometry: new Point(fromLonLat([item.lon, item.lat])),
+      id: item.id,
+      lon: item.lon,
+      lat: item.lat,
+      kinds: item.kinds,
+      kindsKey,
+      editable: props.editableMarker,
+    });
+    pointFeaturesById.set(pointKey, feature);
+    featuresToAdd.push(feature);
+  });
+
+  const featuresToRemove: Feature[] = [];
+  for (const [id, feature] of pointFeaturesById) {
+    if (incomingIds.has(id)) continue;
+    pointFeaturesById.delete(id);
+    featuresToRemove.push(feature);
+  }
+  if (featuresToRemove.length > 0) vectorSource.removeFeatures(featuresToRemove);
+  if (featuresToAdd.length > 0) vectorSource.addFeatures(featuresToAdd);
+  if (stylesChanged) {
+    vectorLayer.changed();
+    clusterLayer.changed();
+  }
   setSelectedPoint(props.selectedPointId);
 
-  if (!map || features.length === 0) return;
+  if (!map || points.length === 0 || !shouldFit) return;
   map.getView().fit(vectorSource.getExtent(), {
     padding: [36, 36, 36, 36],
     maxZoom: 15,
@@ -292,9 +334,11 @@ function setPoints(points: ToiletMapPoint[]) {
 }
 
 function setSelectedPoint(id = "") {
-  vectorSource.getFeatures().forEach((feature) => {
-    feature.set("selected", Boolean(id) && feature.get("id") === id);
-  });
+  const nextFeature = id ? pointFeaturesById.get(id) ?? null : null;
+  if (selectedPointFeature === nextFeature) return;
+  selectedPointFeature?.set("selected", false, true);
+  nextFeature?.set("selected", true, true);
+  selectedPointFeature = nextFeature;
   vectorLayer.changed();
   clusterLayer.changed();
 }
@@ -371,6 +415,10 @@ onUnmounted(() => {
   if (map && selectInteraction) map.removeInteraction(selectInteraction);
   translateInteraction = null;
   selectInteraction = null;
+  selectedPointFeature = null;
+  pointFeaturesById.clear();
+  vectorSource.clear();
+  map?.setTarget(undefined);
   map = null;
 });
 </script>

@@ -342,7 +342,7 @@ function clearCachedRecords() {
           </el-form-item>
           <el-form-item label="卫生间类型">
             <el-checkbox-group v-model="draft.kinds" class="quick-kind-options">
-              <el-checkbox-button v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :label="item.value">
+              <el-checkbox-button v-for="item in TOILET_KIND_OPTIONS" :key="item.value" :value="item.value">
                 {{ item.label }}
               </el-checkbox-button>
             </el-checkbox-group>

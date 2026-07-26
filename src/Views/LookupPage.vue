@@ -2,7 +2,7 @@
 
 import ToiletMap from "@/components/map/ToiletMap.vue";
 import FilterLabel from "@/components/filters/FilterLabel.vue";
-import {computed, nextTick, onMounted, ref, watch} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {
   ACCESS_RESTRICTION_OPTIONS,
   normalizeToiletKinds,
@@ -47,6 +47,10 @@ const originFilter = ref<"all" | RecordOrigin>("all")
 const changeFilter = ref<"all" | RecordChangeKind>("all")
 const advancedFiltersOpen = ref<string[]>([])
 const mobileFilterOpen = ref(false)
+const debouncedKeyword = ref("")
+const MAX_VISIBLE_RESULTS = 80
+let searchTimer: number | null = null
+let mapRenderFrame: number | null = null
 
 const mapComponent = ref<InstanceType<typeof ToiletMap> | null>(null)
 const detailDrawerSize = computed(() => "420px");
@@ -93,8 +97,6 @@ async function loadStaticData() {
         : "暂无真实静态数据";
       dataset.replaceDataset(visibleToilets, sourceLabel, origins);
       dataNotice.value = "Mock 模拟数据已隐藏。可在设置中开启“显示 Mock 模拟数据”，或导入真实静态数据。";
-      await nextTick();
-      renderPoints();
       return;
     }
     const toilets = (await loadRegions(dataRoot, regions)).map((toilet) => ({
@@ -120,8 +122,6 @@ async function loadStaticData() {
         duration: 5000,
       });
     }
-    await nextTick();
-    renderPoints();
   } catch (err) {
     loadError.value = "静态数据加载失败。";
   } finally {
@@ -130,10 +130,18 @@ async function loadStaticData() {
 }
 
 function renderPoints() {
-  const points = filteredBathrooms.value
+  const points = matchingBathrooms.value
       .filter((item) => Number.isFinite(item.location?.lon) && Number.isFinite(item.location?.lat))
       .map((item) => ({id: item.id, lon: item.location.lon, lat: item.location.lat, kinds: item.kinds}));
   mapComponent.value?.setPoints(points);
+}
+
+function scheduleRenderPoints() {
+  if (mapRenderFrame !== null) window.cancelAnimationFrame(mapRenderFrame);
+  mapRenderFrame = window.requestAnimationFrame(() => {
+    mapRenderFrame = null;
+    renderPoints();
+  });
 }
 
 function getNearestMapPoints(location: { lat: number; lon: number }, limit = 5) {
@@ -217,7 +225,7 @@ function selectToilet(item: ToiletPlace) {
 }
 
 function selectMapPoint(id: string) {
-  const item = dataset.toilets.find((record) => record.id === id);
+  const item = dataset.getToiletById(id);
   if (item) selectToilet(item);
 }
 
@@ -290,9 +298,20 @@ function matchesTriState(value: boolean | null | undefined, filter: "all" | "yes
   return filter === "yes" ? value === true : value === false;
 }
 
-const filteredBathrooms = computed(() => {
-  const q = keyword.value.trim().toLowerCase()
-  const filtered = dataset.toilets.filter((item) => {
+const distanceById = computed(() => {
+  const distances = new Map<string, number>();
+  if (!userLocation.value) return distances;
+  for (const item of dataset.toilets) {
+    distances.set(item.id, distanceInMeters(userLocation.value, item.location));
+  }
+  return distances;
+});
+
+const matchingBathrooms = computed(() => {
+  const q = debouncedKeyword.value.trim().toLowerCase()
+  const metadataById = localCache.metadataById;
+  const recordOrigins = dataset.recordOrigins;
+  return dataset.toilets.filter((item) => {
     const matchesKeyword = !q || [
       item.name,
       item.address?.country,
@@ -307,8 +326,8 @@ const filteredBathrooms = computed(() => {
     const matchesKind = selectedKinds.value.length === 0 || selectedKinds.value.some((kind) => item.kinds.includes(kind));
     const matchesRestriction = selectedRestrictions.value.length === 0 || selectedRestrictions.value.includes(item.access.restriction);
     const matchesActive = activeFilter.value === "all" || (activeFilter.value === "active" ? item.isActive : !item.isActive);
-    const metadata = localCache.getMetadata(item.id);
-    const origin = metadata?.origin ?? dataset.getRecordOrigin(item.id);
+    const metadata = metadataById.get(item.id);
+    const origin = metadata?.origin ?? recordOrigins[item.id] ?? "bundled";
     const changeKind = metadata?.changeKind ?? "none";
     return matchesKeyword
         && matchesKind
@@ -319,16 +338,28 @@ const filteredBathrooms = computed(() => {
         && matchesTriState(item.accessibility.isLocked, lockedFilter.value)
         && (originFilter.value === "all" || origin === originFilter.value)
         && (changeFilter.value === "all" || changeKind === changeFilter.value);
-  })
-  if (!userLocation.value) return filtered;
-  return [...filtered].sort((a, b) => {
-    return distanceInMeters(userLocation.value!, a.location) - distanceInMeters(userLocation.value!, b.location);
   });
 })
 
-watch(filteredBathrooms, () => {
-  renderPoints();
-}, {flush: "post"});
+const filteredBathrooms = computed(() => {
+  if (!userLocation.value) return matchingBathrooms.value;
+  return [...matchingBathrooms.value].sort((a, b) => {
+    return (distanceById.value.get(a.id) ?? Number.POSITIVE_INFINITY)
+        - (distanceById.value.get(b.id) ?? Number.POSITIVE_INFINITY);
+  });
+})
+
+const visibleBathrooms = computed(() => filteredBathrooms.value.slice(0, MAX_VISIBLE_RESULTS));
+
+watch(keyword, (value) => {
+  if (searchTimer !== null) window.clearTimeout(searchTimer);
+  searchTimer = window.setTimeout(() => {
+    debouncedKeyword.value = value;
+    searchTimer = null;
+  }, 180);
+});
+
+watch(matchingBathrooms, scheduleRenderPoints, {flush: "post"});
 
 watch([
   selectedKinds,
@@ -361,6 +392,11 @@ watch(() => settings.showMockData, () => {
 onMounted(() => {
   loadStaticData();
   void updateCurrentLocation(false, true);
+})
+
+onBeforeUnmount(() => {
+  if (searchTimer !== null) window.clearTimeout(searchTimer);
+  if (mapRenderFrame !== null) window.cancelAnimationFrame(mapRenderFrame);
 })
 </script>
 
@@ -488,6 +524,9 @@ onMounted(() => {
             <span>{{ dataset.dataSourceName }}</span>
             <span>{{ filteredBathrooms.length }} / {{ dataset.toilets.length }} 条</span>
           </div>
+          <div v-if="filteredBathrooms.length > visibleBathrooms.length" class="result-limit-note">
+            列表显示最近或最匹配的 {{ visibleBathrooms.length }} 条，地图仍显示全部筛选结果
+          </div>
           <div v-if="userLocation" class="location-meta">
             当前位置：{{ userLocation.lat.toFixed(5) }}, {{ userLocation.lon.toFixed(5) }}
             <span v-if="userLocationAccuracy">精度约 {{ userLocationAccuracy }} m</span>
@@ -509,8 +548,8 @@ onMounted(() => {
         </div>
 
         <div v-else class="result-list">
-          <article v-for="(item,idx) in filteredBathrooms"
-                   :key="`${item.name}-${idx}`"
+          <article v-for="item in visibleBathrooms"
+                   :key="item.id"
                    :class="['result-item', { active: selectedId === item.id }]"
                    @click="selectToilet(item)">
             <div>
@@ -930,6 +969,11 @@ onMounted(() => {
   gap: 12px;
   color: var(--itp-text-muted);
   font-size: 13px;
+}
+
+.result-limit-note {
+  color: var(--itp-text-muted);
+  font-size: 12px;
 }
 
 .location-meta {

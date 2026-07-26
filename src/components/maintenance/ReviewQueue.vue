@@ -31,6 +31,7 @@ const pipelineIndex = ref(0);
 const pipelineReviewedCount = ref(0);
 const pipelineSkippedCount = ref(0);
 const isMobile = ref(false);
+const MAX_VISIBLE_RECORDS = 80;
 let mobileMedia: MediaQueryList | null = null;
 
 function updateMobileLayout(event?: MediaQueryListEvent) {
@@ -63,6 +64,7 @@ const visibleRecords = computed(() => {
   if (queueSort.value === "updated" || !currentLocation.value) return filteredRecords.value;
   return [...filteredRecords.value].sort((a, b) => distanceInMeters(currentLocation.value!, a) - distanceInMeters(currentLocation.value!, b));
 });
+const displayedRecords = computed(() => visibleRecords.value.slice(0, MAX_VISIBLE_RECORDS));
 
 const pendingCount = computed(() => allRecords.value.filter((item) => !item.audit.reviewed).length);
 const pipelineEligibleCount = computed(() => visibleRecords.value.filter((item) => !item.audit.reviewed && !localCache.hasConflict(item.id)).length);
@@ -71,7 +73,10 @@ const pipelineRecord = computed(() => {
   return id ? allRecords.value.find((item) => item.id === id) || null : null;
 });
 const pipelineProgress = computed(() => `${Math.min(pipelineIndex.value + 1, pipelineIds.value.length)} / ${pipelineIds.value.length}`);
-const selectedVisibleIds = computed(() => selectedIds.value.filter((id) => visibleRecords.value.some((item) => item.id === id)));
+const selectedVisibleIds = computed(() => {
+  const visibleIds = new Set(visibleRecords.value.map((item) => item.id));
+  return selectedIds.value.filter((id) => visibleIds.has(id));
+});
 const allVisibleSelected = computed(() => visibleRecords.value.length > 0 && selectedVisibleIds.value.length === visibleRecords.value.length);
 const selectedCachedRecords = computed(() => localCache.toilets.filter((item) => selectedIds.value.includes(item.id)));
 const conflictCount = computed(() => localCache.conflictCount);
@@ -377,9 +382,12 @@ function exportCachedRecords(records: ToiletPlace[]) {
 
     <el-empty v-if="visibleRecords.length === 0" description="当前视图没有记录"/>
     <div v-else class="review-list">
-      <article v-for="record in visibleRecords" :key="record.id" class="review-item">
+      <p v-if="visibleRecords.length > displayedRecords.length" class="record-limit-note">
+        当前列表显示前 {{ displayedRecords.length }} 条，共 {{ visibleRecords.length }} 条；批量操作仍作用于完整筛选结果。
+      </p>
+      <article v-for="record in displayedRecords" :key="record.id" class="review-item">
         <el-checkbox-group v-model="selectedIds" class="review-select">
-          <el-checkbox :label="record.id"><span class="sr-only">选择 {{ record.name }}</span></el-checkbox>
+          <el-checkbox :value="record.id"><span class="sr-only">选择 {{ record.name }}</span></el-checkbox>
         </el-checkbox-group>
         <div class="review-content">
           <div class="review-title-row">
@@ -557,6 +565,12 @@ function exportCachedRecords(records: ToiletPlace[]) {
   gap: 10px;
   max-height: 580px;
   overflow: auto;
+}
+
+.record-limit-note {
+  margin: 0;
+  color: var(--itp-text-muted);
+  font-size: 12px;
 }
 
 .review-item {
