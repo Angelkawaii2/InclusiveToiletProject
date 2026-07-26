@@ -60,6 +60,15 @@ async function loadDatasetManifest(root: "data" | "mock-data") {
   return response.json() as Promise<ToiletDatasetManifest>;
 }
 
+async function loadRegions(root: "data" | "mock-data", regions: ToiletDatasetManifest["regions"]) {
+  const regionToilets = await Promise.all(regions.map(async (region) => {
+    const response = await fetch(`./${root}/${region.dataUrl.replace("./", "")}`);
+    if (!response.ok) throw new Error(`${region.id} region unavailable`);
+    return response.json() as Promise<ToiletPlace[]>;
+  }));
+  return regionToilets.flat();
+}
+
 async function loadStaticData() {
   isLoading.value = true;
   loadError.value = "";
@@ -67,13 +76,13 @@ async function loadStaticData() {
   try {
     let dataRoot: "data" | "mock-data" = "data";
     let manifest = await loadDatasetManifest(dataRoot);
-    let region = manifest.regions.find((item) => !item.isMock);
-    if (!region && settings.showMockData) {
+    let regions = manifest.regions.filter((item) => !item.isMock);
+    if (regions.length === 0 && settings.showMockData) {
       dataRoot = "mock-data";
       manifest = await loadDatasetManifest(dataRoot);
-      region = manifest.regions.find((item) => item.isMock);
+      regions = manifest.regions.filter((item) => item.isMock);
     }
-    if (!region) {
+    if (regions.length === 0) {
       const visibleToilets = localCache.toilets.filter((toilet) => !toilet.audit.isMock);
       const origins = Object.fromEntries(visibleToilets.map((toilet) => [
         toilet.id,
@@ -88,9 +97,7 @@ async function loadStaticData() {
       renderPoints();
       return;
     }
-    const regionResponse = await fetch(`./${dataRoot}/${region.dataUrl.replace("./", "")}`);
-    if (!regionResponse.ok) throw new Error("dataset region unavailable");
-    const toilets = (await regionResponse.json() as ToiletPlace[]).map((toilet) => ({
+    const toilets = (await loadRegions(dataRoot, regions)).map((toilet) => ({
       ...toilet,
       kinds: normalizeToiletKinds(toilet.kinds),
     }));
@@ -100,7 +107,9 @@ async function loadStaticData() {
       toilet.id,
       localCache.getMetadata(toilet.id)?.origin ?? "bundled",
     ])) as Record<string, RecordOrigin>;
-    const sourceLabel = region.isMock ? `${region.name}（Mock）` : region.name;
+    const sourceLabel = regions.every((region) => region.isMock)
+        ? `${regions.map((region) => region.name).join("、")}（Mock）`
+        : regions.length === 1 ? regions[0].name : `正式静态数据（${regions.length} 个区域）`;
     dataset.replaceDataset(visibleToilets, `${sourceLabel}：${visibleToilets.length} 条`, origins);
     if (mergedDataset.newConflictCount > 0) {
       ElNotification({

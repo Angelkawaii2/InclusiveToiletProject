@@ -16,7 +16,7 @@
 
 ## 本地运行
 
-需要 Node.js 和 pnpm。项目使用 `pnpm@11.7.0`。
+需要 Node.js 和 pnpm。项目使用 `pnpm@11.11.0`。
 
 ```bash
 pnpm install
@@ -31,12 +31,14 @@ pnpm dev
 pnpm build
 pnpm preview
 pnpm generate:mock-data
+pnpm import:official-data -- /path/to/public-toilet-data
 ```
 
 ## 数据与本地存储
 
 - 数据结构：v6 `ToiletPlace`，定义位于 [`src/domain/toilet/v6`](./src/domain/toilet/v6)。
 - 真实静态数据：通过 `public/data/manifest.json` 及其区域 JSON 加载。
+- 正式数据转换：`pnpm import:official-data -- <数据目录>` 会按城市生成 v6 区域数据及 `public/data/conversion-report.json`；仅导入具有有效 WGS84 坐标的记录，缺坐标来源会保留在报告中等待后续补点。
 - Mock 数据：开发和构建前自动生成到被 Git 忽略的 `public/mock-data`，与真实数据目录隔离；当前用于生成 200 条青岛测试记录。
 - 浏览器缓存：新增、编辑和 Review 产生的本地记录保存于 `localStorage`。缓存仅存在于当前浏览器和设备，应通过“数据导入导出”页面定期导出备份或传输。
 - 离线缓存：PWA 使用 Cache Storage 保存应用资源和静态数据资源。它不替代浏览器记录缓存，也不等同于云端同步。

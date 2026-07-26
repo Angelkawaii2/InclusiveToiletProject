@@ -1,5 +1,1 @@
-{
-  "version": "v0.6.0.20260708",
-  "generatedAt": 0,
-  "regions": []
-}
+{"version":"v0.6.0.20260708","generatedAt":1726070400000,"regions":[{"id":"shanghai-pudong","name":"上海市浦东新区","bbox":[121.460364732815,30.852835,121.972753817836,31.3867304629046],"updatedAt":1726070400000,"recordCount":2684,"dataUrl":"./regions/shanghai-pudong.json","sha256":"89653d212281b71e898731b03ecf93edce7634f49469cce5f28eceb691fe38df"},{"id":"xiamen","name":"厦门市","bbox":[117.90874,24.426254,118.38601,24.879967],"updatedAt":1670774400000,"recordCount":2896,"dataUrl":"./regions/xiamen.json","sha256":"263b59dab99aa0617a99a53214894e7dd482fe5694626d93f4a24cc812f1c676"},{"id":"shenzhen","name":"深圳市","bbox":[113.76377663803363,22.397128236383463,115.12995860875633,22.852835090495226],"updatedAt":1726070400000,"recordCount":4809,"dataUrl":"./regions/shenzhen.json","sha256":"5d9d9a823aa284bf320fe14f15ea36f1956a5a1eb4c74efa54104f497c06b4f9"}]}

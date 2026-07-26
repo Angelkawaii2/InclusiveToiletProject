@@ -14,6 +14,7 @@
     "prebuild": "pnpm generate:mock-data",
     "build": "vite build",
     "generate:mock-data": "node scripts/generate-mock-v6-data.mjs",
+    "import:official-data": "node scripts/import-official-toilet-data.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
